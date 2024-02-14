@@ -18,13 +18,30 @@ const fileName = process.env.FILE_NAME
 export const GET = async (request) =>  {
   const storage = new Storage();
   const file = storage.bucket(bucketName).file(fileName);
-  //const file = "gs://esl-presentation-generator-bucket/eng3.mp3";
+  
 
   try {
-    const [metadata] = await file.getMetadata();
-    console.log('File metadata:', metadata);
+    const audioBuffer = await fetchAudioFromBucket(file);
+    // const [metadata] = await file.getMetadata();
+    // console.log('File metadata:', metadata);
+
+    //return new Response("Response from audio fetch", { status: 200, headers: { "Content-Type": "application/json" } });
+    return new Response(audioBuffer, { status: 200, headers: { "Content-Type": "audio/mp3" } });
   } catch (error) {
-    console.error('Error getting file metadata:', error);
+    console.error('Error getting audio:', error);
+    return new Response(error);
   }
+}
+
+async function fetchAudioFromBucket(file) {
+  try {
+    const fileData = await file.download()
+    const audioBuffer = fileData[0]
+    return audioBuffer
+  } catch (error) {
+    console.error('Error fetching audio from bucket:', error);
+    throw error;
+  }
+  
 }
 

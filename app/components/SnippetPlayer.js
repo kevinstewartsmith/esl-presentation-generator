@@ -1,7 +1,29 @@
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import { useEffect } from 'react';
 
 function SnippetPlayer({ index }) {
 
+    useEffect(() => {
+        // Create AudioContext only if it hasn't been created yet
+        if (!audioContextRef.current) {
+          window.AudioContext = window.AudioContext ;
+          audioContextRef.current = new AudioContext();
+        }
+        async function fetchAudioFile(audioURL) {
+            try {
+                const response = await fetch(audioURL);
+                const arrayBuffer = await response.arrayBuffer();
+                const buffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+                updateAudioBuffer(buffer);
+            } catch (error) {
+                console.error('Error fetching or decoding audio file:', error);
+            }
+        }
+        fetchAudioFile(audioURL);
+
+        }, [audioURL, snippetBufferArray]); 
+
+        
     function playSnippetClicked() {
         
         console.log(index);
