@@ -83,9 +83,9 @@ const Player = () => {
 
         // Create a new AudioBuffer to store the sliced data
         const slicedAudioBuffer = new AudioBuffer({
-        numberOfChannels: 1, // Assuming a mono audio file, change it to 2 for stereo
-        length: slicedData.length,
-        sampleRate: sampleRate,
+          numberOfChannels: 1, // Assuming a mono audio file, change it to 2 for stereo
+          length: slicedData.length,
+          sampleRate: sampleRate,
         });
 
         // Set the sliced data to the new AudioBuffer

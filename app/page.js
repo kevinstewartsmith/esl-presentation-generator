@@ -8,6 +8,7 @@ import Player from './components/Player';
 import LlamaButton from './components/LlamaButton';
 import { transcribeAudioTest } from './utils/speech-to-text';
 import Link from 'next/link';
+import QuestionDisplay from './components/QuestionDisplay';
 // import mui grid
 //import  Grid  from '@mui/material';
 
@@ -103,6 +104,10 @@ async function getAudioSnippetTimeCodes() {
 
   const transcriptArray = s2tData.map(element => element.alternatives[0].transcript);
   console.log(transcriptArray);
+  //const combinedString = transcriptArray.join(" ")
+  console.log(transcript);
+  const wordsArray = transcript.split(" ")
+  console.log(wordsArray);
   console.log("Questions to send")
   console.log(questions);
   const params = {
@@ -112,7 +117,7 @@ async function getAudioSnippetTimeCodes() {
   const questionsString = JSON.stringify(questions)
   const queryString = new URLSearchParams(params).toString();
   const url = `/api/get-audio-snippets-codes?${queryString}`;
-  const url2 = `/api/get-audio-snippets-codes?questions=${questionsString}&audiodata=${transcriptArray}`;
+  const url2 = `/api/get-audio-snippets-codes?questions=${questionsString}&audiodata=${transcriptArray}&transcript_str=${transcript}`;
   const response = await fetch(url2);
   //const response = await fetch(`/api/get-audio-snippets-codes?questions=hello&audio-data=world`);
 
@@ -211,20 +216,9 @@ async function getAudioSnippetTimeCodes() {
     <button onClick={getAudioSnippetTimeCodes}>Get Audio Snippet Time Codes</button>
     <br></br>
     {snippetData ? <p>{JSON.stringify(snippetData)}</p> : null}
-    <Grid container spacing={2} >
-      {snippetData ? snippetData.map((snippet, index) => {
-        return (
-          <Grid item xs={12}>
-          <div style={{ borderWidth: 3, borderColor: "white", borderRadius: 15, width: "100%", height: "100%", padding:30}}>
-            <h1 style={{ fontSize:"2rem" }}><strong>{`${index + 1} - ` + snippetData[index].question}</strong></h1>
-            <h1><em>{snippetData[index].answer}</em></h1>
-            <h1 style={{ fontSize:"1.5rem" }}><em>"{snippetData[index].snippet}"</em></h1>
-          </div>            
-          </Grid>
-        )
-      }) : null}
-      
-    </Grid>
+ 
+    <QuestionDisplay snippetData={snippetData} />
+    
 
 </div>
 

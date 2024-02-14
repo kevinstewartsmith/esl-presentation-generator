@@ -7,7 +7,7 @@
     answer: '##'
   })
   
-export function snippetPrompt (questions, audioData) {
+export function snippetPrompt (questions, transcriptStr, wordsArray) {
    
   const prompt = 
   `Read the given questions: ${questions}. Determine what kind of questions they are (open-ended, true/false, fill in the blank).
@@ -29,9 +29,27 @@ export function snippetPrompt (questions, audioData) {
   snip_ends.array_idx: The index of the transcript array that contains the ending word for the answer snippet as a string.
   snip_ends.end_word_idx: The position of the end word within the array elementas a string. 
   
-  Here is the transcript array: ${audioData}`
+  Here is the transcript array: ${wordsArray}`
+
+  const prompt2 = 
+  `Read the given questions: ${questions}. Determine what kind of questions they are (open-ended, true/false, fill in the blank).
+  Generate JSON data with the following properties and no natural language response. Make sure the results are a stringified array of objects. Respond with only the data:
+  {
+    question:###,
+    answer: ###,
+    snippet: ###,
+    start_word_idx: ###,
+    end_word_idx: ###,
+  }
+  question: the given questions as a string.
+  answer: The answer as a string.
+  snippet: the segment of the transcript that answers the question. It should not include the question as a string.
+  start_word_idx: The position of the starting word of snippet within this array: ${wordsArray}. 
+  snip_ends.end_word_idx: The position of the ending word of snippet within this array: ${wordsArray}. 
+  
+  Here is the transcript string: ${transcriptStr}`
     
-  return prompt;
+  return prompt2;
 }
 
 export function makeQuestionsPrompt(searchQuery) {
