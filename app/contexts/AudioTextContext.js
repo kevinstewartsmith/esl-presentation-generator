@@ -21,6 +21,11 @@ const AudioTextProvider = ({ children }) => {
   const [transcript, setTranscript] = useState('')
   const [s2tData, setS2tData] = useState({});
   const [snippetData, setSnippetData] = useState()
+  const [bucketContents, setBucketContents] = useState()
+
+  function updateBucketContents(contents) {
+    setBucketContents(contents)
+  }
 
   function updateSnippetData(data) {
     setSnippetData(data)
@@ -92,7 +97,9 @@ const AudioTextProvider = ({ children }) => {
       s2tData,
       updateS2tData,
       snippetData,
-      updateSnippetData
+      updateSnippetData,
+      bucketContents,
+      updateBucketContents
     }}>
         {children}
     </AudioTextContext.Provider>

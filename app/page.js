@@ -1,5 +1,5 @@
 "use client";
-import { useState, Fragment, useContext } from 'react';
+import { useState, Fragment, useContext, useEffect } from 'react';
 import { createWorker } from 'tesseract.js';
 import { Grid, Item } from '@mui/material';
 import AudioSlicer from './components/AudioSlicer';
@@ -9,13 +9,19 @@ import LlamaButton from './components/LlamaButton';
 import { transcribeAudioTest } from './utils/speech-to-text';
 import Link from 'next/link';
 import QuestionDisplay from './components/QuestionDisplay';
+import UploadOneMP3 from './components/UploadOneMP3';
 // import mui grid
 //import  Grid  from '@mui/material';
 
 
+
+
+
+
 export default function Home() {
+
   // Add an upload button. When I click it I can upload an image that will be displayed on the page.
-  const { originalAudio, setAudioSnippet, updateExtractedText, extractedText, updateQuestions, questions, updateTranscript, transcript, updateS2tData,s2tData, updateSnippetData, snippetData } = useContext(AudioTextContext);
+  const { originalAudio, setAudioSnippet, updateExtractedText, extractedText, updateQuestions, questions, updateTranscript, transcript, updateS2tData,s2tData, updateSnippetData, snippetData, bucketContents, updateBucketContents } = useContext(AudioTextContext);
   const [image, setImage] = useState(null);
 
 
@@ -25,6 +31,20 @@ export default function Home() {
     const selectedImage = e.target.files[0];
     setImage(URL.createObjectURL(selectedImage));
   };
+
+
+
+  //Get list of mp3s in bucket
+  useEffect(() => {
+    async function getBucketContents() {
+      const response = await fetch("/api/get-audio-bucket-info");
+      const data = await response.json()
+      console.log(data[0][0]);
+      updateBucketContents(data)
+    }
+    getBucketContents();
+  }, []);
+
 
   async function handleReadText() {
     
@@ -185,6 +205,7 @@ async function getAudioSnippetTimeCodes() {
     <Player />
     <br></br>
     <br></br>
+    <UploadOneMP3 />
     <br></br>
     <LlamaButton />
     <br></br>
@@ -209,6 +230,9 @@ async function getAudioSnippetTimeCodes() {
     }) : null }
 
     <br></br>
+    <h1><strong>Bucket Contents</strong></h1>
+    <h1>{bucketContents}</h1>
+    <br></br>
     <button onClick={getTranscript}>Get Transcript</button>
     <br></br>
     { transcript ? <p>{transcript}</p> : null }
@@ -218,6 +242,7 @@ async function getAudioSnippetTimeCodes() {
     {snippetData ? <p>{JSON.stringify(snippetData)}</p> : null}
  
     <QuestionDisplay snippetData={snippetData} />
+    
     
 
 </div>
