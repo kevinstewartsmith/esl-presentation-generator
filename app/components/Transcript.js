@@ -4,7 +4,7 @@ import { AudioTextContext } from '../contexts/AudioTextContext';
 
 const Transcript = () => {
 
-    const { updateTranscript, transcript, updateS2tData, selectedAudioFileName } = useContext(AudioTextContext);
+    const { updateTranscript, transcript, updateS2tData, selectedAudioFileName, wordTimeArray, updateWordTimeArray } = useContext(AudioTextContext);
 
     async function getTranscript() {
         const response = await fetch(`/api/google-api-s2t?name=${selectedAudioFileName}`);
@@ -16,6 +16,7 @@ const Transcript = () => {
       
         const data = await response.json();
         updateS2tData(data);
+        createTimeArray(data)
       
         const combinedTranscript = data.map((element) => {
           return element.alternatives[0].transcript;
@@ -28,9 +29,10 @@ const Transcript = () => {
         updateTranscript(combinedTranscript);
     }
 
-    function createTimeArray(data) {
-        const wordsInfo = text[4].alternatives[0].words
-        console.log(wordsInfo);
+    function createTimeArray(text) {
+        const wordsInfo = text[text.length - 1].alternatives[0].words
+        updateWordTimeArray(wordsInfo)
+        console.log(JSON.stringify(wordsInfo));
     }
   return (
     <div>

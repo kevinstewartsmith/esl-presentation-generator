@@ -29,7 +29,7 @@ export const GET = async (request) => {
         console.log(text);
         console.log("end log text");
            
-        const wordsInfo = text[4].alternatives[0].words
+        const wordsInfo = text[text.length - 1].alternatives[0].words
         console.log(wordsInfo);
         //console.log(JSON.stringify(text, null, 2));
 
