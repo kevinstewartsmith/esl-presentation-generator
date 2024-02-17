@@ -18,9 +18,12 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
 console.log("Service file exists: " + fs.existsSync(serviceFilePath));
 
 export const GET = async (request) => {
+    const urlQuery = new URL(request.url)
+    const name = urlQuery.searchParams.get("name")
+
     try {
         console.log("Begin transcription");
-        const text = await transcribeAudio();
+        const text = await transcribeAudio(name);
             
         console.log("log text");
         console.log(text);
@@ -28,8 +31,9 @@ export const GET = async (request) => {
            
         const wordsInfo = text[4].alternatives[0].words
         console.log(wordsInfo);
-        console.log(JSON.stringify(text, null, 2));
+        //console.log(JSON.stringify(text, null, 2));
 
+        //return new Response( JSON.stringify(wordsInfo), { status: 200 })
         return new Response( JSON.stringify(text), { status: 200 })
                 
     } catch (error) {
@@ -38,13 +42,13 @@ export const GET = async (request) => {
     }
 }
 
-async function transcribeAudio(audioName) {
+async function transcribeAudio(name) {
     
     const bucketName = process.env.BUCKET_NAME
     const fileName = process.env.FILE_NAME
 
     const storage = new Storage();
-    const file = storage.bucket(bucketName).file(fileName);
+    const file = storage.bucket(bucketName).file(name);
    
     try {
         // Initialize a SpeechClient from the Google Cloud Speech library.

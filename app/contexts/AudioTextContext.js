@@ -22,6 +22,11 @@ const AudioTextProvider = ({ children }) => {
   const [s2tData, setS2tData] = useState({});
   const [snippetData, setSnippetData] = useState()
   const [bucketContents, setBucketContents] = useState()
+  const [selectedAudioFileName, setSelectedAudioFileName] = useState()
+
+  function updateSelectedAudioFileName(name) {
+    setSelectedAudioFileName(name)
+  }
 
   function updateBucketContents(contents) {
     setBucketContents(contents)
@@ -99,7 +104,9 @@ const AudioTextProvider = ({ children }) => {
       snippetData,
       updateSnippetData,
       bucketContents,
-      updateBucketContents
+      updateBucketContents,
+      selectedAudioFileName,
+      updateSelectedAudioFileName
     }}>
         {children}
     </AudioTextContext.Provider>

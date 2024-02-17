@@ -1,7 +1,9 @@
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 function SnippetPlayer({ index }) {
+    const audioURL = "/api/audio"
+    const audioContextRef = useRef(null);
 
     useEffect(() => {
         // Create AudioContext only if it hasn't been created yet
@@ -21,7 +23,9 @@ function SnippetPlayer({ index }) {
         }
         fetchAudioFile(audioURL);
 
-        }, [audioURL, snippetBufferArray]); 
+        }, [audioURL, 
+            //snippetBufferArray
+        ]); 
 
         
     function playSnippetClicked() {

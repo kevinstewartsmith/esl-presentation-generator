@@ -17,6 +17,7 @@ const bucketName = process.env.BUCKET_NAME
 
 export const GET = async (request) =>  {
     const bucketName = process.env.BUCKET_NAME
+  
    
   try {
     // Get the list of files in the bucket

@@ -10,6 +10,8 @@ import { transcribeAudioTest } from './utils/speech-to-text';
 import Link from 'next/link';
 import QuestionDisplay from './components/QuestionDisplay';
 import UploadOneMP3 from './components/UploadOneMP3';
+import AudioTable from './components/AudioTable';
+import Transcript from './components/Transcript';
 // import mui grid
 //import  Grid  from '@mui/material';
 
@@ -21,7 +23,7 @@ import UploadOneMP3 from './components/UploadOneMP3';
 export default function Home() {
 
   // Add an upload button. When I click it I can upload an image that will be displayed on the page.
-  const { originalAudio, setAudioSnippet, updateExtractedText, extractedText, updateQuestions, questions, updateTranscript, transcript, updateS2tData,s2tData, updateSnippetData, snippetData, bucketContents, updateBucketContents } = useContext(AudioTextContext);
+  const { originalAudio, setAudioSnippet, updateExtractedText, extractedText, updateQuestions, questions, updateTranscript, transcript, updateS2tData,s2tData, updateSnippetData, snippetData, bucketContents, updateBucketContents, selectedAudioFileName } = useContext(AudioTextContext);
   const [image, setImage] = useState(null);
 
 
@@ -82,7 +84,7 @@ function playTestAudio() {
 }
 
 async function getTranscript() {
-  const response = await fetch(`/api/google-api-s2t`);
+  const response = await fetch(`/api/google-api-s2t?name=${selectedAudioFileName}`);
   //const response = await fetch(`/api/test`);
 
   if (!response.ok) {
@@ -230,12 +232,13 @@ async function getAudioSnippetTimeCodes() {
     }) : null }
 
     <br></br>
-    <h1><strong>Bucket Contents</strong></h1>
-    <h1>{bucketContents}</h1>
+    <AudioTable />
+   
     <br></br>
-    <button onClick={getTranscript}>Get Transcript</button>
+    {/* <button onClick={getTranscript}>Get Transcript</button> */}
+    <Transcript />
     <br></br>
-    { transcript ? <p>{transcript}</p> : null }
+    {/* { transcript ? <p>{transcript}</p> : null } */}
     <br></br>
     <button onClick={getAudioSnippetTimeCodes}>Get Audio Snippet Time Codes</button>
     <br></br>

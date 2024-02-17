@@ -16,8 +16,11 @@ const fileName = process.env.FILE_NAME
 
 
 export const GET = async (request) =>  {
+  const urlQuery = new URL(request.url)
+  const name = urlQuery.searchParams.get("name")
+  
   const storage = new Storage();
-  const file = storage.bucket(bucketName).file(fileName);
+  const file = storage.bucket(bucketName).file(name);
   
 
   try {
