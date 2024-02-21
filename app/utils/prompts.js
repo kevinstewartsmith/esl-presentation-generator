@@ -44,8 +44,8 @@ export function snippetPrompt (questions, transcriptStr, wordsArray) {
   question: the given questions as a string.
   answer: The answer as a string.
   snippet: the segment of the transcript that answers the question. It should not include the question as a string.
-  start_word_idx: The position of the starting word of snippet within this array: ${wordsArray}. 
-  snip_ends.end_word_idx: The position of the ending word of snippet within this array: ${wordsArray}. 
+  start_word_idx: The position of the first word of snippet. Use this array to find the index: ${wordsArray}. For example, if the snippet is: "I like cats.", the index should be for the word "I" because it's the first word of the snippet. 
+  snip_ends.end_word_idx: The position of the ending word of snippet within this array: ${wordsArray}.  For example, if the snippet is: "I like cats.", the index should be for the word "cats because it is the last word of the snippet.". 
   
   Here is the transcript string: ${transcriptStr}`
     

@@ -29,8 +29,8 @@ export const GET = async (request) => {
         console.log(text);
         console.log("end log text");
            
-        const wordsInfo = text[text.length - 1].alternatives[0].words
-        console.log(wordsInfo);
+        //const wordsInfo = text[text.length - 1].alternatives[0].words
+        //console.log(wordsInfo);
         //console.log(JSON.stringify(text, null, 2));
 
         //return new Response( JSON.stringify(wordsInfo), { status: 200 })
