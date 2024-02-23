@@ -24,6 +24,11 @@ const AudioTextProvider = ({ children }) => {
   const [bucketContents, setBucketContents] = useState()
   const [selectedAudioFileName, setSelectedAudioFileName] = useState()
   const [wordTimeArray, setWordTimeArray] = useState()
+  const [fullAudioBuffer, setFullAudioBuffer] = useState() //Full file of an audio track. Updated when a track from the bucket is played
+
+  function updateFullAudioBuffer(buffer) {
+    setFullAudioBuffer(buffer)
+  }
 
   function updateWordTimeArray(array) {
     setWordTimeArray(array)
@@ -113,7 +118,9 @@ const AudioTextProvider = ({ children }) => {
       selectedAudioFileName,
       updateSelectedAudioFileName,
       wordTimeArray,
-      updateWordTimeArray
+      updateWordTimeArray,
+      fullAudioBuffer,
+      updateFullAudioBuffer
     }}>
         {children}
     </AudioTextContext.Provider>

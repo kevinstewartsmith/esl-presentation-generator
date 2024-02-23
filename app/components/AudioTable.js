@@ -3,9 +3,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import { AudioTextContext } from '../contexts/AudioTextContext';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import IconButton from '@mui/material/IconButton';
+import { playAudioFile } from '@app/utils/AudioControls';
 
 function AudioTable(props) {
-    const {bucketContents, updateBucketContents, selectedAudioFileName, updateSelectedAudioFileName } = useContext(AudioTextContext);
+    const {bucketContents, updateBucketContents, selectedAudioFileName, updateSelectedAudioFileName,fullAudioBuffer, updateFullAudioBuffer } = useContext(AudioTextContext);
     const [selectedRow, setSelectedRow] = useState(null);
 
     const handleRowSelectionChange = (newSelection) => {
@@ -25,7 +26,7 @@ function AudioTable(props) {
           updateBucketContents(data)
         }
         getBucketContents();
-      }, []);
+    }, []);
 
       async function playAudio(name) {
         console.log('Row Data:', name);
@@ -37,13 +38,14 @@ function AudioTable(props) {
             }
             
             const audioBuffer = await response.arrayBuffer();
-            const audioContext = new AudioContext();
-            const audioSource = audioContext.createBufferSource();
-            audioContext.decodeAudioData(audioBuffer, (buffer) => {
-                audioSource.buffer = buffer;
-                audioSource.connect(audioContext.destination);
-                audioSource.start(0);
-            });
+            playAudioFile(audioBuffer)
+            // const audioContext = new AudioContext();
+            // const audioSource = audioContext.createBufferSource();
+            // audioContext.decodeAudioData(audioBuffer, (buffer) => {
+            //     audioSource.buffer = buffer;
+            //     audioSource.connect(audioContext.destination);
+            //     audioSource.start(0);
+            // });
         } catch (error) {
             console.error('Error playing audio:', error);
         }

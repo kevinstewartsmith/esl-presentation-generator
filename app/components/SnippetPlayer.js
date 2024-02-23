@@ -2,9 +2,12 @@ import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite
 import { useEffect, useRef, useContext } from 'react';
 import { AudioTextContext } from '@app/contexts/AudioTextContext';
 import { combinedTranscript } from '@app/utils/transcript';
+import { createAudioSlice } from '@app/utils/AudioSnipper'
+import { playAudioFile, playAudioFileClip } from '@app/utils/AudioControls';
+
 
 function SnippetPlayer({ index }) {
-    const { snippetData, wordTimeArray, transcript } = useContext(AudioTextContext)
+    const { snippetData, wordTimeArray, transcript, fullAudioBuffer, selectedAudioFileName } = useContext(AudioTextContext)
     const audioURL = "/api/audio"
     const audioContextRef = useRef(null);
 
@@ -37,7 +40,7 @@ function SnippetPlayer({ index }) {
     //   const indices = findSnippetIndices(snippet, array);
     //   console.log(indices); // Output: [{ start: 62, end: 82 }]
       
-
+      //pretty sure i'm not using this
     useEffect(() => {
         // Create AudioContext only if it hasn't been created yet
         if (!audioContextRef.current) {
@@ -85,13 +88,75 @@ function SnippetPlayer({ index }) {
        // console.log(slicedArray.join(' '));
         console.log(wordTimeArray[startIndex]);
         console.log(wordTimeArray[endIndex]);
-        console.log(wordTimeArray[startIndex].startTime);
-        console.log(wordTimeArray[endIndex].endTime);
+        // console.log(wordTimeArray[startIndex].startTime);
+        // console.log(wordTimeArray[endIndex].endTime);
+        const startTime = wordTimeArray[startIndex].startTime
+        const endTime = wordTimeArray[endIndex].endTime
+        console.log(startTime);
+        playSnippet(selectedAudioFileName, startTime, endTime)
+    }
+    function getTimeStamp(data) {
+        //const data = {seconds: '19', nanos: 200000000};
+        // Convert seconds to float
+        const secondsFloat = data.seconds !== null ? parseFloat(data.seconds) : 0
+
+        // Convert nanos to float and adjust for decimal precision
+        const nanosFloat = data.nanos !== null ? parseFloat(data.nanos) / Math.pow(10, 9) : 0
+
+        // Combine seconds and nanos
+        const resultFloat = secondsFloat + nanosFloat;
+
+        console.log(resultFloat); // Output: 19.2
+        return resultFloat
+    }
+
+    async function playSnippet(name, startTime, endTime) {
+            const start = getTimeStamp(startTime)
+            const end = getTimeStamp(endTime)
+            console.log(start);
+            console.log(end);
+            // if (!fullAudioBuffer) return ;
+        
+            // const audioContext = new AudioContext();
+            // audioContext.decodeAudioData(fullAudioBuffer, (buffer) => {
+            //   const source = audioContext.createBufferSource();
+            //   source.buffer = buffer;
+            //   source.connect(audioContext.destination);
+            //   source.start();
+            // });
+            console.log(startTime);
+            console.log(startTime.seconds);
+            console.log(startTime.nanos % 1000000000);
+            console.log(endTime);
+
+            console.log('Row Data:', name);
+            try {
+                const response = await fetch(`/api/audio?name=${name}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch audio file');
+                }
+                
+                const audioBuffer = await response.arrayBuffer();
+                //playAudioFile(audioBuffer)
+                playAudioFileClip(audioBuffer, start, end)
+                // const audioContext = new AudioContext();
+                // const audioSource = audioContext.createBufferSource();
+                // audioContext.decodeAudioData(audioBuffer, (buffer) => {
+                //     audioSource.buffer = buffer;
+                //     audioSource.connect(audioContext.destination);
+                //     audioSource.start(0);
+                // });
+            } catch (error) {
+                console.error('Error playing audio:', error);
+            }
+          
     }
 
     function removeEmptyStrings(array) {
         return array.filter(item => item !== "");
     }
+
 
     return (
         <div style={{ backgroundColor: "transparent", width: "100px", height: "100%", display: "flex", alignItems:"center", justifyContent:"center" }} onClick={playSnippetClicked} value={index}>
