@@ -24,12 +24,25 @@ export function playAudioFileClip(audioData, startTime = 0, endTime = null) {
         if (endTime !== null && endTime !== undefined) {
             audioSource.stop(audioContext.currentTime + (endTime - startTime));
         }
+
+           // Download the audio clip as MP3
+           downloadAudioClip(decodedData);
     }, (error) => {
         console.error('Error decoding audio data:', error);
     });
 }
 
 
-
+function downloadAudioClip(decodedData) {
+    const audioBlob = new Blob([decodedData], { type: 'audio/mp3' });
+    const url = URL.createObjectURL(audioBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'audio_clip.mp3';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
 
