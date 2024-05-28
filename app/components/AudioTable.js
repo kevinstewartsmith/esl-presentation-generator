@@ -53,7 +53,7 @@ function AudioTable(props) {
 
     const columns = [
         { field: "id", headerName: "ID", width: 70 },
-        { field: "fileName", headerName: "File name", width: 190 },
+        { field: "fileName", headerName: "File name", width: 300 },
         { field: "size", headerName: "Size", width: 130 },
         { field: "length", headerName: "Length", width: 130 },
         {

@@ -12,6 +12,10 @@ import QuestionDisplay from './components/QuestionDisplay';
 import UploadOneMP3 from './components/UploadOneMP3';
 import AudioTable from './components/AudioTable';
 import Transcript from './components/Transcript';
+import Presentation from './components/Presentation'
+//import MyPowerPointPage from './components/presentation';
+//import PresentationPreview from './presentation-preview/[presentationID]/page';
+
 // import mui grid
 //import  Grid  from '@mui/material';
 
@@ -162,6 +166,28 @@ async function getAudioSnippetTimeCodes() {
 
   updateSnippetData(parsedArray)
 }
+async function makeFart() {
+  console.log("client fart");
+  try{
+    const response = await fetch('/api/presentation/post', {
+      method: 'POST',
+      // We convert the React state to JSON and send it as the POST body
+      body: JSON.stringify({
+        fartSound: "Varuuum"}),
+       headers: {"Content-Type": "application/json", 'Accept': 'application/json'}
+    });
+
+    if (response.ok) {
+      //router.push("/");
+      console.log("response ok");
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    //toggleTrigger()
+    console.log("end of fart");
+  }
+}
 
   return (
     <div style={{margin: 50 }}>
@@ -246,7 +272,10 @@ async function getAudioSnippetTimeCodes() {
  
     <QuestionDisplay snippetData={snippetData} />
     
-    
+    <button onClick={makeFart}> fart</button>
+    <br></br>
+    <br></br>
+    <Presentation />
 
 </div>
 

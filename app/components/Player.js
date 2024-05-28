@@ -182,7 +182,7 @@ const Player = () => {
   };
 
   return (
-    <div style={{ borderWidth:1,borderColor:"white" , padding: 50}}>
+    <div style={{ borderWidth:1, borderColor:"white" , padding: 50}}>
        <Grid container direction={"row"} spacing={2} padding={20}>
             <Grid item xs={12} sm={6}>
                 <h1>Audio Slicer</h1>

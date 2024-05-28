@@ -38,3 +38,37 @@ button {
   margin: 5px;
   padding: 2px;
 }
+
+.presentation {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  
+}
+
+.presentation-grid-container {
+  width: 80vw; 
+  height: 100%; 
+  border-width: 1px; 
+  border-color: "blue";
+  scroll-behavior: auto;
+  margin-top: 50px;
+}
+
+.presentation-item {
+  border-color: red;
+  border-width: 1px;
+  border-radius: 15px;
+  background-color: lightcoral;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  margin: 10px;
+  
+}
