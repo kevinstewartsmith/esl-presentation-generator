@@ -1,8 +1,8 @@
 
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useContext} from 'react';
 import {useDropzone} from 'react-dropzone';
 import { createWorker } from 'tesseract.js';
-
+import { PresentationContext } from '@app/contexts/PresentationContext';
 
 const baseStyle = {
     flex: 1,
@@ -71,7 +71,7 @@ const img = {
 
 function AddTextBook(props) {
     const [extractedText, setExtractedText] = useState('');
-
+    const { textTranscript, updateTextTranscript } = useContext(PresentationContext);
     //Tesseract.js OCR
     // async function handleReadText() {
     
@@ -88,7 +88,8 @@ function AddTextBook(props) {
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
         const { data: { text } } = await worker.recognize(file);
-        setExtractedText(text);
+        //setExtractedText(text);
+        updateTextTranscript(text);
         await worker.terminate();
     }
 
@@ -166,7 +167,7 @@ const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = u
             <aside style={thumbsContainer}>
                 {thumbs}
             </aside>
-            <div><h1 style={{color:"black"}}>{extractedText}</h1></div>
+            <div><h1 style={{color:"black"}}>{textTranscript}</h1></div>
         </div>
 
     </section>

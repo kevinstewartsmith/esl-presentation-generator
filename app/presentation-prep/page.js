@@ -14,16 +14,16 @@ const page = () => {
     }
 
     const slides = [
-    "Advantages/Disadvantages",
-    "Sharing",
-    "Brainstorm",
-    "Sharing",
-    "Reading for Gist",
-    "Partner Check",
-    "Book Answer",
-    "Reading for Detail",
-    "Partner Check",
-    "Book Answer",
+        "Advantages/Disadvantages",
+        "Sharing",
+        "Brainstorm",
+        "Sharing",
+        "Reading for Gist",
+        "Partner Check",
+        "Book Answer",
+        "Reading for Detail",
+        "Partner Check",
+        "Book Answer",
     ]
 //container style={{ width: "80%", height: "80vh", borderWidth: 1, borderColor: "white", }}
 //<div className="presentation" style={{ width:"100vw", height:"100vh", display: "flex", justifyContent: "center", alignItems: "center"  }}>

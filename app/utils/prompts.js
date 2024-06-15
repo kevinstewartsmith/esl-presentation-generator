@@ -61,3 +61,12 @@ export function findTrueFalseQuestions(combinedTranscript) {
   const prompt = `Find some true false questions and a corresponding audio transcript below. Please return a JSON with the sections of the transcript that answer the true-false questions Here are the questions: 1 Connor has an important football match on Saturday.2 Connor is celebrating his birthday at an American restaurant.3 Olivia is not a fan of superhero films. 4 Connor invites Olivia to the museum. 5 Connor has about an hour between getting back from the museum and his piano lesson. 6 Connor isn't very busy the following weekend. Here is the transcript: ${combinedTranscript}`
   return prompt
 }
+
+export function findVocabularyPrompt(text, cefrLevel) {
+  const prompt = `Find the most difficult words for a ${cefrLevel} ESL in this text: ${text}.
+  Make an array of objects out using this format: { "word": "###", "vietnamese_translation": "###", "ipa_uk": "###", "ipa_usa": "###" }. 
+  The ipd_uk field is the word written in the internation phoenetic alphabet for the UK.
+  The ipd_usa field is the word written in the internation phoenetic alphabet for the USA.
+  The most difficult words are the ones that are likely to be unfamiliar to a ${cefrLevel} ESL student.`
+  return prompt
+}
