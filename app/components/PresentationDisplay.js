@@ -33,19 +33,7 @@ const PresentationDisplay = ({presData}) => {
     {/* <h1>test</h1> */}
       <div className="slides" >
         <section data-background-color="red">Slide 1
-        {/* <section data-markdown>
-          <textarea data-template>
-            ## Slide 1
-            A paragraph with some text and a [link](http://hakim.se).
-           ---
-            ## Slide 2
-            ---
-            ## Slide 3
-          </textarea>
-        </section>
-        <section data-markdown>something</section>
-        <section>Slide fart</section>
-        <section>Slide poop</section> */}
+       
  
         </section>
         <section>
@@ -63,7 +51,7 @@ const PresentationDisplay = ({presData}) => {
           <li>Read {presData.gistReading.book + " p." + presData.gistReading.page}<em> quickly</em></li>
           <li><em>Answer:</em> What is the name of Hercules' cat?</li>
           <li>No talking</li>
-          <li>Raise your hand when you are finished</li>
+          <li>Hand up when finished</li>
           <li><em>{presData.gistReading.timeLimit} minutes</em></li>
           
         </ul>
