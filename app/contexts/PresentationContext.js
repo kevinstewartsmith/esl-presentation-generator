@@ -29,6 +29,21 @@ const PresentationContextProvider = ({ children }) => {
     function updateVocabulary(newVocabulary) {
         setVocabulary(newVocabulary);
     }
+
+    function loadVocabulary(data) {
+        // Add the fields selected: false and img_url: null to each word object
+        const words = data.map(word => {
+            return {
+                ...word,
+                selected: false,
+                img_url: ""
+            }
+        });
+        console.log(words);
+        setVocabulary(words);
+    }
+
+ 
     
     
     
@@ -45,6 +60,7 @@ const PresentationContextProvider = ({ children }) => {
             updateQuestions, 
             updateAnswers,
             updateVocabulary,
+            loadVocabulary
         }}>
             {children}
         </PresentationContext.Provider>
