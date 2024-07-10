@@ -4,6 +4,7 @@ import {useDropzone} from 'react-dropzone';
 import { createWorker } from 'tesseract.js';
 import { PresentationContext } from '@app/contexts/PresentationContext';
 
+// Styles
 const baseStyle = {
     flex: 1,
     display: 'flex',
@@ -34,56 +35,46 @@ const baseStyle = {
     borderColor: '#ff1744'
   };
 
+  const thumbsContainer = {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 16,
+    backgroundColor: 'white'
+  };
+
+  const thumb = {
+    display: 'inline-flex',
+    borderRadius: 2,
+    border: '1px solid #eaeaea',
+    marginBottom: 8,
+    marginRight: 8,
+    width: 100,
+    height: 100,
+    padding: 4,
+    boxSizing: 'border-box'
+  };
+
+  const thumbInner = {
+    display: 'flex',
+    minWidth: 0,
+    overflow: 'hidden'
+  };
+
+  const img = {
+    display: 'block',
+    width: 'auto',
+    height: '100%'
+  };
 
 
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16,
-  backgroundColor: 'white'
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
-
-
-function AddTextBook(props) {
+function AddTextBook({category}) {
+  console.log("The category is: ", category);
     const [extractedText, setExtractedText] = useState('');
-    const { textTranscript, updateTextTranscript } = useContext(PresentationContext);
-    //Tesseract.js OCR
-    // async function handleReadText() {
+    const { textTranscript, updateTextTranscript, questions,  updateQuestions, answers, updateAnswers } = useContext(PresentationContext);
     
-    //     const worker = await createWorker('eng');
-    //     const ret = await worker.recognize(files[0].preview);
-    //     console.log(ret.data.text);
-    //     //setTextOCR(ret.data.text);
-    //     setExtractedText(ret.data.text);
-    //     await worker.terminate();
-    //   ;
-    // }
-    async function handleReadText(file) {
+    //OCR Function
+    async function handleReadText2(file) {
         const worker = await createWorker();
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
@@ -93,20 +84,39 @@ function AddTextBook(props) {
         await worker.terminate();
     }
 
+    async function handleReadText(file) {
+      const worker = await createWorker();
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+      const { data: { text } } = await worker.recognize(file);
+      //setExtractedText(text);
+      //updateTextTranscript(text);
+      handleTextStateMemory(text);
+      await worker.terminate();
+  }
+  
+  function handleTextStateMemory(text) {
+    console.log("The category is SWITCH: ", category);
+    switch (category) {
+      case "BookText":
+        updateTextTranscript(text);
+        return null
+      case "QuestionText":
+        updateQuestions(text);
+        return null
+      case "AnswerText":
+        updateAnswers(text);
+        return null
+      default:
+        console.log("No category selected");
+        return null
+    }
+  }
+
     
   const [files, setFiles] = useState([]);
-//   const {getRootProps, getInputProps,  isFocused, isDragAccept, isDragReject} = useDropzone({
-//     accept: {
-//       'image/*': []
-//     },
-//     onDrop: async acceptedFiles => {
-//       setFiles(acceptedFiles.map(file => Object.assign(file, {
-//         preview: URL.createObjectURL(file)
-//       })));
-//        await handleReadText();
-//     }
-//   });
 
+//Drag and Drop
 const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = useDropzone({
     accept: {
         'image/*': []
@@ -126,6 +136,7 @@ const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = u
     }
 });
   
+//Thumbnails
   const thumbs = files.map(file => (
     <div style={thumb} key={file.name}>
       <div style={thumbInner}>
@@ -156,6 +167,20 @@ const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = u
     isDragReject
   ]);
 
+  const handleTextDisplay = (category, textTranscript, questions, answers) => {
+    switch (category) {
+      case "BookText":
+        return <h1 style={{ color: "black" }}>{textTranscript}</h1>;
+      case "QuestionText":
+        return <h1 style={{ color: "black" }}>{questions}</h1>; 
+      case "AnswerText":   
+        return <h1 style={{ color: "black" }}>{answers}</h1>; 
+      default:
+        console.log("No category selected");
+        return null; 
+    }
+  };
+
   return (
     <section className="container" style={{ display: "flex", alignItems:"center", justifyContent:"center", marginBottom:40 }} >
     
@@ -167,7 +192,12 @@ const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = u
             <aside style={thumbsContainer}>
                 {thumbs}
             </aside>
-            <div><h1 style={{color:"black"}}>{textTranscript}</h1></div>
+            <div>
+            {
+              handleTextDisplay(category, textTranscript, questions, answers)
+
+              }
+            </div>
         </div>
 
     </section>

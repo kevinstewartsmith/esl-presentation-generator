@@ -72,28 +72,21 @@ const updateGistReadingTimeLimit = (event, newTimeLimit) => {
 
       {showPresentation ? <PresentationDisplay presData={presData} /> : 
       <div style={{ backgroundColor: "white", height: "100vh", width: "100vw"}}>
-        {/* <Box sx={{ width: 300 }} style={{marginTop: 50, borderRadius:10, borderColor: "gray" }}>
-
-            <h1>Page</h1>
-            <Slider defaultValue={2} aria-label="Default" valueLabelDisplay="auto" min={1} max={20} onChange={updateGistPage} />
-            <h1>Time Limit</h1>
-            <Slider defaultValue={2} aria-label="Default" valueLabelDisplay="auto" min={1} max={20} onChange={updateGistReadingTimeLimit} />
-            <h1>{presData.gistReading.timeLimit}</h1>
-            <button onClick={() => setShowPresentation(true)}>Start Presentation</button>
-        </Box> */}
+        
         <div style={{
             backgroundColor: "white",
-            height: "15vh",
+            height: "10vh",
             display: "flex",
             alignItems: "center",
-            marginLeft: 20,
+            
+            marginLeft: 0,
         }}>
             <h1 style={{ 
                 color:"orange",
                 fontSize: 40,
                 marginTop: 0,
                 marginLeft: 20,
-                marginBottom: 20,
+                marginBottom: 0,
             }}>Reading Exercise Generator</h1>
          </div>
         {/* <ReadingContent />
@@ -102,7 +95,12 @@ const updateGistReadingTimeLimit = (event, newTimeLimit) => {
             backgroundColor: "white",
             height: "80vh",
             display: "flex",
+            
             justifyContent: "center",
+            alignItems: "center",
+            
+            borderColor: 'transparent',
+            borderWidth: 3,
            
         }}>
         {sections[sectionNumber]}

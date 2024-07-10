@@ -5,9 +5,9 @@ const ReadingContent = () => {
     <div>
         
         <div style={{ paddingTop:40}}>
-            <AddTextBook />
-            <AddTextBook />
-            <AddTextBook />
+            <AddTextBook category={"BookText"} />
+            <AddTextBook category={"QuestionText"}/>
+            <AddTextBook category={"AnswerText"}/>
 
         </div>
     </div>

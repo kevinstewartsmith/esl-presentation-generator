@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import './globals.css'
+import './styles/globals.css'
 import { AudioTextProvider } from './contexts/AudioTextContext'
 import { PresentationContextProvider } from './contexts/PresentationContext'
 

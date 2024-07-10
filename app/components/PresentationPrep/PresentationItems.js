@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { Grid } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox';
-import '../../globals.css';
+// import '../../globals.css';
 
 const PresentationItems = ({slide, index}) => {
     const [checked, setChecked] = useState(true);

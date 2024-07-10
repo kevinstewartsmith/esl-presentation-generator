@@ -8,6 +8,7 @@ import PreviewVocabSlides from '@app/components/PresentationPrep/PreviewVocabSli
 const PreReadingVocabSlides = () => {
     const words = ['Carpet', 'Dolphin', 'Rubbish', 'Sequence']
     const [selectedVocabNum, setSelectedVocabNum] = useState(0)
+    const [selectedVocabulary, setSelectedVocabulary] = useState([]);
 
     const { textTranscript, vocabulary, updateVocabulary, loadVocabulary } = useContext(PresentationContext);
 
@@ -107,15 +108,25 @@ const PreReadingVocabSlides = () => {
     //rerender when checkmark is clicked
     useEffect(() => {
         console.log("Vocabulary updated:", vocabulary);
-        let selectedWords = 0;
-        vocabulary && vocabulary.forEach((word, index) => {
-            if (word.selected) {
-                selectedWords++;
-            }   
-        })
-        setSelectedVocabNum(selectedWords)
+        // let selectedWords = 0;
+        // vocabulary && vocabulary.forEach((word, index) => {
+        //     if (word.selected) {
+        //         selectedWords++;
+        //     }   
+        // })
+       // setSelectedVocabNum(selectedWords)
 
-    }, [checkMarkClicked]);
+        if (vocabulary) {
+            const filtered = vocabulary.filter(item => item.selected);
+            setSelectedVocabulary(filtered);
+            setSelectedVocabNum(filtered.length)
+          }
+      
+          
+          console.log("use effect triggered");
+          console.log(selectedVocabulary);
+
+    }, [vocabulary]);
 
   return (
     <div>
@@ -145,7 +156,7 @@ const PreReadingVocabSlides = () => {
                     <div style={{width: "80%", height: "80%"}}>
                         {/* <div style={{width:"100%", paddingBottom:"60%", borderColor: "black", borderWidth:3,  marginTop:40 }}>{vocabulary ? vocabulary[0].selected ? <img src={vocabulary[0].img_url} style={{ width: 200 }} /> : null : null}</div> */}
                         {/* <div style={{width:"100%", paddingBottom:"60%", borderColor: "black", borderWidth:3,  marginTop:40 }}>j</div> */}
-                        <PreviewVocabSlides vocabulary={vocabulary} selectedVocabNum={selectedVocabNum} />
+                        <PreviewVocabSlides vocabulary={vocabulary} selectedVocabNum={selectedVocabNum} selectedVocabulary={selectedVocabulary} />
                         
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 60 }}>
                             <button style={{ width: 200, height: 50, backgroundColor: "lightblue", color: "white", fontSize: 24, borderRadius: 10 }} onClick={getVocabulary} >Get Vocabulary</button>
