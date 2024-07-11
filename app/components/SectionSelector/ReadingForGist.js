@@ -17,23 +17,9 @@ export const ReadingForGist = ({index}) => {
 
   return (
     <>
-        <Grid item sm={12} lg={12}  key={index} style={{ 
-            borderColor: 'lightgray', 
-            borderWidth: 1, 
-            paddingBottom: 40, 
-            paddingTop: 40,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            // height: "100%",
-            padding: 0,
-            backgroundColor: "white",
-            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.40)",
-            marginBottom: 40,
-        }}>
+        <Grid item sm={12} lg={12}  key={index} marginBottom={4} className='reading-lesson-section'>
                             
-            <Grid container direction={"row"}  spacing={0} margin={2} padding={0} style={{ backgroundColor: "white", paddingLeft:10 }} >
+            <Grid container direction={"row"}>
                 <Grid item xs={12} sm={12} >
                     <CheckBoxAndLabel size={"medium"} label={"Reading For Gist"}  checked={gistReadingChecked} onChange={handleCheckBoxChange} /> 
                 </Grid> 
@@ -41,7 +27,7 @@ export const ReadingForGist = ({index}) => {
                                 
                 { gistReadingChecked ?
                 <Grid item xs={12} sm={12} style={{ display:'flex', alignItems:"center", justifyContent:"center", paddingTop: 40 }}>
-                    <Grid container direction={"row"}  spacing={0} style={{ backgroundColor: "white", paddingLeft:60, paddingBottom:20 }} >
+                    <Grid container direction={"row"} style={{ backgroundColor: "white", paddingLeft:60, paddingBottom:20 }} >
                         <Grid item xs={12} sm={6} paddingBottom={4}  >
                             <Grid container direction={"row"}  spacing={2} padding={0} style={{ backgroundColor: "white", paddingLeft:10 }} > 
                                 <Grid item xs={12} sm={12}  >

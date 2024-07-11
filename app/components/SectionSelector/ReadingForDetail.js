@@ -15,21 +15,7 @@ const ReadingForDetail = () => {
 
   return (
     <>
-        <Grid item sm={12} lg={12}  style={{ 
-            borderColor: 'lightgray', 
-            borderWidth: 1, 
-            marginBottom: 40, 
-            // height: 100,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            padding: 0,
-            backgroundColor: "white",
-            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.40)",
-            paddingTop:40,
-            paddingBottom:40,
-        }}>
+        <Grid item sm={12} lg={12} className='reading-lesson-section'>
                             
             <Grid container direction={"row"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:10 }} >
                 <Grid item xs={12} sm={12} >
@@ -38,12 +24,11 @@ const ReadingForDetail = () => {
 
                                 
                 { detailReadingChecked ?
-                <Grid item xs={12} sm={12} style={{ display:'flex', alignItems:"center", justifyContent:"center" }}>
-                    <Grid container direction={"row"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:10 }} >
-                        
+                <Grid item xs={12} sm={12} style={{ display:'flex', alignItems:"center", justifyContent:"center", paddingTop: 40 }}>
+                    <Grid container direction={"row"} style={{ backgroundColor: "white", paddingLeft: 60, paddingBottom: 20 }} >
                         <Grid item xs={12} sm={12}  >
-                        <Grid container direction={"column"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:0 }} > 
-                            <Grid item xs={12} sm={12}  >
+                            <Grid container direction={"column"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:0 }} > 
+                                <Grid item xs={12} sm={12}  >
                                     <CheckBoxAndLabel label={"Exercises"} size={"small"} />
                                 </Grid>
                                 <Grid item xs={12} sm={12} style={{ marginLeft: "10%", marginRight: "60%" }} >

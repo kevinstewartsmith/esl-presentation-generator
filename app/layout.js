@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import './styles/globals.css'
+import '@styles/globals.css'
 import { AudioTextProvider } from './contexts/AudioTextContext'
 import { PresentationContextProvider } from './contexts/PresentationContext'
 
@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" >
       <AudioTextProvider>
       <PresentationContextProvider>
         <body className={inter.className}>{children}</body>
