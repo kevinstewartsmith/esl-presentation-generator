@@ -9,6 +9,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+
 
 export default function InputWithIcon({label, input, size, iconFirst}) {
   function setInput(){
@@ -21,6 +23,9 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
         break;
       case "page":
         return <PlagiarismIcon sx={{ color: '#333', mr: 1, my: 0.5 }}/>
+        break;
+      case "exercise":
+        return <FitnessCenterIcon sx={{ color: '#333', mr: 1, my: 0.5 }}/>
         break;
       default:
         return <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
