@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Grid } from '@mui/material'
 import CheckBoxAndLabel from '../PresentationPrep/AddTextButtons/CheckBoxAndLabel'
 import InputWithIcon from '../PresentationPrep/AddTextButtons/InputWithIcon'
 import TimeLimitSlider from '../PresentationPrep/AddTextButtons/TimeLimitSlider'
 import DiscussionForm from '../PresentationPrep/DiscussionForm'
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { PresentationContext } from '@app/contexts/PresentationContext'
 
 const ReadingForDetail = () => {
     const [detailReadingChecked, setDetailReadingChecked] = useState(true)
+    const { answers, textTranscript } = useContext(PresentationContext)
     
     const handleCheckBoxChange = () => {
         setDetailReadingChecked(!detailReadingChecked);
@@ -24,7 +25,7 @@ const ReadingForDetail = () => {
 
                                 
                 { detailReadingChecked ?
-                <Grid item xs={12} sm={12} style={{ display:'flex', alignItems:"center", justifyContent:"center", paddingTop: 40 }}>
+                <Grid item xs={12} sm={12} className='section-details-container' >
                     <Grid container direction={"row"} style={{ backgroundColor: "white", paddingLeft: 60, paddingBottom: 20 }} >
                         <Grid item xs={12} sm={12}  >
                             <Grid container direction={"column"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:0 }} > 
@@ -37,26 +38,25 @@ const ReadingForDetail = () => {
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sm={12}  >
-                            <CheckBoxAndLabel label={"Answers"} size={"small"} />  
+                            <Grid container direction={"column"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:0 }} > 
+                                <Grid item xs={12} sm={12}  >
+                                    <CheckBoxAndLabel label={"Answers"} size={"small"} /> 
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                { textTranscript ? <h1 style={{color:"black"}}>{textTranscript}</h1> : null}
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item xs={12} sm={12} style={{ color: "black" }} >
                             {/* <CheckBoxAndLabel label={"Reading Time Limit"}  /> */}
-                            <TimeLimitSlider label={"Reading Time Limit"} />
+                            <TimeLimitSlider label={"Reading Time Limit"}  defaultValue={6}/>
                         </Grid>
                         <Grid item xs={12} sm={12} >
-                            <Grid container direction={"row"}  spacing={0} padding={0} style={{ backgroundColor: "white", paddingLeft:10 }} >
-                                <Grid item xs={12} sm={12}  >
-                                    <CheckBoxAndLabel label={"Partner Check Discussion"} size={"small"} />
-                                </Grid>
-                                <Grid item xs={12} sm={12}  >
-                                   <DiscussionForm />
-                                </Grid>
-                            </Grid>
-                            
+                            <DiscussionForm />
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4}  >
-                            <TimeLimitSlider label={"Discussion Time Limit"} />
-                         </Grid>
+                            <TimeLimitSlider label={"Discussion Time Limit"} defaultValue={2}/>
+                        </Grid>
                     </Grid>
                 </Grid> : null }                   
             </Grid>

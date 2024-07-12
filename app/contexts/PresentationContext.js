@@ -7,12 +7,16 @@ const PresentationContext = createContext();
 const PresentationContextProvider = ({ children }) => {
 
     const [showPresentation, setShowPresentation] = useState(false);
-
+    
+    // Presentation Details
     const [textTranscript, setTextTranscript] = useState('');
     const [questions, setQuestions] = useState();
     const [answers, setAnswers] = useState();
     const [vocabulary, setVocabulary] = useState();
-  
+    const [gistReadingQuestions, setGistReadingQuestions] = useState("");
+    const [gistReadingAnswers, setGistReadingAnswers] = useState("");
+    const [gistReadingPage, setGistReadingPage] = useState("");
+    const [textbookExercises, setTextbookExercises] = useState();
     
     function updateTextTranscript(newTextTranscript) {
         setTextTranscript(newTextTranscript);
@@ -43,6 +47,25 @@ const PresentationContextProvider = ({ children }) => {
         setVocabulary(words);
     }
 
+    function updateGistReadingQuestions(newGistReadingQuestions) {
+        setGistReadingQuestions(newGistReadingQuestions);
+        console.log(gistReadingQuestions);
+    }
+
+    function updateGistReadingAnswers(newGistReadingAnswers) {
+        setGistReadingAnswers(newGistReadingAnswers);
+        console.log(gistReadingAnswers);
+    }
+
+    function updateGistReadingPage(newGistReadingPage) {
+        setGistReadingPage(newGistReadingPage);
+        console.log(gistReadingPage)
+    }
+
+    function updateTextbookExercises(newTextbookExercises) {
+        setTextbookExercises(newTextbookExercises);
+    }
+
  
     
     
@@ -60,7 +83,15 @@ const PresentationContextProvider = ({ children }) => {
             updateQuestions, 
             updateAnswers,
             updateVocabulary,
-            loadVocabulary
+            loadVocabulary,
+            gistReadingQuestions,
+            gistReadingAnswers,
+            updateGistReadingQuestions,
+            updateGistReadingAnswers,
+            gistReadingPage,
+            updateGistReadingPage,
+            textbookExercises,
+            updateTextbookExercises
         }}>
             {children}
         </PresentationContext.Provider>

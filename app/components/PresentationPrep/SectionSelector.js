@@ -12,7 +12,7 @@ const SectionSelector = () => {
     const sectionList = ["Pre Reading Vocabulary", "Pre Reading Game", "Reading for Gist", "Reading for Detail"]
     const sections = [<PreReadingVocabulary />, <PreReadingGame /> ,<ReadingForGist />, <ReadingForDetail />]
     return (
-        <Grid container className="presentation-grid-container" direction={"row"}  spacing={0} padding={4} style={{  borderColor:"black", borderWidth:1, overflowX: "hidden", borderRadius:10, width: "60%", height: "90%" }}>
+        <Grid container className="presentation-grid-container" direction={"row"}>
             { sections.map((section, index) => (
                 <React.Fragment key={index}>{section}</React.Fragment>
             ))}

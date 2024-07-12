@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -10,9 +10,21 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-
+import { PresentationContext } from '@app/contexts/PresentationContext';
 
 export default function InputWithIcon({label, input, size, iconFirst}) {
+  const { 
+    gistReadingQuestions, 
+    gistReadingAnswers, 
+    updateGistReadingQuestions, 
+    updateGistReadingAnswers,
+    gistReadingPage,
+    updateGistReadingPage,
+    textbookExercises,
+    updateTextbookExercises
+  } = useContext(PresentationContext);
+
+
   function setInput(){
     switch (input) {
       case "question":
@@ -32,13 +44,53 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
     }
   }
 
+  
+  //const [inputValue, setInputValue] = useState("bitch ass");
+
+  
+
+  const handleChange = (event) => {
+    switch (input) {
+      case "question":
+        console.log("change question");
+        updateGistReadingQuestions(event.target.value);
+        break;
+      case "answer":
+        updateGistReadingAnswers(event.target.value);
+        console.log("change answer");
+        break;
+      case "page":
+        updateGistReadingPage(event.target.value);
+        break;
+      case "exercise":
+        updateTextbookExercises(event.target.value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const getValue = () => {
+    switch (input) {
+      case "question":
+        return gistReadingQuestions;
+      case "answer":
+        return gistReadingAnswers;
+      case "page":
+        return gistReadingPage;
+      case "exercise":
+        return textbookExercises;
+      default:
+        return '';
+    }
+  }
 
   return (
     <Box sx={{ '& > :not(style)': { m: 1 } }}>
       <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
         {/* <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} /> */}
         {iconFirst ? setInput() : null}
-        <TextField id="input-with-sx" label={label} variant="standard" style={{ width: "90%" }} />
+        <TextField id="input-with-sx" label={label} variant="standard" style={{ width: "90%", color:"black" }} value={getValue()} onChange={handleChange} />
         { !iconFirst ? setInput() : null }
       </Box>
     </Box>

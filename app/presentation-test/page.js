@@ -12,6 +12,9 @@ import ReadingContent from '@app/components/PresentationPrep/ReadingContent';
 import SectionSelector from '@app/components/PresentationPrep/SectionSelector';
 import PreReadingVocabSlides from '@app/components/PresentationPrep/PreReadingVocabSlides';
 import PreReadingGames from '@app/components/PresentationPrep/PreReadingGames';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 
 const PresentationTest = () => {
 
@@ -74,32 +77,32 @@ const updateGistReadingTimeLimit = (event, newTimeLimit) => {
       <div style={{ backgroundColor: "white", height: "100vh", width: "100vw"}}>
         
         <div style={{
-            backgroundColor: "white",
-            height: "10vh",
+            backgroundColor: "#3A3EFD",
+            height: 50,
             display: "flex",
             alignItems: "center",
             
             marginLeft: 0,
         }}>
             <h1 style={{ 
-                color:"orange",
-                fontSize: 40,
+                color:"white",
+                
                 marginTop: 0,
                 marginLeft: 20,
                 marginBottom: 0,
-            }}>Reading Exercise Generator</h1>
+            }}>{"Reading "}</h1><NetworkCheckIcon style={{ marginLeft:3, marginRight: 3}}/> <h1>{" Exercise Generator"}</h1>
          </div>
         {/* <ReadingContent />
         <SectionSelector /> */}
         <div style={{
             backgroundColor: "white",
-            height: "80vh",
+            height: "100vh - 50px",
             display: "flex",
-            
+            top: 50,
             justifyContent: "center",
             alignItems: "center",
             
-            borderColor: 'transparent',
+            borderColor: 'yellow',
             borderWidth: 3,
            
         }}>
@@ -107,24 +110,12 @@ const updateGistReadingTimeLimit = (event, newTimeLimit) => {
         </div>
         <button 
             onClick={() => setSectionNumber(sectionNumber + 1)} 
-            style={{ 
-                    color:"orange",
-                    position: "fixed",
-                    zIndex: 2,
-                    right: 40,
-                    bottom: 40,
-                    fontSize: 40,
-            }}>{"Next >"}</button>
+            className='flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left'>
+            <ArrowForwardIosIcon /></button>
               <button
                 onClick={() => setSectionNumber(sectionNumber - 1)} 
-                style={{ 
-                    color:"orange",
-                    position: "fixed",
-                    zIndex: 2,
-                    left: 40,
-                    bottom: 40,
-                    fontSize: 40,
-            }}>{"< Prev"}</button>
+                className='flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right'
+            ><ArrowBackIosIcon sx={{}} /></button>
        </div>
       }
      

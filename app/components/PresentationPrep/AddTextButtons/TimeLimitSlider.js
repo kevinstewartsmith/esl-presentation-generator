@@ -4,9 +4,9 @@ import CheckBoxAndLabel from './CheckBoxAndLabel'
 import DiscreteSlider from './DiscreteSlider'
 
 
-const TimeLimitSlider = ({label}) => {
+const TimeLimitSlider = ({label, defaultValue}) => {
 
-    const [sliderValue, setSliderValue] = useState(3);
+    const [sliderValue, setSliderValue] = useState(defaultValue ? defaultValue : 3);
 
     const handleSliderChange = (event, newValue) => {
         setSliderValue(newValue);
@@ -19,7 +19,7 @@ const TimeLimitSlider = ({label}) => {
             <CheckBoxAndLabel label={`${label} - ${sliderValue} minutes`} size={"small"} />
         </Grid> 
         <Grid item xs={12} sm={12} style={{ marginLeft: "10%", marginRight: "10%" }} >
-            <DiscreteSlider min={0} max={10} defaultValue={3} onChange={handleSliderChange}   />
+            <DiscreteSlider min={0} max={10} defaultValue={defaultValue ? defaultValue : 3} onChange={handleSliderChange}   />
         </Grid>       
     </Grid>
   )

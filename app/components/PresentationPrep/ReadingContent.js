@@ -8,7 +8,6 @@ const ReadingContent = () => {
             <AddTextBook category={"BookText"} />
             <AddTextBook category={"QuestionText"}/>
             <AddTextBook category={"AnswerText"}/>
-
         </div>
     </div>
   )
