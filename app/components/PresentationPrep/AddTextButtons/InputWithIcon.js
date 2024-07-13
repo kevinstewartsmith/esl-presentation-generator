@@ -12,7 +12,7 @@ import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { PresentationContext } from '@app/contexts/PresentationContext';
 
-export default function InputWithIcon({label, input, size, iconFirst}) {
+export default function InputWithIcon({label, input, size, iconFirst, discussionLine, id, index }) {
   const { 
     gistReadingQuestions, 
     gistReadingAnswers, 
@@ -21,7 +21,12 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
     gistReadingPage,
     updateGistReadingPage,
     textbookExercises,
-    updateTextbookExercises
+    updateTextbookExercises,
+    discussionObjects,
+    updateDiscussionObjects,
+    updateDiscussionText,
+    discussionForms
+    
   } = useContext(PresentationContext);
 
 
@@ -44,11 +49,6 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
     }
   }
 
-  
-  //const [inputValue, setInputValue] = useState("bitch ass");
-
-  
-
   const handleChange = (event) => {
     switch (input) {
       case "question":
@@ -65,6 +65,11 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
       case "exercise":
         updateTextbookExercises(event.target.value);
         break;
+      case "discussion":
+        console.log(event.target.value);
+        updateDiscussionText(id, index, event.target.value);
+        console.log(discussionForms);
+        break;
       default:
         break;
     }
@@ -80,6 +85,9 @@ export default function InputWithIcon({label, input, size, iconFirst}) {
         return gistReadingPage;
       case "exercise":
         return textbookExercises;
+      case "discussion":
+        //return discussionObjects.id.discussionTexts[index];
+        return discussionForms[id]?.discussionTexts[index] || '';
       default:
         return '';
     }

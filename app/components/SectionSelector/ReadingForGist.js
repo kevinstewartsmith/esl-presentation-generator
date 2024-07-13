@@ -55,7 +55,7 @@ export const ReadingForGist = ({index}) => {
                             <InputWithIcon iconFirst={true} label={"Answer"} input={"answer"} />     
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} > 
-                           <DiscussionForm />
+                           <DiscussionForm  id={"gistQuestion"}/>
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} >
                             <TimeLimitSlider label={"Discussion Time Limit"} />

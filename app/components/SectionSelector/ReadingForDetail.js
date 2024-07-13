@@ -52,7 +52,7 @@ const ReadingForDetail = () => {
                             <TimeLimitSlider label={"Reading Time Limit"}  defaultValue={6}/>
                         </Grid>
                         <Grid item xs={12} sm={12} >
-                            <DiscussionForm />
+                            <DiscussionForm id={"detailAnswers"}/>
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4}  >
                             <TimeLimitSlider label={"Discussion Time Limit"} defaultValue={2}/>
