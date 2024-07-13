@@ -49,13 +49,25 @@ const ReadingForDetail = () => {
                         </Grid>
                         <Grid item xs={12} sm={12} style={{ color: "black" }} >
                             {/* <CheckBoxAndLabel label={"Reading Time Limit"}  /> */}
-                            <TimeLimitSlider label={"Reading Time Limit"}  defaultValue={6}/>
+                            <TimeLimitSlider 
+                                label={"Reading Time Limit"}  
+                                defaultValue={6} 
+                                id={"detailReadingTimeLimit"}
+                                min={0}
+                                max={10}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={12} >
-                            <DiscussionForm id={"detailAnswers"}/>
+                            <DiscussionForm id={"detailAnswersDiscussion"}/>
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4}  >
-                            <TimeLimitSlider label={"Discussion Time Limit"} defaultValue={2}/>
+                            <TimeLimitSlider 
+                                label={"Discussion Time Limit"} 
+                                defaultValue={2} 
+                                id={"detailReadingDiscussionTimeLimit"}
+                                min={0}
+                                max={10}
+                            />
                         </Grid>
                     </Grid>
                 </Grid> : null }                   

@@ -46,7 +46,13 @@ export const ReadingForGist = ({index}) => {
                             </Grid>    
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} >
-                            <TimeLimitSlider label={"Reading Time Limit"} />
+                            <TimeLimitSlider 
+                                label={"Reading Time Limit"} 
+                                defaultValue={2} 
+                                id={"gistReadingTime"}
+                                min={0}
+                                max={10} 
+                                />
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} >
                             <InputWithIcon iconFirst={true} label={"Question"} input={"question"} size={"wide"} />
@@ -55,10 +61,16 @@ export const ReadingForGist = ({index}) => {
                             <InputWithIcon iconFirst={true} label={"Answer"} input={"answer"} />     
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} > 
-                           <DiscussionForm  id={"gistQuestion"}/>
+                           <DiscussionForm  id={"gistQuestionDiscussion"}/>
                         </Grid>
                         <Grid item xs={12} sm={12} paddingBottom={4} >
-                            <TimeLimitSlider label={"Discussion Time Limit"} />
+                            <TimeLimitSlider 
+                                label={"Discussion Time Limit"} 
+                                defaultValue={2} 
+                                id={"gistDiscussionTime"}
+                                min={0}
+                                max={10}
+                            />
                          </Grid>
                     </Grid>
                 </Grid> : null }                   

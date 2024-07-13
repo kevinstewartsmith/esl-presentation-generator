@@ -22,8 +22,8 @@ export default function InputWithIcon({label, input, size, iconFirst, discussion
     updateGistReadingPage,
     textbookExercises,
     updateTextbookExercises,
-    discussionObjects,
-    updateDiscussionObjects,
+    // discussionObjects,
+    // updateDiscussionObjects,
     updateDiscussionText,
     discussionForms
     

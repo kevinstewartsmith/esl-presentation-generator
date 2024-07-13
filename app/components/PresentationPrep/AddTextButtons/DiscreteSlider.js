@@ -2,16 +2,17 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
+
 function valuetext(value) {
-  return `${value}°C`;
+  return `${value} minutes`;
 }
 
-export default function DiscreteSlider({min, max, defaultValue, onChange}) {
+export default function DiscreteSlider({minuteValue, min, max, defaultValue, onChange, id}) {
   return (
     <Box sx={{ width: "100%" }}>
       <Slider
-        aria-label="Temperature"
-        defaultValue={defaultValue}
+        aria-label="Minutes"
+        defaultValue={minuteValue}
         getAriaValueText={valuetext}
         valueLabelDisplay="auto"
         shiftStep={30}
@@ -19,7 +20,7 @@ export default function DiscreteSlider({min, max, defaultValue, onChange}) {
         marks
         min={min}
         max={max}
-        
+        //value={4}
         onChangeCommitted={onChange}
       />
       {/* <Slider defaultValue={defaultValue} step={1} marks min={min} max={max} disabled /> */}

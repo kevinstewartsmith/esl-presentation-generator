@@ -21,6 +21,8 @@ const PresentationContextProvider = ({ children }) => {
 
     // Discussion forms state
     const [discussionForms, setDiscussionForms] = useState({});
+    const [sliders, setSliders] = useState({});
+
     console.log(typeof discussionForms);
     console.log(discussionForms);
     
@@ -78,22 +80,6 @@ const PresentationContextProvider = ({ children }) => {
         setDiscussionObjects(newDiscussionObjects);
     }
 
-    
-    // function addDiscussionLine(id) {
-    //     setDiscussionForms(prev => {
-    //         const form = prev[id] || { numberOfDiscussionLines: 0, discussionTexts: [] };
-    //         return {
-    //             ...prev,
-    //             [id]: {
-    //                 ...form,
-    //                 numberOfDiscussionLines: form.numberOfDiscussionLines + 1,
-    //                 discussionTexts: [...form.discussionTexts, '']
-    //             }
-    //         };
-    //     });
-    //     console.log(discussionForms);
-    // }
-
     const addDiscussionLine = (id) => {
         setDiscussionForms(prev => {
             const form = prev[id] || { numberOfDiscussionLines: 0, discussionTexts: [] };
@@ -123,24 +109,34 @@ const PresentationContextProvider = ({ children }) => {
             };
         });
     }
+
+    function addSliderStateMemory(id, min, max, defaultValue, label) {
+        setSliders(prev => {
+            const slider = prev[id] || { min: min, max: max, defaultValue: defaultValue, label: label, value: defaultValue };
+            return {
+                ...prev,
+                [id]:  slider 
+            };
+
+        });
+        console.log("sliders CONTEXT: " + JSON.stringify(sliders));  
+    }
+//this is wrong
+    function updateSliderStateMemory(id, newValue) {
+        setSliders(prev => {
+            const slider = prev[id] || { min: 0, max: 10, defaultValue: 3, label: "Time Limit" };
+            return {
+                ...prev,
+                [id]: { ...slider, value: newValue }
+            };
+        });
+
+        console.log(JSON.stringify(sliders));
+        
+    }
+
     
 
-
-
-    // const updateDiscussionText = (id, index, text) => {
-    //     setDiscussionForms(prev => {
-    //         const form = prev[id] || { discussionTexts: [] };
-    //         const newTexts = [...form.discussionTexts];
-    //         newTexts[index] = text;
-    //         return {
-    //             ...prev,
-    //             [id]: {
-    //                 ...form,
-    //                 discussionTexts: newTexts
-    //             }
-    //         };
-    //     });
-    // };
     
     return (
         <PresentationContext.Provider value={{ 
@@ -164,11 +160,14 @@ const PresentationContextProvider = ({ children }) => {
             updateGistReadingPage,
             textbookExercises,
             updateTextbookExercises,
-            discussionObjects,
-            updateDiscussionObjects,
+            // discussionObjects,
+            // updateDiscussionObjects,
             discussionForms,
             addDiscussionLine,
-            updateDiscussionText
+            updateDiscussionText,
+            addSliderStateMemory, 
+            updateSliderStateMemory,
+            sliders,
         }}>
             {children}
         </PresentationContext.Provider>
