@@ -21,10 +21,16 @@ const PresentationContextProvider = ({ children }) => {
 
     // Discussion forms state
     const [discussionForms, setDiscussionForms] = useState({});
+    
+    // Slider state
     const [sliders, setSliders] = useState({});
+    
+    //Section and subsection inclusion state
+    //const [included, setIncluded] = useState({"id": true});
+    const [included, setIncluded] = useState({});
 
-    console.log(typeof discussionForms);
-    console.log(discussionForms);
+    //console.log(typeof discussionForms);
+    //console.log(discussionForms);
     
     function updateTextTranscript(newTextTranscript) {
         setTextTranscript(newTextTranscript);
@@ -135,6 +141,34 @@ const PresentationContextProvider = ({ children }) => {
         
     }
 
+    // function updateIncludedSection(id) {
+    //     console.log("updateIncludedSection: " + id);
+    //     setIncluded(prev => {
+    //         const newIncluded = { ...prev };
+    //         newIncluded[id] = !prev[id];
+    //         return newIncluded;
+    //     });
+    //     console.log(included);
+    // }
+    
+
+    
+    
+
+    function updateIncludedSection(id) {
+        console.log("updateIncludedSectionCONTEXT: " + id);
+        //check if the id is already in the included object
+        //if it is, switch the boolean value
+        //if it is not, add it with a value of true
+        setIncluded(prev => {
+            const newIncluded = { ...prev };
+            newIncluded[id] = !prev[id];
+            return newIncluded;
+        }
+
+        );
+
+    }
     
 
     
@@ -168,6 +202,8 @@ const PresentationContextProvider = ({ children }) => {
             addSliderStateMemory, 
             updateSliderStateMemory,
             sliders,
+            included,
+            updateIncludedSection,
         }}>
             {children}
         </PresentationContext.Provider>

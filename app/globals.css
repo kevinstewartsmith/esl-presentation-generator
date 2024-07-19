@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  /* color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom right,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  ); */
+  background: rgb(158, 154, 154);
+  color: rgb(var(--foreground-rgb));
+}
+input {
+  background: rgb(255,255,255);
+  color: rgb(0,0,0);
+}
+
+button {
+  border-radius: 5px;
+  border-color: white;
+  border-width: 1px;
+  margin: 5px;
+  padding: 2px;
+}
+
+.add-text-button {
+  background-color: rgb(3, 56, 74);
+  border-radius: 5px;
+  /* border-color: white; */
+  border-width: 5px;
+  border-color: green;
+  margin: 5px;
+  padding: 2px;
+  color: red;
+}
+
+.presentation {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  
+}
+
+.presentation-grid-container {
+  width: 80vw; 
+  height: 100%; 
+  border-width: 1px; 
+  border-color: "blue";
+  scroll-behavior: auto;
+  margin-top: 50px;
+}
+
+.presentation-item {
+  border-color: red;
+  border-width: 1px;
+  border-radius: 15px;
+  background-color: lightcoral;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  margin: 10px;
+  
+}

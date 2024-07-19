@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { PresentationContext } from '@app/contexts/PresentationContext'
 import { PhotoSizeSelectLargeTwoTone } from '@mui/icons-material';
 
-const DiscussionForm = ({id}) => {
+const DiscussionForm = ({id, includedId}) => {
     //const [numberOfDiscussionLines, setNumberOfDiscussionLines] = useState(2)
     const { discussionForms, addDiscussionLine, updateDiscussionText  }= useContext(PresentationContext)
     console.log("DiscussionForm render_discussionForms: " + discussionForms);
@@ -24,7 +24,7 @@ const DiscussionForm = ({id}) => {
 
     <Grid container direction={"row"}  spacing={0} padding={0}  >
         <Grid item xs={12} sm={12}  >
-            <CheckBoxAndLabel label={"Partner Check Discussion"} size={"small"} />
+            <CheckBoxAndLabel label={"Partner Check Discussion"} size={"small"} includedId={includedId}/>
         </Grid>
         <Grid item xs={12} sm={12} className='flex justify-center items-center'>
             <div className='border border-gray-300 rounded-lg m-4 relative p-4 w-4/5' >

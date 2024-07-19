@@ -1,22 +1,30 @@
-import React, { useContext, useState } from 'react';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import FeedbackIcon from '@mui/icons-material/Feedback';
-import PlagiarismIcon from '@mui/icons-material/Plagiarism';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import { PresentationContext } from '@app/contexts/PresentationContext';
+import React, { useContext, useState } from "react";
+import Box from "@mui/material/Box";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import PlagiarismIcon from "@mui/icons-material/Plagiarism";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import { PresentationContext } from "@app/contexts/PresentationContext";
 
-export default function InputWithIcon({label, input, size, iconFirst, discussionLine, id, index }) {
-  const { 
-    gistReadingQuestions, 
-    gistReadingAnswers, 
-    updateGistReadingQuestions, 
+export default function InputWithIcon({
+  label,
+  input,
+  size,
+  iconFirst,
+  discussionLine,
+  id,
+  index,
+}) {
+  const {
+    gistReadingQuestions,
+    gistReadingAnswers,
+    updateGistReadingQuestions,
     updateGistReadingAnswers,
     gistReadingPage,
     updateGistReadingPage,
@@ -25,27 +33,27 @@ export default function InputWithIcon({label, input, size, iconFirst, discussion
     // discussionObjects,
     // updateDiscussionObjects,
     updateDiscussionText,
-    discussionForms
-    
+    discussionForms,
   } = useContext(PresentationContext);
 
-
-  function setInput(){
+  function setInput() {
     switch (input) {
       case "question":
-        return <HelpOutlineIcon  sx={{ color: '#333', mr: 1, my: 0.5 }}/>
+        return <HelpOutlineIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
         break;
       case "answer":
-        return <FeedbackIcon sx={{ color: '#333', mr: 1, my: 0.5 }}/>
+        return <FeedbackIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
         break;
       case "page":
-        return <PlagiarismIcon sx={{ color: '#333', mr: 1, my: 0.5 }}/>
+        return <PlagiarismIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
         break;
       case "exercise":
-        return <FitnessCenterIcon sx={{ color: '#333', mr: 1, my: 0.5 }}/>
+        return <FitnessCenterIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
         break;
       default:
-        return <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+        return (
+          <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+        );
     }
   }
 
@@ -87,19 +95,26 @@ export default function InputWithIcon({label, input, size, iconFirst, discussion
         return textbookExercises;
       case "discussion":
         //return discussionObjects.id.discussionTexts[index];
-        return discussionForms[id]?.discussionTexts[index] || '';
+        return discussionForms[id]?.discussionTexts[index] || "";
       default:
-        return '';
+        return "";
     }
-  }
+  };
 
   return (
-    <Box sx={{ '& > :not(style)': { m: 1 } }}>
-      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+    <Box sx={{ "& > :not(style)": { m: 1 } }}>
+      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
         {/* <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} /> */}
         {iconFirst ? setInput() : null}
-        <TextField id="input-with-sx" label={label} variant="standard" style={{ width: "90%", color:"black" }} value={getValue()} onChange={handleChange} />
-        { !iconFirst ? setInput() : null }
+        <TextField
+          id="input-with-sx"
+          label={label}
+          variant="standard"
+          style={{ width: "90%", color: "black" }}
+          value={getValue()}
+          onChange={handleChange}
+        />
+        {!iconFirst ? setInput() : null}
       </Box>
     </Box>
   );

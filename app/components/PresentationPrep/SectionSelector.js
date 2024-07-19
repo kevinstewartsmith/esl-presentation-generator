@@ -10,7 +10,11 @@ import { Fragment } from 'react'
 const SectionSelector = () => {
     const [gistReadingChecked, setGistReadingChecked] = useState(true)
     const sectionList = ["Pre Reading Vocabulary", "Pre Reading Game", "Reading for Gist", "Reading for Detail"]
-    const sections = [<PreReadingVocabulary />, <PreReadingGame /> ,<ReadingForGist />, <ReadingForDetail />]
+    const sections = [
+        <PreReadingVocabulary includedId={"includePreReadingVocabulary"} />, 
+        <PreReadingGame includedId={"includePreReadingGame"} /> ,
+        <ReadingForGist includedId={"includeReadingForGistSection"} />, 
+        <ReadingForDetail includedId={"includeReadingForDetailSection"} />]
     return (
         <Grid container className="presentation-grid-container" direction={"row"}>
             { sections.map((section, index) => (
