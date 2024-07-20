@@ -8,11 +8,22 @@ import "reveal.js/dist/theme/black.css";
 //import "reveal.js/plugin/markdown/markdown.css";
 import PreReadingVocabularySection from "./FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstructions";
+import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
+import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
 
 const PresentationDisplay = ({ presData }) => {
   const revealRef = useRef(null);
   console.log(presData);
-  const { vocabulary, included } = useContext(PresentationContext);
+  const {
+    vocabulary,
+    included,
+    gistReadingQuestions,
+    gistReadingPage,
+    sliders,
+    textbookExercises,
+    textBoxInputs,
+  } = useContext(PresentationContext);
   console.log("VOCAB LENGTH: " + JSON.stringify(vocabulary));
   console.log("INCLUDED: " + JSON.stringify(included));
 
@@ -51,72 +62,38 @@ const PresentationDisplay = ({ presData }) => {
         {included["includePreReadingVocabulary"] ? (
           <PreReadingVocabularySection vocabulary={vocabulary} />
         ) : null}
+
+        {/* {included["includeGistReading"] ? <GistReadingInstructions /> : null} */}
+
+        <GistReadingInstructions
+          gistReadingQuestions={gistReadingQuestions}
+          gistReadingPage={gistReadingPage}
+          sliders={sliders}
+          textBoxInputs={textBoxInputs}
+          time={"gistReadingTime"}
+        />
         <section>
-          <h1>Pre-reading</h1>
-          <ul>
-            {/* <li>{vocabulary[0].word}</li> */}
-            <li>cat</li>
-            <li>beacon</li>
-          </ul>
-          {/* <section data-markdown>something</section> */}
+          <h1>Stop and Look</h1>
+          <ul>Zip It</ul>
+          <ul> Eyes on teacher</ul>
+          <ul>Listen</ul>
         </section>
-        {/* <section data-background-color="red">
-          <h1>
-            Reading for <em>Gist</em>
-          </h1>
-          <ul>
-            <li>
-              Read{" "}
-              {presData.gistReading.book + " p." + presData.gistReading.page}
-              <em> quickly</em>
-            </li>
-            <li>
-              <em>Answer:</em> What is the name of Hercules' cat?
-            </li>
-            <li>No talking</li>
-            <li>Hand up when finished</li>
-            <li>
-              <em>{presData.gistReading.timeLimit} minutes</em>
-            </li>
-          </ul>
-        </section> */}
-        {/* <section>
-          <h1>Partner Check</h1>
-          <ul>
-            <li>{presData.detailPartnerCheck.question}</li>
-            <li>{presData.detailPartnerCheck.answer}</li>
-          </ul>
-        </section> */}
-        <section data-background-color="red">
-          <h1>
-            Reading for <em>Detail</em>
-          </h1>
-          <ul>
-            <li>
-              Read Student Book p.23 <em>slowly</em>
-            </li>
-            <li>
-              <em>Complete: </em>
-              {/* {presData.detailReading.book +
-                " " +
-                presData.detailReading.page +
-                " exercise " +
-                presData.detailReading.exercises}{" "} */}
-            </li>
-            <li>No talking</li>
-            <li>Raise your hand when you are finished</li>
-            <li>
-              <em>6 minutes</em>
-            </li>
-          </ul>
-        </section>
+        <PartnerDiscussionSection slider={sliders["gistDiscussionTime"]} />
+
+        <DetailReadingInstructions
+          sliders={sliders}
+          textbookExercises={textbookExercises}
+        />
         <section>
-          <h1>Partner Check</h1>
-          <ul>
-            {/* <li>{presData.detailPartnerCheck.question}</li>
-            <li>{presData.detailPartnerCheck.answer}</li> */}
-          </ul>
+          <h1>Stop and Look</h1>
+          <ul>Zip It</ul>
+          <ul> Eyes on teacher</ul>
+          <ul>Listen</ul>
         </section>
+        <PartnerDiscussionSection
+          slider={sliders["detailReadingDiscussionTimeLimit"]}
+          time={"detailDiscussionTime"}
+        />
         <section>
           <h1>Book Answers</h1>
         </section>

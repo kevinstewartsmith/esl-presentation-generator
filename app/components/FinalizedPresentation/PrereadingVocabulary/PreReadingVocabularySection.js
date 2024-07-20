@@ -8,7 +8,11 @@ const PreReadingVocabularySection = ({ vocabulary }) => {
         <section data-background-color="red" key={index}>
           <h3>{word.word}</h3>
           <p></p>
-          <img src={word.img_url} alt={word.word} />
+          <img
+            style={{ height: "60vh", width: "auto" }}
+            src={word.img_url}
+            alt={word.word}
+          />
         </section>
       ))}
     </>

@@ -20,7 +20,9 @@ const FinishReading = () => {
           Open in New Tab
         </a>
       </Link> */}
-      <button onClick={handleClick}>Start Presentation</button>
+      <button style={{ color: "black" }} onClick={handleClick}>
+        Start Presentation
+      </button>
     </>
   );
 };

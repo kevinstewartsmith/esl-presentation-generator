@@ -27,6 +27,7 @@ const PresentationContextProvider = ({ children }) => {
   //Section and subsection inclusion state
   //const [included, setIncluded] = useState({"id": true});
   const [included, setIncluded] = useState({});
+  const [textBoxInputs, setTextBoxInputs] = useState({});
 
   //console.log(typeof discussionForms);
   //console.log(discussionForms);
@@ -167,6 +168,14 @@ const PresentationContextProvider = ({ children }) => {
     setShowPresentation(bool);
   }
 
+  function updateTextBoxInputs(id, text) {
+    setTextBoxInputs((prev) => {
+      const newInputs = { ...prev };
+      newInputs[id] = text;
+      return newInputs;
+    });
+  }
+
   return (
     <PresentationContext.Provider
       value={{
@@ -202,6 +211,8 @@ const PresentationContextProvider = ({ children }) => {
         updateIncludedSection,
         updateShowPresentation,
         showPresentation,
+        textBoxInputs,
+        updateTextBoxInputs,
       }}
     >
       {children}
