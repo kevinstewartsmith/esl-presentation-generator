@@ -14,7 +14,6 @@ const baseStyle = {
   borderRadius: 2,
   borderColor: "#eeeeee",
   borderStyle: "dashed",
-  // backgroundColor: '#fafafa',
   backgroundColor: "#f5f5f5",
   color: "#bdbdbd",
   outline: "none",
@@ -77,7 +76,7 @@ const buttonStyle = {
 
 function AddTextBook({ category }) {
   console.log("The category is: ", category);
-  const [extractedText, setExtractedText] = useState("");
+  //const [extractedText, setExtractedText] = useState("");
   const {
     textTranscript,
     updateTextTranscript,
@@ -107,8 +106,6 @@ function AddTextBook({ category }) {
     const {
       data: { text },
     } = await worker.recognize(file);
-    //setExtractedText(text);
-    //updateTextTranscript(text);
     handleTextStateMemory(text);
     await worker.terminate();
   }
@@ -199,7 +196,7 @@ function AddTextBook({ category }) {
       case "AnswerText":
         return <h1 style={{ color: "black" }}>{answers}</h1>;
       default:
-        console.log("No category selected");
+        //console.log("No category selected");
         return null;
     }
   };
@@ -225,13 +222,13 @@ function AddTextBook({ category }) {
           </button>
         );
       default:
-        console.log("No category selected");
+        //console.log("No category selected");
         return null;
     }
   };
 
   async function handleClick() {
-    console.log("HANDLECLICK The category is: ", category);
+    //console.log("HANDLECLICK The category is: ", category);
     const textContent = (category) => {
       switch (category) {
         case "BookText":

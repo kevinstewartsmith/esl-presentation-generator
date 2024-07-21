@@ -14,10 +14,8 @@ const TimeLimitSlider = ({ label, defaultValue, max, min, id, includedId }) => {
 
   if (!sliders[id]) {
     addSliderStateMemory(id, min, max, defaultValue, label);
-    //console.log("sliders: " + JSON.stringify(sliders ? sliders : "no sliders");
   }
   console.log("sliders: " + JSON.stringify(sliders));
-  console.log(sliders);
 
   useEffect(() => {
     if (sliders[id] && sliders[id].value) {
@@ -28,8 +26,6 @@ const TimeLimitSlider = ({ label, defaultValue, max, min, id, includedId }) => {
   }, [sliders]);
 
   const handleSliderChange = (event, newValue) => {
-    console.log("id Slider: " + id);
-
     console.log("handleSliderChange: " + id);
     updateSliderStateMemory(id, newValue);
     setSliderValue(newValue);
@@ -49,8 +45,6 @@ const TimeLimitSlider = ({ label, defaultValue, max, min, id, includedId }) => {
     <Grid
       container
       direction={"column"}
-      spacing={0}
-      padding={0}
       style={{ backgroundColor: "white", paddingLeft: 0 }}
       includedId={includedId}
     >

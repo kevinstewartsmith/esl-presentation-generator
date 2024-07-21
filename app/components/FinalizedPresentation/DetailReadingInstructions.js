@@ -16,11 +16,7 @@ const DetailReadingInstructions = ({ textbookExercises, sliders }) => {
           </li>
           <li>
             <em>Complete Exercises: </em>
-            {/* {presData.detailReading.book +
-                " " +
-                presData.detailReading.page +
-                " exercise " +
-                presData.detailReading.exercises}{" "} */}
+
             {textbookExercises}
           </li>
           <li>No talking</li>

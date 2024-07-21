@@ -19,7 +19,6 @@ const GistReadingInstructions = ({
           </strong>
         </h1>
         <ul>
-          {/* <li>{vocabulary[0].word}</li> */}
           <li>
             {"Open " + textBoxInputs["book"] + " to p." + gistReadingPage}
           </li>
@@ -29,19 +28,13 @@ const GistReadingInstructions = ({
               <em> quickly</em>
             </strong>
           </li>
-          {/* <li>
-            Read
-            <strong>
-              <em> quickly</em>
-            </strong>
-          </li> */}
+
           <li>
             <em>Answer the question :</em> {gistReadingQuestions}
           </li>
           <li>No talking</li>
           <li>{sliders[time].value + " minutes"}</li>
         </ul>
-        {/* <section data-markdown>something</section> */}
       </section>
     </>
   );

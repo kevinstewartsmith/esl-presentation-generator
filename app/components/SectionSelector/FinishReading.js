@@ -12,14 +12,6 @@ const FinishReading = () => {
 
   return (
     <>
-      {/* <button style={{ color: "black" }} onClick={handleClick}>
-        Open New Tab
-      </button> */}
-      {/* <Link href="https://www.example.com" passHref>
-        <a target="_blank" rel="noopener noreferrer">
-          Open in New Tab
-        </a>
-      </Link> */}
       <button style={{ color: "black" }} onClick={handleClick}>
         Start Presentation
       </button>

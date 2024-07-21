@@ -5,7 +5,6 @@ import { ReadingForGist } from "../SectionSelector/ReadingForGist";
 import PreReadingVocabulary from "../SectionSelector/PreReadingVocabulary";
 import ReadingForDetail from "../SectionSelector/ReadingForDetail";
 import PreReadingGame from "../SectionSelector/PreReadingGame";
-import { Fragment } from "react";
 
 const SectionSelector = () => {
   const sections = [

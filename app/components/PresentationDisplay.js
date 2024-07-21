@@ -23,6 +23,7 @@ const PresentationDisplay = ({ presData }) => {
     sliders,
     textbookExercises,
     textBoxInputs,
+    discussionForms,
   } = useContext(PresentationContext);
   console.log("VOCAB LENGTH: " + JSON.stringify(vocabulary));
   console.log("INCLUDED: " + JSON.stringify(included));
@@ -78,7 +79,10 @@ const PresentationDisplay = ({ presData }) => {
           <ul> Eyes on teacher</ul>
           <ul>Listen</ul>
         </section>
-        <PartnerDiscussionSection slider={sliders["gistDiscussionTime"]} />
+        <PartnerDiscussionSection
+          slider={sliders["gistDiscussionTime"]}
+          discussion={discussionForms["gistQuestionDiscussion"]}
+        />
 
         <DetailReadingInstructions
           sliders={sliders}
@@ -93,6 +97,7 @@ const PresentationDisplay = ({ presData }) => {
         <PartnerDiscussionSection
           slider={sliders["detailReadingDiscussionTimeLimit"]}
           time={"detailDiscussionTime"}
+          discussion={discussionForms["detailAnswersDiscussion"]}
         />
         <section>
           <h1>Book Answers</h1>

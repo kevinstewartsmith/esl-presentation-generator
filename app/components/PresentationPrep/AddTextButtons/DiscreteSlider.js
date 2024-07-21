@@ -1,13 +1,19 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
-
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 
 function valuetext(value) {
   return `${value} minutes`;
 }
 
-export default function DiscreteSlider({minuteValue, min, max, defaultValue, onChange, id}) {
+export default function DiscreteSlider({
+  minuteValue,
+  min,
+  max,
+  defaultValue,
+  onChange,
+  id,
+}) {
   return (
     <Box sx={{ width: "100%" }}>
       <Slider
@@ -23,7 +29,6 @@ export default function DiscreteSlider({minuteValue, min, max, defaultValue, onC
         //value={4}
         onChangeCommitted={onChange}
       />
-      {/* <Slider defaultValue={defaultValue} step={1} marks min={min} max={max} disabled /> */}
     </Box>
   );
 }

@@ -30,8 +30,6 @@ export default function InputWithIcon({
     updateGistReadingPage,
     textbookExercises,
     updateTextbookExercises,
-    // discussionObjects,
-    // updateDiscussionObjects,
     updateDiscussionText,
     discussionForms,
   } = useContext(PresentationContext);
@@ -40,16 +38,12 @@ export default function InputWithIcon({
     switch (input) {
       case "question":
         return <HelpOutlineIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
-        break;
       case "answer":
         return <FeedbackIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
-        break;
       case "page":
         return <PlagiarismIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
-        break;
       case "exercise":
         return <FitnessCenterIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
-        break;
       default:
         return (
           <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
@@ -60,12 +54,10 @@ export default function InputWithIcon({
   const handleChange = (event) => {
     switch (input) {
       case "question":
-        console.log("change question");
         updateGistReadingQuestions(event.target.value);
         break;
       case "answer":
         updateGistReadingAnswers(event.target.value);
-        console.log("change answer");
         break;
       case "page":
         updateGistReadingPage(event.target.value);
@@ -74,7 +66,6 @@ export default function InputWithIcon({
         updateTextbookExercises(event.target.value);
         break;
       case "discussion":
-        console.log(event.target.value);
         updateDiscussionText(id, index, event.target.value);
         console.log(discussionForms);
         break;
@@ -94,7 +85,6 @@ export default function InputWithIcon({
       case "exercise":
         return textbookExercises;
       case "discussion":
-        //return discussionObjects.id.discussionTexts[index];
         return discussionForms[id]?.discussionTexts[index] || "";
       default:
         return "";
@@ -104,7 +94,6 @@ export default function InputWithIcon({
   return (
     <Box sx={{ "& > :not(style)": { m: 1 } }}>
       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-        {/* <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} /> */}
         {iconFirst ? setInput() : null}
         <TextField
           id="input-with-sx"
