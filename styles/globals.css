@@ -23,7 +23,7 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   ); */
-  background: rgb(158, 154, 154);
+  background: rgb(161, 156, 156);
   color: rgb(var(--foreground-rgb));
 }
 input {
@@ -31,13 +31,26 @@ input {
   color: rgb(0,0,0);
 }
 
-button {
+
+
+/* button {
   border-radius: 5px;
   border-color: white;
   border-width: 1px;
   margin: 5px;
   padding: 2px;
-}
+} */
+
+button {
+  background-color: #3c5997;
+  color: "white";
+  padding: 10;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  border-width: 0;
+  border-color: transparent; 
+};
 
 .presentation {
   display: flex;
@@ -137,3 +150,9 @@ button {
   cursor: pointer;
   color: gray;
 }
+
+
+/* .test-border {
+  border-color: pink;
+  border-width: 10px ;
+} */

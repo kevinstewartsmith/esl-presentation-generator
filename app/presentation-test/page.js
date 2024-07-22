@@ -81,7 +81,7 @@ const PresentationTest = () => {
   ];
   const [sectionNumber, setSectionNumber] = useState(0);
   return (
-    <div>
+    <div className="test-border">
       <Head style={{ backgroundColor: "red" }}>
         <title style={{ font: "white" }}>Reveal.js with Next.js</title>
       </Head>
@@ -94,7 +94,7 @@ const PresentationTest = () => {
         >
           <div
             style={{
-              backgroundColor: "#3A3EFD",
+              backgroundColor: "white",
               height: 50,
               display: "flex",
               alignItems: "center",
@@ -104,7 +104,7 @@ const PresentationTest = () => {
           >
             <h1
               style={{
-                color: "white",
+                color: "#3C5997",
 
                 marginTop: 0,
                 marginLeft: 20,
@@ -113,8 +113,10 @@ const PresentationTest = () => {
             >
               {"Reading "}
             </h1>
-            <NetworkCheckIcon style={{ marginLeft: 3, marginRight: 3 }} />{" "}
-            <h1>{" Exercise Generator"}</h1>
+            <NetworkCheckIcon
+              style={{ marginLeft: 3, marginRight: 3, color: "#3C5997" }}
+            />{" "}
+            <h1 style={{ color: "#3C5997" }}>{" Exercise Generator"}</h1>
           </div>
           {/* <ReadingContent />
         <SectionSelector /> */}
@@ -127,8 +129,8 @@ const PresentationTest = () => {
               justifyContent: "center",
               alignItems: "center",
 
-              borderColor: "yellow",
-              borderWidth: 3,
+              //borderColor: "yellow",
+              borderWidth: 0,
             }}
           >
             {sections[sectionNumber]}

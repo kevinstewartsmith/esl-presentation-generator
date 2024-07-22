@@ -3,7 +3,9 @@ import React from "react";
 const DetailReadingInstructions = ({ textbookExercises, sliders }) => {
   return (
     <>
-      <section data-background-color="red">
+      <section
+      //data-background-color="red"
+      >
         <h1>
           Reading for <em>Detail</em>
         </h1>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
 import "reveal.js/dist/reveal.css";
-import "reveal.js/dist/theme/black.css";
+//import "reveal.js/dist/theme/black.css";
 //maybe delete this. Ai put it there
 //import "reveal.js/plugin/markdown/markdown.css";
 import PreReadingVocabularySection from "./FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
@@ -11,8 +11,12 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
+//import "reveal.js/dist/theme/moon.css";
 
 const PresentationDisplay = ({ presData }) => {
+  //import("reveal.js/dist/theme/moon.css");
+  import("@styles/reveal-hedonic.css");
+
   const revealRef = useRef(null);
   console.log(presData);
   const {
@@ -52,13 +56,15 @@ const PresentationDisplay = ({ presData }) => {
       style={{
         width: "100vw",
         height: "100vh",
-        borderWidth: 10,
-        borderColor: 5,
+        // borderWidth: 10,
+        // borderColor: 5,
       }}
     >
       {/* <h1>test</h1> */}
       <div className="slides">
-        <section data-background-color="red">Slide 1</section>
+        <section data-background-color="blue" data-font-family="Arial">
+          <h1>Slide1</h1>Slide 1
+        </section>
 
         {included["includePreReadingVocabulary"] ? (
           <PreReadingVocabularySection vocabulary={vocabulary} />

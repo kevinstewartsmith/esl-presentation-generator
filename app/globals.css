@@ -39,6 +39,10 @@ button {
   padding: 2px;
 }
 
+h3 {
+  font-family: 'Times New Roman', Times, serif;
+} 
+
 .add-text-button {
   background-color: rgb(3, 56, 74);
   border-radius: 5px;
@@ -83,3 +87,5 @@ button {
   margin: 10px;
   
 }
+
+

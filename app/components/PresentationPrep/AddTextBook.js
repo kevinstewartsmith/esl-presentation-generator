@@ -65,14 +65,14 @@ const img = {
   height: "100%",
 };
 
-const buttonStyle = {
-  backgroundColor: "blue",
-  color: "white",
-  padding: 10,
-  borderRadius: 5,
-  borderWidth: 1,
-  borderColor: "black",
-};
+// const buttonStyle = {
+//   backgroundColor: "blue",
+//   color: "white",
+//   padding: 10,
+//   borderRadius: 5,
+//   borderWidth: 1,
+//   borderColor: "black",
+// };
 
 function AddTextBook({ category }) {
   console.log("The category is: ", category);
@@ -204,23 +204,11 @@ function AddTextBook({ category }) {
   const handleButtonDisplay = (category) => {
     switch (category) {
       case "BookText":
-        return (
-          <button style={buttonStyle} onClick={handleClick}>
-            Clean Text
-          </button>
-        );
+        return <button onClick={handleClick}>Clean Text</button>;
       case "QuestionText":
-        return (
-          <button style={buttonStyle} onClick={handleClick}>
-            Clean Questions
-          </button>
-        );
+        return <button onClick={handleClick}>Clean Questions</button>;
       case "AnswerText":
-        return (
-          <button style={buttonStyle} onClick={handleClick}>
-            Clean Answers
-          </button>
-        );
+        return <button onClick={handleClick}>Clean Answers</button>;
       default:
         //console.log("No category selected");
         return null;

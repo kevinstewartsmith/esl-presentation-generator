@@ -266,19 +266,7 @@ const PreReadingVocabSlides = () => {
                   marginTop: 60,
                 }}
               >
-                <button
-                  style={{
-                    width: 200,
-                    height: 50,
-                    backgroundColor: "lightblue",
-                    color: "white",
-                    fontSize: 24,
-                    borderRadius: 10,
-                  }}
-                  onClick={getVocabulary}
-                >
-                  Get Vocabulary
-                </button>
+                <button onClick={getVocabulary}>Get Vocabulary</button>
               </div>
             </div>
           </div>

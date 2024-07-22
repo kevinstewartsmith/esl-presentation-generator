@@ -19,9 +19,11 @@ const GistReadingInstructions = ({
           </strong>
         </h1>
         <ul>
+          {/* <h3> */}
           <li>
             {"Open " + textBoxInputs["book"] + " to p." + gistReadingPage}
           </li>
+          {/* </h3> */}
           <li>
             {"Read " + textBoxInputs["title"]}
             <strong>
