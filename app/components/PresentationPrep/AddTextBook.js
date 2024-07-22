@@ -249,6 +249,7 @@ function AddTextBook({ category }) {
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 40,
+        backgroundColor: "pink",
       }}
     >
       <div
@@ -259,6 +260,8 @@ function AddTextBook({ category }) {
           width: "66vw",
           boxShadow: 50,
           padding: 10,
+          maxHeight: "80%",
+          overflow: "auto",
         }}
       >
         <div {...getRootProps({ style })}>

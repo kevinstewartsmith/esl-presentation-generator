@@ -1,7 +1,7 @@
 "use client";
 
 import FlashOnIcon from "@mui/icons-material/FlashOn";
-import { Lobster_Two } from "@next/font/google";
+import { Lobster_Two } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";

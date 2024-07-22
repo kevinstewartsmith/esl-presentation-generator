@@ -260,13 +260,15 @@ const PreReadingVocabSlides = () => {
 
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 60,
+                  // display: "flex",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  marginTop: 160,
                 }}
               >
-                <button onClick={getVocabulary}>Get Vocabulary</button>
+                <button style={{ marginTop: 160 }} onClick={getVocabulary}>
+                  Get Vocabulary
+                </button>
               </div>
             </div>
           </div>

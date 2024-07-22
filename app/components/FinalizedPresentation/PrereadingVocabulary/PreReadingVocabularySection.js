@@ -1,6 +1,6 @@
 import React from "react";
 //import next/font/google
-import { Lobster_Two } from "@next/font/google";
+import { Lobster_Two } from "next/font/google";
 import { Andada_Pro } from "next/font/google";
 import { and } from "firebase/firestore";
 import { Grid } from "@mui/material";
