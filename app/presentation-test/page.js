@@ -20,6 +20,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import StegaIcon from "@app/components/StegaIcon";
+import { Handjet } from "next/font/google";
+
+const handjet = Handjet({
+  weight: ["400"],
+  subsets: ["latin"],
+});
 
 const PresentationTest = () => {
   //const [showPresentation, setShowPresentation] = useState(false);
@@ -102,21 +109,30 @@ const PresentationTest = () => {
               marginLeft: 0,
             }}
           >
-            <h1
+            {/* <h1
+              className={handjet.className}
               style={{
                 color: "#3C5997",
-
+                //fontFamily: "fantasy",
                 marginTop: 0,
                 marginLeft: 20,
+                marginRight: 10,
                 marginBottom: 0,
+                fontSize: 30,
               }}
             >
-              {"Reading "}
-            </h1>
-            <NetworkCheckIcon
+              {"Reading   "}
+            </h1> */}
+            {/* <NetworkCheckIcon
               style={{ marginLeft: 3, marginRight: 3, color: "#3C5997" }}
-            />{" "}
-            <h1 style={{ color: "#3C5997" }}>{" Exercise Generator"}</h1>
+            /> */}
+            <StegaIcon />{" "}
+            <h1
+              style={{ color: "#3C5997", marginLeft: 10, fontSize: 30 }}
+              className={handjet.className}
+            >
+              {"  Reading Exercise Generator"}
+            </h1>
           </div>
           {/* <ReadingContent />
         <SectionSelector /> */}

@@ -249,7 +249,7 @@ function AddTextBook({ category }) {
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 40,
-        backgroundColor: "pink",
+        backgroundColor: "transparent",
       }}
     >
       <div
