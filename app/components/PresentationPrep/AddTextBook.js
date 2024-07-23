@@ -266,7 +266,9 @@ function AddTextBook({ category }) {
       >
         <div {...getRootProps({ style })}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <p>
+            Drag <strong>text</strong>, or click to select files
+          </p>
         </div>
         <aside style={thumbsContainer}>{thumbs}</aside>
         <div style={{ borderWidth: 1 }}>

@@ -109,23 +109,6 @@ const PresentationTest = () => {
               marginLeft: 0,
             }}
           >
-            {/* <h1
-              className={handjet.className}
-              style={{
-                color: "#3C5997",
-                //fontFamily: "fantasy",
-                marginTop: 0,
-                marginLeft: 20,
-                marginRight: 10,
-                marginBottom: 0,
-                fontSize: 30,
-              }}
-            >
-              {"Reading   "}
-            </h1> */}
-            {/* <NetworkCheckIcon
-              style={{ marginLeft: 3, marginRight: 3, color: "#3C5997" }}
-            /> */}
             <StegaIcon />{" "}
             <h1
               style={{ color: "#3C5997", marginLeft: 10, fontSize: 30 }}
@@ -153,13 +136,13 @@ const PresentationTest = () => {
           </div>
           <button
             onClick={() => setSectionNumber(sectionNumber + 1)}
-            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left"
+            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
           >
             <ArrowForwardIosIcon />
           </button>
           <button
             onClick={() => setSectionNumber(sectionNumber - 1)}
-            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right"
+            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
           >
             <ArrowBackIosIcon sx={{}} />
           </button>
