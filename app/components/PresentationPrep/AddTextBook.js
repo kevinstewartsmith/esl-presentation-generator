@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
+import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 
 // Styles
 const baseStyle = {
@@ -230,16 +232,29 @@ function AddTextBook({ category }) {
       }
     };
     const text = textContent(category);
-    console.log("The category is: ", category);
-    console.log("The text content is: ", text);
-    console.log("the text is: ", text);
+    // console.log("The category is: ", category);
+    // console.log("The text content is: ", text);
+    // console.log("the text is: ", text);
     const response = await fetch(
       `/api/clean-text-json?query=${text}&category=${category}`
     );
     const data = await response.json();
-    console.log(data);
-    console.log(typeof data);
+    // console.log(data);
+    // console.log(typeof data);
   }
+
+  const dragNDropText = (category) => {
+    switch (category) {
+      case "BookText":
+        return "Book Text";
+      case "QuestionText":
+        return "Question Text";
+      case "AnswerText":
+        return "Answer Text";
+      default:
+        return "No category selected";
+    }
+  };
 
   return (
     <section
@@ -259,15 +274,18 @@ function AddTextBook({ category }) {
           borderRadius: 10,
           width: "66vw",
           boxShadow: 50,
-          padding: 10,
+          padding: "2%",
           maxHeight: "80%",
           overflow: "auto",
         }}
       >
+        {/* <InputWithIcon label={"Page"} input={"page"} /> */}
+        <TextBookInfoEntry category={category} className="w-half" />
         <div {...getRootProps({ style })}>
           <input {...getInputProps()} />
           <p>
-            Drag <strong>text</strong>, or click to select files
+            Drag <strong>{dragNDropText(category)}</strong>, or click to select
+            files
           </p>
         </div>
         <aside style={thumbsContainer}>{thumbs}</aside>

@@ -126,26 +126,27 @@ const PreReadingVocabSlides = () => {
   }, [vocabulary]);
 
   return (
-    <div>
+    <div className="presentation-grid-container">
       <h1
         style={{
           color: "lightgrey",
           fontSize: 24,
           marginLeft: 60,
           borderColor: "white",
+          top: 0,
         }}
       >
         Select words to teach before reading
       </h1>
       <Grid
         container
-        className="presentation-grid-container"
+        //className="presentation-grid-container"
         direction={"row"}
         margin={0}
         spacing={0}
         padding={0}
         sm={12}
-        style={{ width: "90vw", height: "90%", borderColor: "red" }}
+        style={{ width: "100%", height: "90%", borderColor: "red" }}
       >
         <Grid
           item
@@ -153,92 +154,82 @@ const PreReadingVocabSlides = () => {
           style={{
             backgroundColor: "white",
             borderColor: "purple",
-            borderWidth: 2,
+            borderWidth: 5,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             overflow: "auto",
-            maxHeight: 500,
+            maxHeight: "100%",
+            borderRadius: 10,
           }}
         >
-          <div
-            style={{
-              width: "90%",
-              height: "80%",
-              borderWidth: 1,
-              borderColor: "green",
-              backgroundColor: "white",
-              padding: 20,
-              overflow: "auto",
-            }}
+          <Grid
+            container
+            direction={"column"}
+            spacing={0}
+            padding={0}
+            style={{ backgroundColor: "white", paddingLeft: 0 }}
           >
-            <Grid
-              container
-              direction={"column"}
-              spacing={0}
-              padding={0}
-              style={{ backgroundColor: "white", paddingLeft: 10 }}
-            >
-              {vocabulary
-                ? vocabulary.map((word, index) => (
+            {vocabulary
+              ? vocabulary.map((word, index) => (
+                  <Grid
+                    item
+                    xs={12}
+                    style={{ borderColor: "red", borderWidth: 1, height: 80 }}
+                  >
                     <Grid
-                      item
-                      xs={12}
-                      style={{ borderColor: "red", borderWidth: 1, height: 80 }}
+                      container
+                      direction={"row"}
+                      key={index}
+                      sm={12}
+                      style={{
+                        marginBottom: 20,
+                        borderColor: "green",
+                        borderWidth: 1,
+                        height: 80,
+                      }}
                     >
                       <Grid
-                        container
-                        direction={"row"}
-                        key={index}
-                        sm={12}
+                        item
+                        xs={0.5}
+                        sm={1}
                         style={{
-                          marginBottom: 20,
-                          borderColor: "green",
-                          borderWidth: 1,
-                          height: 80,
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <Grid
-                          item
-                          xs={0.5}
-                          sm={1}
-                          style={{
-                            height: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <input
-                            value={index}
-                            checked={word.selected}
-                            type="checkbox"
-                            style={{ marginLeft: 20, width: 30, height: 30 }}
-                            onClick={checkMarkClicked}
-                          />
-                        </Grid>
-                        <Grid
-                          item
-                          xs={11.5}
-                          sm={4}
-                          className="flex items-center "
-                          style={{
-                            height: "100%",
-                            width: "100%",
-                            fontSize: 24,
-                            marginLeft: 10,
-                          }}
-                        >
-                          <h1 style={{ color: "gray" }}>
-                            {word.word + " " + index}
-                          </h1>
-                        </Grid>
+                        <input
+                          value={index}
+                          checked={word.selected}
+                          type="checkbox"
+                          style={{ marginLeft: 20, width: 30, height: 30 }}
+                          onClick={checkMarkClicked}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={11.5}
+                        sm={4}
+                        className="flex items-center "
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          fontSize: 24,
+                          marginLeft: 10,
+                        }}
+                      >
+                        <h1 style={{ color: "gray" }}>
+                          {word.word + " " + index}
+                        </h1>
                       </Grid>
                     </Grid>
-                  ))
-                : null}
-            </Grid>
-          </div>
+                  </Grid>
+                ))
+              : null}
+          </Grid>
+          {/* </div> */}
         </Grid>
         <Grid item sm={6}>
           <div
@@ -251,25 +242,13 @@ const PreReadingVocabSlides = () => {
               justifyContent: "center",
             }}
           >
-            <div style={{ width: "80%", height: "80%" }}>
+            <div style={{ width: "80%", height: "75%" }}>
               <PreviewVocabSlides
                 vocabulary={vocabulary}
                 selectedVocabNum={selectedVocabNum}
                 selectedVocabulary={selectedVocabulary}
+                getVocabularyPressed={getVocabulary}
               />
-
-              <div
-                style={{
-                  // display: "flex",
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  marginTop: 160,
-                }}
-              >
-                <button style={{ marginTop: 160 }} onClick={getVocabulary}>
-                  Get Vocabulary
-                </button>
-              </div>
             </div>
           </div>
         </Grid>

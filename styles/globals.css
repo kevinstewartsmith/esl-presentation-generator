@@ -71,17 +71,17 @@ button {
   scroll-behavior: auto;
   margin-top: 50px; */
 
-  border-color: black; 
+  border-color: lightgray; 
   border-width:1px;
   overflow-x: hidden; 
   border-radius:10px; 
-  width: 75%; 
-  height: 80vh;
-  margin-top: 50px;
+  width: 80%; 
+  height: 87vh;
+  margin-top: 1%;
   scroll-behavior: auto;
   padding: 2%;
-  margin-left: 8%;
-  margin-right: 8%;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 
@@ -123,15 +123,15 @@ button {
   position: fixed;
   z-index: 2;
   /* right: 40px; */
-  bottom: 40px;
+  bottom: 40%;
   font-size: 80;
 }
 .arrow-left {
-  right: 40px;
+  right: 20px;
 }
 
 .arrow-right {
-  left: 40px;
+  left: 20px;
 }
 
 .section-details-container {

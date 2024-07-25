@@ -15,7 +15,11 @@ export default function FreeSoloDropDown({ label, input }) {
   };
 
   return (
-    <Stack spacing={2} sx={{ width: 300 }}>
+    <Stack
+      spacing={0}
+      className="w-full h-full"
+      sx={{ backgroundColor: "white", left: 0 }}
+    >
       <Autocomplete
         id="free-solo-demo"
         freeSolo

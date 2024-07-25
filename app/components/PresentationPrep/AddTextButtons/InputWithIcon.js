@@ -93,7 +93,15 @@ export default function InputWithIcon({
 
   return (
     <Box sx={{ "& > :not(style)": { m: 1 } }}>
-      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "flex-end",
+          //height: "100%",
+          //justifyContent: "center",
+          //alignItems: "center",
+        }}
+      >
         {iconFirst ? setInput() : null}
         <TextField
           id="input-with-sx"
