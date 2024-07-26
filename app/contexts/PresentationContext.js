@@ -17,6 +17,7 @@ const PresentationContextProvider = ({ children }) => {
   const [gistReadingPage, setGistReadingPage] = useState("");
   const [textbookExercises, setTextbookExercises] = useState();
   const [discussionObjects, setDiscussionObjects] = useState([]);
+  const [textbookExercisePages, setTextbookExercisePages] = useState();
 
   // Discussion forms state
   const [discussionForms, setDiscussionForms] = useState({});
@@ -176,6 +177,9 @@ const PresentationContextProvider = ({ children }) => {
     });
   }
 
+  function updateTextbookExercisePages(newPage) {
+    setTextbookExercisePages(newPage);
+  }
   return (
     <PresentationContext.Provider
       value={{
@@ -213,6 +217,8 @@ const PresentationContextProvider = ({ children }) => {
         showPresentation,
         textBoxInputs,
         updateTextBoxInputs,
+        textbookExercisePages,
+        updateTextbookExercisePages,
       }}
     >
       {children}

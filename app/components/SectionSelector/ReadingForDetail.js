@@ -7,6 +7,7 @@ import DiscussionForm from "../PresentationPrep/DiscussionForm";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import DetailReadingExercises from "../PresentationPrep/DetailReadingExercises";
 import DetailReadingExAnswers from "../PresentationPrep/DetailReadingExAnswers";
+import DetailExerciseInputs from "../PresentationPrep/DetailExerciseInputs";
 
 const ReadingForDetail = ({ includedId }) => {
   const [detailReadingChecked, setDetailReadingChecked] = useState(true);
@@ -60,9 +61,9 @@ const ReadingForDetail = ({ includedId }) => {
                     max={10}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12}>
-                  <DiscussionForm id={"detailAnswersDiscussion"} />
-                </Grid>
+                {/* <Grid item xs={12} sm={12}> */}
+                <DiscussionForm id={"detailAnswersDiscussion"} />
+                {/* </Grid> */}
                 <Grid item xs={12} sm={12} paddingBottom={4}>
                   <TimeLimitSlider
                     label={"Discussion Time Limit"}

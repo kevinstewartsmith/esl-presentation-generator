@@ -2,6 +2,7 @@ import React from "react";
 import { Grid } from "@mui/material";
 import CheckBoxAndLabel from "./AddTextButtons/CheckBoxAndLabel";
 import InputWithIcon from "./AddTextButtons/InputWithIcon";
+import DetailExerciseInputs from "./DetailExerciseInputs";
 
 const DetailReadingExercises = ({ includedId }) => {
   return (
@@ -24,13 +25,14 @@ const DetailReadingExercises = ({ includedId }) => {
           item
           xs={12}
           sm={12}
-          style={{ marginLeft: "10%", marginRight: "60%" }}
+          style={{ marginLeft: "8%", marginRight: "20%" }}
         >
-          <InputWithIcon
+          {/* <InputWithIcon
             label={"Textbook Exercises"}
             input={"exercise"}
             iconFirst={"true"}
-          />
+          /> */}
+          <DetailExerciseInputs />
         </Grid>
       </Grid>
     </Grid>

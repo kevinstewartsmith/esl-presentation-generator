@@ -8,20 +8,6 @@ const TextBookInfoEntry = ({ category }) => {
     switch (category) {
       case "BookText":
         return (
-          //   <Grid container spacing={2} padding={1} direction={"row"} margin={1}>
-          //     <Grid item xs={12} sm={12}>
-          //       <FreeSoloDropDown label={"Text Title"} input={"title"} />
-          //     </Grid>
-          //     <Grid item xs={12} sm={12}>
-          //       <FreeSoloDropDown label={"Book Name"} input={"book"} />
-          //     </Grid>
-          //     <Grid item xs={12} sm={12}>
-          //       <div style={{ width: "33%" }}>
-          //         <InputWithIcon label={"Page"} input={"page"} />
-          //       </div>
-          //     </Grid>
-          //   </Grid>
-
           <Grid
             container
             spacing={0}
@@ -56,14 +42,7 @@ const TextBookInfoEntry = ({ category }) => {
                   <FreeSoloDropDown label={"Book Name"} input={"book"} />
                 </Grid>
 
-                <Grid
-                  item
-                  xs={4}
-                  sm={4}
-                  paddingLeft={2}
-                  //className="flex  justify-center items-center"
-                  //style={{ paddingBottom: 20 }}
-                >
+                <Grid item xs={4} sm={4} paddingLeft={2}>
                   <InputWithIcon label={"Page"} input={"page"} />
                 </Grid>
               </Grid>
@@ -71,31 +50,32 @@ const TextBookInfoEntry = ({ category }) => {
           </Grid>
         );
       case "QuestionText":
-        return null;
+        return (
+          <Grid container spacing={0} padding={1} direction={"row"} margin={0}>
+            <Grid item xs={6} sm={6} marginBottom={0}>
+              <InputWithIcon
+                label={"Textbook Exercises"}
+                input={"exercise"}
+                iconFirst={"true"}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <InputWithIcon
+                label={"Exercise Page"}
+                input={"exercisePage"}
+                iconFirst={true}
+              />
+            </Grid>
+          </Grid>
+        );
       case "AnswerText":
         return null;
       default:
         return null;
     }
   };
-  //inputs();
 
-  return (
-    // <Grid container spacing={2} padding={1} direction={"row"} margin={1}>
-    //   <Grid item xs={12} sm={12}>
-    //     <FreeSoloDropDown label={"Text Title"} input={"title"} />
-    //   </Grid>
-    //   <Grid item xs={12} sm={12}>
-    //     <FreeSoloDropDown label={"Book Name"} input={"book"} />
-    //   </Grid>
-    //   <Grid item xs={12} sm={12}>
-    //     <div style={{ width: "33%" }}>
-    //       <InputWithIcon label={"Page"} input={"page"} />
-    //     </div>
-    //   </Grid>
-    // </Grid>
-    <>{inputs(category)}</>
-  );
+  return <>{inputs(category)}</>;
 };
 
 export default TextBookInfoEntry;

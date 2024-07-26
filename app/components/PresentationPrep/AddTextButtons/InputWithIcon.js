@@ -11,6 +11,7 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export default function InputWithIcon({
   label,
@@ -32,6 +33,8 @@ export default function InputWithIcon({
     updateTextbookExercises,
     updateDiscussionText,
     discussionForms,
+    updateTextbookExercisePages,
+    textbookExercisePages,
   } = useContext(PresentationContext);
 
   function setInput() {
@@ -40,10 +43,12 @@ export default function InputWithIcon({
         return <HelpOutlineIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
       case "answer":
         return <FeedbackIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
-      case "page":
+      case "page" || "exercisePage":
         return <PlagiarismIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
       case "exercise":
         return <FitnessCenterIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+      case "exercisePage":
+        return <AutoStoriesIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
       default:
         return (
           <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
@@ -69,6 +74,8 @@ export default function InputWithIcon({
         updateDiscussionText(id, index, event.target.value);
         console.log(discussionForms);
         break;
+      case "exercisePage":
+        updateTextbookExercisePages(event.target.value);
       default:
         break;
     }
@@ -86,6 +93,8 @@ export default function InputWithIcon({
         return textbookExercises;
       case "discussion":
         return discussionForms[id]?.discussionTexts[index] || "";
+      case "exercisePage":
+        return textbookExercisePages;
       default:
         return "";
     }
@@ -100,6 +109,7 @@ export default function InputWithIcon({
           //height: "100%",
           //justifyContent: "center",
           //alignItems: "center",
+          backgroundColor: "transparent",
         }}
       >
         {iconFirst ? setInput() : null}

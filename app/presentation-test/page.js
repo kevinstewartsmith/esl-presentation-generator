@@ -22,6 +22,7 @@ import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import StegaIcon from "@app/components/StegaIcon";
 import { Handjet } from "next/font/google";
+import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 
 const handjet = Handjet({
   weight: ["400"],
@@ -124,7 +125,7 @@ const PresentationTest = () => {
               backgroundColor: "white",
               height: "100vh - 50px",
               display: "flex",
-              top: 50,
+              top: 30,
               justifyContent: "center",
               alignItems: "center",
 

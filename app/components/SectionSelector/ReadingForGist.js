@@ -5,6 +5,7 @@ import FreeSoloDropDown from "../PresentationPrep/AddTextButtons/FreeSoloDropDow
 import InputWithIcon from "../PresentationPrep/AddTextButtons/InputWithIcon";
 import TimeLimitSlider from "../PresentationPrep/AddTextButtons/TimeLimitSlider";
 import DiscussionForm from "../PresentationPrep/DiscussionForm";
+import GistExerciseInputs from "../PresentationPrep/GistExerciseInputs";
 
 export const ReadingForGist = ({ index, includedId }) => {
   const [gistReadingChecked, setGistReadingChecked] = useState(true);
@@ -46,43 +47,15 @@ export const ReadingForGist = ({ index, includedId }) => {
                   paddingBottom: 20,
                 }}
               >
-                <Grid item xs={12} sm={6} paddingBottom={4}>
-                  <Grid
-                    container
-                    direction={"row"}
-                    spacing={2}
-                    padding={0}
-                    style={{ backgroundColor: "white", paddingLeft: 10 }}
-                  >
-                    <Grid item xs={12} sm={12}>
-                      <FreeSoloDropDown label={"Book Name"} input={"book"} />
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                      <FreeSoloDropDown label={"Text Title"} input={"title"} />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sm={6} paddingBottom={4}>
-                  <Grid
-                    container
-                    direction={"row"}
-                    spacing={0}
-                    padding={0}
-                    style={{ backgroundColor: "white", paddingLeft: 10 }}
-                  >
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <InputWithIcon label={"Page"} input={"page"} />
-                    </Grid>
-                  </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  paddingBottom={4}
+                  paddingRight={9}
+                  paddingLeft={2}
+                >
+                  <GistExerciseInputs />
                 </Grid>
                 <Grid item xs={12} sm={12} paddingBottom={4}>
                   <TimeLimitSlider
@@ -109,12 +82,12 @@ export const ReadingForGist = ({ index, includedId }) => {
                     input={"answer"}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12} paddingBottom={4}>
-                  <DiscussionForm
-                    id={"gistQuestionDiscussion"}
-                    includedId={"includeGistReadingQuestionPartnerCheck"}
-                  />
-                </Grid>
+                {/* <Grid item xs={12} sm={12} paddingBottom={4}> */}
+                <DiscussionForm
+                  id={"gistQuestionDiscussion"}
+                  includedId={"includeGistReadingQuestionPartnerCheck"}
+                />
+                {/* </Grid> */}
                 <Grid item xs={12} sm={12} paddingBottom={4}>
                   <TimeLimitSlider
                     label={"Discussion Time Limit"}

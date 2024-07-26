@@ -10,7 +10,7 @@ const DiscussionForm = ({ id, includedId }) => {
   //const [numberOfDiscussionLines, setNumberOfDiscussionLines] = useState(2)
   const { discussionForms, addDiscussionLine, updateDiscussionText } =
     useContext(PresentationContext);
-  console.log("DiscussionForm render_discussionForms: " + discussionForms);
+  //console.log("DiscussionForm render_discussionForms: " + discussionForms);
   const discussionForm = discussionForms[id] || {
     numberOfDiscussionLines: 2,
     discussionTexts: Array(2).fill(""),
@@ -25,42 +25,49 @@ const DiscussionForm = ({ id, includedId }) => {
   }, [id, discussionForms, addDiscussionLine]);
 
   return (
-    <Grid container direction={"row"} spacing={0} padding={0}>
-      <Grid item xs={12} sm={12}>
-        <CheckBoxAndLabel
-          label={"Partner Check Discussion"}
-          size={"small"}
-          includedId={includedId}
-        />
-      </Grid>
-      <Grid item xs={12} sm={12} className="flex justify-center items-center">
-        <div className="border border-gray-300 rounded-lg m-4 relative p-4 w-4/5">
-          <Grid container direction={"row"}>
-            {discussionForm.discussionTexts &&
-              discussionForm.discussionTexts.map((text, index) => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  key={index}
-                  paddingLeft={index % 2 === 0 ? 0 : 5}
-                  paddingRight={index % 2 !== 0 ? 0 : 3}
-                >
-                  <InputWithIcon
-                    iconFirst={index % 2 === 0}
-                    discussionLine={text || "test"}
-                    text={text}
-                    index={index}
-                    input={"discussion"}
-                    id={id}
-                  />
-                </Grid>
-              ))}
-          </Grid>
-          <button onClick={() => addDiscussionLine(id)}>
-            <AddIcon className="add-discussion-line-button" />
-          </button>
-        </div>
+    <Grid item xs={12} sm={12} paddingBottom={4}>
+      <Grid container direction={"row"} spacing={0} padding={0}>
+        <Grid item xs={12} sm={12}>
+          <CheckBoxAndLabel
+            label={"Partner Check Discussion"}
+            size={"small"}
+            includedId={includedId}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} className="flex justify-center items-center">
+          <div className="border border-gray-300 rounded-lg m-4 relative p-4 w-4/5">
+            <Grid container direction={"row"}>
+              {discussionForm.discussionTexts &&
+                discussionForm.discussionTexts.map((text, index) => (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    key={index}
+                    paddingLeft={index % 2 === 0 ? 0 : 5}
+                    paddingRight={index % 2 !== 0 ? 0 : 3}
+                  >
+                    <InputWithIcon
+                      iconFirst={index % 2 === 0}
+                      discussionLine={text || "test"}
+                      text={text}
+                      index={index}
+                      input={"discussion"}
+                      id={id}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
+            <div style={{ width: "100%" }}>
+              <button
+                onClick={() => addDiscussionLine(id)}
+                className="add-discussion-line-button"
+              >
+                <AddIcon />
+              </button>
+            </div>
+          </div>
+        </Grid>
       </Grid>
     </Grid>
   );
