@@ -5,24 +5,24 @@ import Head from "next/head";
 import { useState, useContext } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
-  () => import("../components/PresentationDisplay"),
+  () => import("../create/components/PresentationDisplay"),
   { ssr: false }
 );
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import AddTextBook from "../components/PresentationPrep/AddTextBook";
-import ReadingContent from "@app/components/PresentationPrep/ReadingContent";
-import SectionSelector from "@app/components/PresentationPrep/SectionSelector";
-import PreReadingVocabSlides from "@app/components/PresentationPrep/PreReadingVocabSlides";
-import PreReadingGames from "@app/components/PresentationPrep/PreReadingGames";
+import AddTextBook from "../create/components/PresentationPrep/AddTextBook";
+import ReadingContent from "@app/create/components/PresentationPrep/ReadingContent";
+import SectionSelector from "@app/create/components/PresentationPrep/SectionSelector";
+import PreReadingVocabSlides from "@app/create/components/PresentationPrep/PreReadingVocabSlides";
+import PreReadingGames from "@app/create/components/PresentationPrep/PreReadingGames";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
-import FinishReading from "@app/components/SectionSelector/FinishReading";
+import FinishReading from "@app/create/components/SectionSelector/FinishReading";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import StegaIcon from "@app/components/StegaIcon";
+import StegaIcon from "@app/create/components/StegaIcon";
 import { Handjet } from "next/font/google";
-import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
+import TextBookInfoEntry from "@app/create/components/PresentationPrep/TextBookInfoEntry";
 
 const handjet = Handjet({
   weight: ["400"],
@@ -34,52 +34,6 @@ const PresentationTest = () => {
   const { updateShowPresentation, showPresentation } =
     useContext(PresentationContext);
 
-  const [presData, setPresData] = useState({
-    gistReading: {
-      book: "Student Book",
-      page: 23,
-      title: "My Cat, the Hero",
-      question: "What is the name of Hercules' cat?",
-      timeLimit: 2,
-    },
-    detailReading: {
-      book: "Student Book",
-      page: 23,
-      title: "My Cat, the Hero",
-      exercises: 5,
-      timeLimit: 6,
-    },
-    gistPartnerCheck: {
-      question: "What did you put for number 1?",
-      answer: "I put ...",
-    },
-    detailPartnerCheck: {
-      question: "What did you put for number 5?",
-      answer: "I put ...",
-    },
-  });
-
-  // const updateGistReadingTimeLimit = (event, newTimeLimit) => {
-  //   setPresData((prevState) => ({
-  //     ...prevState,
-  //     gistReading: {
-  //       ...prevState.gistReading,
-  //       timeLimit: newTimeLimit,
-  //     },
-  //   }));
-  //   console.log(presData.gistReading.timeLimit);
-  // };
-
-  // const updateGistPage = (event, newPage) => {
-  //   setPresData((prevState) => ({
-  //     ...prevState,
-  //     gistReading: {
-  //       ...prevState.gistReading,
-  //       page: newPage,
-  //     },
-  //   }));
-  //   console.log(presData.gistReading.page);
-  // };
   const sections = [
     <ReadingContent />,
     <SectionSelector />,
@@ -100,26 +54,6 @@ const PresentationTest = () => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          <div
-            style={{
-              backgroundColor: "white",
-              height: 50,
-              display: "flex",
-              alignItems: "center",
-
-              marginLeft: 0,
-            }}
-          >
-            <StegaIcon />{" "}
-            <h1
-              style={{ color: "#3C5997", marginLeft: 10, fontSize: 30 }}
-              className={handjet.className}
-            >
-              {"  Reading Exercise Generator"}
-            </h1>
-          </div>
-          {/* <ReadingContent />
-        <SectionSelector /> */}
           <div
             style={{
               backgroundColor: "white",

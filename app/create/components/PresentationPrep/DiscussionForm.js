@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React, { useState, useContext, useEffect } from "react";
-import CheckBoxAndLabel from "../PresentationPrep/AddTextButtons/CheckBoxAndLabel";
-import InputWithIcon from "../PresentationPrep/AddTextButtons/InputWithIcon";
+import CheckBoxAndLabel from "./AddTextButtons/CheckBoxAndLabel";
+import InputWithIcon from "./AddTextButtons/InputWithIcon";
 import AddIcon from "@mui/icons-material/Add";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { PhotoSizeSelectLargeTwoTone } from "@mui/icons-material";

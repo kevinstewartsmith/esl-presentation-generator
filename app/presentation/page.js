@@ -2,7 +2,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 
 const PresentationDisplay = dynamic(
-  () => import("../components/PresentationDisplay"),
+  () => import("../create/components/PresentationDisplay"),
   { ssr: false }
 );
 

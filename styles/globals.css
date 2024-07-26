@@ -10,7 +10,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
@@ -23,7 +23,8 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   ); */
-  background: rgb(161, 156, 156);
+  /* background: rgb(161, 156, 156); */
+  background: rgb(255,255,255);
   color: rgb(var(--foreground-rgb));
 }
 input {
@@ -135,6 +136,17 @@ button {
   left: 20px;
 }
 
+.add-button {
+  color: white;
+  background-color: #3c5997;
+  position: fixed;
+  z-index: 2;
+  /* right: 40px; */
+  bottom: 10%;
+  right: 5%;
+  font-size: 80;
+}
+
 .section-details-container {
   display:flex;
   align-items: center;
@@ -157,3 +169,16 @@ button {
   border-color: pink;
   border-width: 10px ;
 } */
+
+.lesson-card {
+  border-color: lightgray;
+  border-width: 1px;
+  border-radius: 15px;
+  background-color: white;
+  width: 60%;
+  height: 33vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}

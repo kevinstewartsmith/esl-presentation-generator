@@ -1,13 +1,20 @@
-import { useState, useContext } from 'react';
+import { useState, useContext } from "react";
 //import audiotextcontext
-import { AudioTextContext } from '../contexts/AudioTextContext';
+import { AudioTextContext } from "../../contexts/AudioTextContext";
 
 const AudioSlicer = () => {
-    //audio context
-  const { originalAudio, setAudioSnippet, updateExtractedText, extractedText, audioURL, updateAudioURL } = useContext(AudioTextContext);
+  //audio context
+  const {
+    originalAudio,
+    setAudioSnippet,
+    updateExtractedText,
+    extractedText,
+    audioURL,
+    updateAudioURL,
+  } = useContext(AudioTextContext);
   const [trimmedBlob, setTrimmedBlob] = useState(null);
   //const [audioURL, setAudioURL] = useState('');
-  const [textValue, setTextValue] = useState('');
+  const [textValue, setTextValue] = useState("");
   const [link, setLink] = useState(null);
 
   const handleTextChange = (e) => {
@@ -22,12 +29,10 @@ const AudioSlicer = () => {
     e.preventDefault();
     // You can do something with the textValue here, like save it to state or send it to a server
     //log submitted vlue
-    
-    updateAudioURL(textValue);
-    console.log('Submitted Text:', textValue);
-  };
 
- 
+    updateAudioURL(textValue);
+    console.log("Submitted Text:", textValue);
+  };
 
   const handleFetchAudio = async () => {
     try {
@@ -35,7 +40,8 @@ const AudioSlicer = () => {
       const arrayBuffer = await response.arrayBuffer();
 
       // Audio processing logic
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
       const decodedAudio = await audioContext.decodeAudioData(arrayBuffer);
 
       // Trim the audio (example: from 10 seconds to 20 seconds)
@@ -49,10 +55,18 @@ const AudioSlicer = () => {
         decodedAudio.sampleRate
       );
 
-      for (let channel = 0; channel < decodedAudio.numberOfChannels; channel++) {
+      for (
+        let channel = 0;
+        channel < decodedAudio.numberOfChannels;
+        channel++
+      ) {
         const channelData = decodedAudio.getChannelData(channel);
         const newData = newBuffer.getChannelData(channel);
-        for (let i = startTime * decodedAudio.sampleRate, j = 0; i < endTime * decodedAudio.sampleRate; i++, j++) {
+        for (
+          let i = startTime * decodedAudio.sampleRate, j = 0;
+          i < endTime * decodedAudio.sampleRate;
+          i++, j++
+        ) {
           newData[j] = channelData[i];
         }
       }
@@ -65,16 +79,16 @@ const AudioSlicer = () => {
       // Set the trimmed audio blob to state
       setTrimmedBlob(audioBlob);
     } catch (error) {
-      console.error('Error fetching or processing audio:', error);
+      console.error("Error fetching or processing audio:", error);
     }
   };
 
   const newBufferToMP3 = (buffer, callback) => {
-    const mimeType = 'audio/mp3';
+    const mimeType = "audio/mp3";
     const bitRate = 128;
 
     // Use the lamejs library (imported in the component) to encode the audio buffer to MP3
-    const lame = require('lamejs');
+    const lame = require("lamejs");
     const mp3encoder = new lame.Mp3Encoder(2, buffer.sampleRate, bitRate);
 
     const interleaved = [];
@@ -106,9 +120,9 @@ const AudioSlicer = () => {
 
   const handleDownload = () => {
     if (trimmedBlob) {
-      const downloadLink = document.createElement('a');
+      const downloadLink = document.createElement("a");
       downloadLink.href = URL.createObjectURL(trimmedBlob);
-      downloadLink.download = 'trimmed_audio.mp3';
+      downloadLink.download = "trimmed_audio.mp3";
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
@@ -117,8 +131,12 @@ const AudioSlicer = () => {
 
   return (
     <div>
-
-      <button style={{borderColor:"white", borderWidth: 1}} onClick={handleFetchAudio}>Download Audio</button>
+      <button
+        style={{ borderColor: "white", borderWidth: 1 }}
+        onClick={handleFetchAudio}
+      >
+        Download Audio
+      </button>
       <button onClick={handleDownload} disabled={!trimmedBlob}>
         Download Trimmed Audio
       </button>

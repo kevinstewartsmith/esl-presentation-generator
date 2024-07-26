@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
-import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
+import FreeSoloDropDown from "@app/create/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
+import InputWithIcon from "@app/create/components/PresentationPrep/AddTextButtons/InputWithIcon";
 
 const GistExerciseInputs = () => {
   return (
