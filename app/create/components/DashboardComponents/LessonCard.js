@@ -28,8 +28,9 @@ export default function LessonCard({ deleteLesson, lesson }) {
             alt="green iguana"
           />
           <CardContent>
+            <h1>{lesson["title"]}</h1>
             <Typography gutterBottom variant="h5" component="div"></Typography>
-            <Typography variant="body2" sx={{ color: "black" }}>
+            <Typography variant="body2" sx={{ color: "black", size: 40 }}>
               {lesson["title"]}
             </Typography>
             <Typography>{lesson["id"]}</Typography>

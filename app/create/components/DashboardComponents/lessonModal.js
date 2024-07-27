@@ -25,13 +25,13 @@ export default function LessonModal({
   handleOpen,
   addLesson,
 }) {
-  // const [lessonTitle, setLessonTitle] = useState("");
+  const [lessonTitle, setLessonTitle] = useState("");
 
-  // function handleChange(e) {
-  //   setLessonTitle(e.target.value);
-  // }
+  function handleChange(e) {
+    setLessonTitle(e.target.value);
+  }
   function addButtonPressed() {
-    addLesson("tttttt");
+    addLesson(lessonTitle);
   }
 
   return (
@@ -52,14 +52,14 @@ export default function LessonModal({
           Ready, set, plan!
         </Typography>
         <div style={{ width: "100%", margin: 30 }}>
-          {/* <TextField
-              id="input-with-sx"
-              label={"Lesson Title"}
-              variant="standard"
-              style={{ width: "90%", color: "black" }}
-              value={lessonTitle}
-              onChange={handleChange}
-            /> */}
+          <TextField
+            id="input-with-sx"
+            label={"Lesson Title"}
+            variant="standard"
+            style={{ width: "90%", color: "black" }}
+            value={lessonTitle}
+            onChange={handleChange}
+          />
         </div>
         {/* <div style={{ paddingLeft: "0%" }}>
             <FreeSoloDropDown />
