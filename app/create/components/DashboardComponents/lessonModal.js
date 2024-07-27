@@ -1,10 +1,11 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputWithIcon from "@app/create/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import FreeSoloDropDown from "@app/create/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
+import TextField from "@mui/material/TextField";
 
 const style = {
   position: "absolute",
@@ -22,39 +23,56 @@ export default function LessonModal({
   open,
   handleClose,
   handleOpen,
-  addButtonPressed,
+  addLesson,
 }) {
+  // const [lessonTitle, setLessonTitle] = useState("");
+
+  // function handleChange(e) {
+  //   setLessonTitle(e.target.value);
+  // }
+  function addButtonPressed() {
+    addLesson("tttttt");
+  }
+
   return (
-    <div>
-      {/* <Button onClick={handleOpen}>Open modal</Button> */}
-      <Modal
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Box sx={style}>
-          <Typography
-            id="keep-mounted-modal-title"
-            variant="h6"
-            component="h2"
-            color={"black"}
-          >
-            Ready, set, plan!
-          </Typography>
-          <InputWithIcon />
-          <FreeSoloDropDown />
-          <Typography
-            id="keep-mounted-modal-description"
-            sx={{ mt: 2 }}
-            color={"black"}
-          >
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-          <Button onClick={addButtonPressed}>ADD</Button>
-        </Box>
-      </Modal>
-    </div>
+    <Modal
+      keepMounted
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="keep-mounted-modal-title"
+      aria-describedby="keep-mounted-modal-description"
+    >
+      <Box sx={style}>
+        <Typography
+          id="keep-mounted-modal-title"
+          variant="h6"
+          component="h2"
+          color={"black"}
+        >
+          Ready, set, plan!
+        </Typography>
+        <div style={{ width: "100%", margin: 30 }}>
+          {/* <TextField
+              id="input-with-sx"
+              label={"Lesson Title"}
+              variant="standard"
+              style={{ width: "90%", color: "black" }}
+              value={lessonTitle}
+              onChange={handleChange}
+            /> */}
+        </div>
+        {/* <div style={{ paddingLeft: "0%" }}>
+            <FreeSoloDropDown />
+          </div> */}
+        <Typography
+          id="keep-mounted-modal-description"
+          sx={{ mt: 2 }}
+          color={"black"}
+        >
+          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+        </Typography>
+        <Button onClick={addButtonPressed}>ADD</Button>
+      </Box>
+    </Modal>
   );
 }

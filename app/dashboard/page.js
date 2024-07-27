@@ -13,7 +13,7 @@ const page = () => {
   // function handleAdd() {
   //   setNum(num + 1);
   // }
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
@@ -25,13 +25,13 @@ const page = () => {
     }
   }, []);
 
-  const addLesson = () => {
+  const addLesson = (title) => {
     console.log(uuidv4());
 
     const lessonId = uuidv4();
     const newLesson = {
       id: lessonId,
-      title: `New Lesson: ${lessonId}`,
+      title: title,
       description: "This is a new lesson",
       sections: [],
     };
@@ -43,7 +43,8 @@ const page = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem("lessons", lessonString);
     }
-
+    console.log("add lesson");
+    console.log("Lesson Length: ", lessons.length);
     handleClose();
   };
 
@@ -51,7 +52,7 @@ const page = () => {
     console.log("delete lesson");
     console.log(lessonId);
 
-    const newLessons = lessons.filter((lesson) => lesson !== lessonId);
+    const newLessons = lessons.filter((lesson) => lesson.id !== lessonId);
     setLessons(newLessons);
     const lessonString = JSON.stringify(newLessons);
     if (typeof window !== "undefined") {
@@ -85,10 +86,10 @@ const page = () => {
         <AddIcon sx={{}} />
       </button>
       <LessonModal
-        handleOpen={handleOpen}
+        //handleOpen={handleOpen}
         handleClose={handleClose}
         open={open}
-        addButtonPressed={addLesson}
+        addLesson={addLesson}
       />
     </div>
   );

@@ -12,6 +12,7 @@ import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import TitleIcon from "@mui/icons-material/Title";
 
 export default function InputWithIcon({
   label,
@@ -49,6 +50,8 @@ export default function InputWithIcon({
         return <FitnessCenterIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
       case "exercisePage":
         return <AutoStoriesIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+      case "lessonTitle":
+        return <TitleIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
       default:
         return (
           <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />

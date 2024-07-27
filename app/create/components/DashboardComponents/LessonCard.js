@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -12,14 +12,15 @@ import Link from "next/link";
 
 export default function LessonCard({ deleteLesson, lesson }) {
   const lessonId = lesson.id;
-  console.log(lesson);
+
+  // console.log(lesson);
   return (
-    <Link href={`/dashboard/lesson/${lessonId}`}>
-      <Card
-        sx={{ maxWidth: 345, borderRadius: 3 }}
-        onClick={() => console.log(lessonId["title"])}
-      >
-        <CardActionArea>
+    <Card
+      sx={{ maxWidth: 345, borderRadius: 3 }}
+      //onClick={() => console.log(lesson.title)}
+    >
+      <CardActionArea>
+        <Link href={`/dashboard/lesson/${lessonId}`}>
           <CardMedia
             component="img"
             height="140"
@@ -29,23 +30,25 @@ export default function LessonCard({ deleteLesson, lesson }) {
           <CardContent>
             <Typography gutterBottom variant="h5" component="div"></Typography>
             <Typography variant="body2" sx={{ color: "black" }}>
-              {lessonId["title"]}
+              {lesson["title"]}
             </Typography>
+            <Typography>{lesson["id"]}</Typography>
           </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => deleteLesson(lessonId)}
-          >
-            Delete
-          </Button>
-          <Button size="small" style={{ right: 0 }}>
-            <MoreVertIcon fontSize="small" color="black" />
-          </Button>
-        </CardActions>
-      </Card>
-    </Link>
+        </Link>
+      </CardActionArea>
+
+      <CardActions>
+        <Button
+          size="small"
+          color="primary"
+          onClick={() => deleteLesson(lessonId)}
+        >
+          Delete
+        </Button>
+        <Button size="small" style={{ right: 0 }}>
+          <MoreVertIcon fontSize="small" color="black" />
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
