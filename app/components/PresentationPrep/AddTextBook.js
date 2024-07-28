@@ -2,8 +2,8 @@ import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import InputWithIcon from "@app/create/components/PresentationPrep/AddTextButtons/InputWithIcon";
-import TextBookInfoEntry from "@app/create/components/PresentationPrep/TextBookInfoEntry";
+import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
+import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 
 // Styles
 const baseStyle = {

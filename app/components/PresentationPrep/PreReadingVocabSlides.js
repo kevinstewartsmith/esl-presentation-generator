@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { lightBlue } from "@mui/material/colors";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import PreviewVocabSlides from "@app/create/components/PresentationPrep/PreviewVocabSlides";
+import PreviewVocabSlides from "@app/components/PresentationPrep/PreviewVocabSlides";
 
 const PreReadingVocabSlides = () => {
   //const words = ['Carpet', 'Dolphin', 'Rubbish', 'Sequence']

@@ -5,24 +5,24 @@ import Head from "next/head";
 import { useState, useContext } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
-  () => import("../create/components/PresentationDisplay"),
+  () => import("../components/PresentationDisplay"),
   { ssr: false }
 );
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import AddTextBook from "../create/components/PresentationPrep/AddTextBook";
-import ReadingContent from "@app/create/components/PresentationPrep/ReadingContent";
-import SectionSelector from "@app/create/components/PresentationPrep/SectionSelector";
-import PreReadingVocabSlides from "@app/create/components/PresentationPrep/PreReadingVocabSlides";
-import PreReadingGames from "@app/create/components/PresentationPrep/PreReadingGames";
+import AddTextBook from "../components/PresentationPrep/AddTextBook";
+import ReadingContent from "@app/components/PresentationPrep/ReadingContent";
+import SectionSelector from "@app/components/PresentationPrep/SectionSelector";
+import PreReadingVocabSlides from "@app/components/PresentationPrep/PreReadingVocabSlides";
+import PreReadingGames from "@app/components/PresentationPrep/PreReadingGames";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
-import FinishReading from "@app/create/components/SectionSelector/FinishReading";
+import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import StegaIcon from "@app/create/components/StegaIcon";
+import StegaIcon from "@app/components/StegaIcon";
 import { Handjet } from "next/font/google";
-import TextBookInfoEntry from "@app/create/components/PresentationPrep/TextBookInfoEntry";
+import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 
 const handjet = Handjet({
   weight: ["400"],
@@ -49,7 +49,7 @@ const PresentationTest = () => {
       </Head>
 
       {showPresentation ? (
-        <PresentationDisplay presData={presData} />
+        <PresentationDisplay />
       ) : (
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}

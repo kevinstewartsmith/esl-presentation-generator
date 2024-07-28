@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import LessonCard from "@app/create/components/DashboardComponents/LessonCard";
+import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddIcon from "@mui/icons-material/Add";
-import LessonModal from "../create/components/DashboardComponents/lessonModal";
+import LessonModal from "../components/DashboardComponents/lessonModal";
 import { v4 as uuidv4 } from "uuid";
 
 const page = () => {
@@ -63,10 +63,6 @@ const page = () => {
   return (
     <div style={{ marginLeft: 40, marginRight: 40 }}>
       <Grid container spacing={0}>
-        {/* <Grid item xs={4}>
-        <h1 className="lesson-card">+</h1>
-      </Grid> */}
-        {/* Array.from({ length: num }).map((_, index) => ( */}
         {lessons.map((lesson, index) => (
           <Grid item xs={3} padding={2} key={index}>
             <LessonCard

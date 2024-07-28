@@ -5,7 +5,7 @@ import React, {
   useEffect,
   Fragment,
 } from "react";
-import { AudioTextContext } from "../../contexts/AudioTextContext";
+import { AudioTextContext } from "../contexts/AudioTextContext";
 import { Grid } from "@mui/material";
 import Snippet from "./Snippet";
 

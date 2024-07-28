@@ -3,8 +3,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import InputWithIcon from "@app/create/components/PresentationPrep/AddTextButtons/InputWithIcon";
-import FreeSoloDropDown from "@app/create/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
+import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
+import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
 import TextField from "@mui/material/TextField";
 
 const style = {
@@ -32,6 +32,7 @@ export default function LessonModal({
   }
   function addButtonPressed() {
     addLesson(lessonTitle);
+    setLessonTitle("");
   }
 
   return (

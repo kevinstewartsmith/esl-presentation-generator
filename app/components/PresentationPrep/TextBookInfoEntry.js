@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import InputWithIcon from "@app/create/components/PresentationPrep/AddTextButtons/InputWithIcon";
-import FreeSoloDropDown from "@app/create/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
+import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
+import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
 
 const TextBookInfoEntry = ({ category }) => {
   const inputs = (category) => {

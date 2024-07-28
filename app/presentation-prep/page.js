@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 // import '../globals.css';
 import Checkbox from "@mui/material/Checkbox";
-import PresentationItems from "@app/create/components/PresentationPrep/PresentationItems";
+import PresentationItems from "@app/components/PresentationPrep/PresentationItems";
 
 const page = () => {
   const [checked, setChecked] = useState(true);

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AudioTextContext } from "../../contexts/AudioTextContext";
+import { AudioTextContext } from "../contexts/AudioTextContext";
 
 const Transcript = () => {
   const {

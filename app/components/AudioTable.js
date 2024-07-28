@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { AudioTextContext } from "../../contexts/AudioTextContext";
+import { AudioTextContext } from "../contexts/AudioTextContext";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import IconButton from "@mui/material/IconButton";
 import { playAudioFile } from "@app/utils/AudioControls";

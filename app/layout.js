@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import "@styles/globals.css";
 import { AudioTextProvider } from "./contexts/AudioTextContext";
 import { PresentationContextProvider } from "./contexts/PresentationContext";
-import Nav from "./create/components/Nav";
+import Nav from "./components/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
 

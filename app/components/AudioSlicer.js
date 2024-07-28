@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 //import audiotextcontext
-import { AudioTextContext } from "../../contexts/AudioTextContext";
+import { AudioTextContext } from "../contexts/AudioTextContext";
 
 const AudioSlicer = () => {
   //audio context
