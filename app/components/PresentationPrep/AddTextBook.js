@@ -11,6 +11,7 @@ const baseStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  justifyContent: "center",
   padding: "20px",
   borderWidth: 2,
   borderRadius: 2,
@@ -18,6 +19,7 @@ const baseStyle = {
   borderStyle: "dashed",
   backgroundColor: "#f5f5f5",
   color: "#bdbdbd",
+  //color: "green",
   outline: "none",
   transition: "border .24s ease-in-out",
   height: "10vh",
@@ -89,17 +91,17 @@ function AddTextBook({ category }) {
   } = useContext(PresentationContext);
 
   //OCR Function
-  async function handleReadText2(file) {
-    const worker = await createWorker();
-    await worker.loadLanguage("eng");
-    await worker.initialize("eng");
-    const {
-      data: { text },
-    } = await worker.recognize(file);
-    //setExtractedText(text);
-    updateTextTranscript(text);
-    await worker.terminate();
-  }
+  // async function handleReadText2(file) {
+  //   const worker = await createWorker();
+  //   await worker.loadLanguage("eng");
+  //   await worker.initialize("eng");
+  //   const {
+  //     data: { text },
+  //   } = await worker.recognize(file);
+  //   //setExtractedText(text);
+  //   updateTextTranscript(text);
+  //   await worker.terminate();
+  // }
 
   async function handleReadText(file) {
     const worker = await createWorker();

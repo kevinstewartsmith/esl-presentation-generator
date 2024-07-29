@@ -41,17 +41,17 @@ export default function InputWithIcon({
   function setInput() {
     switch (input) {
       case "question":
-        return <HelpOutlineIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <HelpOutlineIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       case "answer":
-        return <FeedbackIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <FeedbackIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       case "page" || "exercisePage":
-        return <PlagiarismIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <PlagiarismIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       case "exercise":
-        return <FitnessCenterIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <FitnessCenterIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       case "exercisePage":
-        return <AutoStoriesIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <AutoStoriesIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       case "lessonTitle":
-        return <TitleIcon sx={{ color: "#333", mr: 1, my: 0.5 }} />;
+        return <TitleIcon sx={{ color: "gray", mr: 1, my: 0.5 }} />;
       default:
         return (
           <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />

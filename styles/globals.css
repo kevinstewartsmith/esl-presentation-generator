@@ -182,3 +182,25 @@ button {
   align-items: center;
   margin: 10px;
 }
+
+.presentation-cancel-button {
+  background-color: transparent; 
+  height: 80px; 
+  width: 80px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  border-radius: 5px; 
+  color: black; 
+  position: fixed; 
+  z-index: 5; 
+  right: 0px; 
+  top: 50px; 
+  font-size: 100%;
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+}
+
+.presentation-cancel-button:hover {
+  opacity: 0.35;
+}

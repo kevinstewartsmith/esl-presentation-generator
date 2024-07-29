@@ -13,7 +13,7 @@ const ReadingContent = () => {
   };
 
   return (
-    <div className="flex items-center content-center m-20">
+    <div className="flex items-center content-center ml-20 mr-20 mt-0">
       <Grid container spacing={0} padding={2} direction={"row"}>
         {sections.map((section, index) => (
           <React.Fragment key={index}>

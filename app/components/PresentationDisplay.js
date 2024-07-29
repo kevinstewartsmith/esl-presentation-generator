@@ -12,6 +12,7 @@ import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstruct
 import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
 //import "reveal.js/dist/theme/moon.css";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const PresentationDisplay = ({ presData }) => {
   //import("reveal.js/dist/theme/moon.css");
@@ -60,8 +61,49 @@ const PresentationDisplay = ({ presData }) => {
         // borderColor: 5,
       }}
     >
+      <button
+        onClick={() => {
+          console.log("cancel clicked");
+        }}
+        className="presentation-cancel-button"
+      >
+        <CancelIcon
+          //fontSize="100%"
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </button>
       {/* <h1>test</h1> */}
       <div className="slides">
+        {/* <button
+          onClick={() => {
+            "cancel clicked";
+          }}
+          style={{
+            backgroundColor: "pink",
+            height: "50px",
+            width: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "5px",
+            borderWidth: "1px",
+            //borderColor: "black",
+            color: "gray",
+            position: "fixed",
+            zIndex: 9999,
+            right: "-20px",
+            top: "10px",
+          }}
+        > */}
+        {/* <CancelIcon
+            fontSize="large"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </button> */}
+
         <section data-background-color="blue" data-font-family="Arial">
           <h1>Slide1</h1>Slide 1
         </section>

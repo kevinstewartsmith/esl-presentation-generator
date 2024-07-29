@@ -2,7 +2,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, use } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
@@ -34,6 +34,21 @@ const page = ({ params }) => {
   const { updateShowPresentation, showPresentation } =
     useContext(PresentationContext);
 
+  function arrowClick(dir) {
+    console.log("arrow clicked");
+    switch (dir) {
+      case "left":
+        setSectionNumber(sectionNumber + 1);
+        break;
+      case "right":
+        setSectionNumber(sectionNumber - 1);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   const sections = [
     <ReadingContent />,
     <SectionSelector />,
@@ -54,13 +69,14 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          <h1>Title Here</h1>
+          <h1 className="ml-20">Title Here</h1>
           <div
             style={{
               backgroundColor: "white",
               height: "100vh - 50px",
               display: "flex",
-              top: 30,
+              top: 10,
+
               justifyContent: "center",
               alignItems: "center",
 
@@ -70,18 +86,24 @@ const page = ({ params }) => {
           >
             {sections[sectionNumber]}
           </div>
-          <button
-            onClick={() => setSectionNumber(sectionNumber + 1)}
-            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
-          >
-            <ArrowForwardIosIcon />
-          </button>
-          <button
-            onClick={() => setSectionNumber(sectionNumber - 1)}
-            className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
-          >
-            <ArrowBackIosIcon sx={{}} />
-          </button>
+          {sectionNumber < sections.length - 1 ? (
+            <button
+              //onClick={() => setSectionNumber(sectionNumber + 1)}
+              onClick={() => arrowClick("left")}
+              className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
+            >
+              <ArrowForwardIosIcon />
+            </button>
+          ) : null}
+          {sectionNumber === 0 ? null : (
+            <button
+              // onClick={() => setSectionNumber(sectionNumber - 1)}
+              onClick={() => arrowClick("right")}
+              className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
+            >
+              <ArrowBackIosIcon sx={{}} />
+            </button>
+          )}
         </div>
       )}
     </div>

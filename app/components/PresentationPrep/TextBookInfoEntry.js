@@ -35,14 +35,14 @@ const TextBookInfoEntry = ({ category }) => {
               >
                 <Grid
                   item
-                  xs={8}
-                  sm={8}
+                  xs={7}
+                  sm={7}
                   //className="flex items-center justify-center"
                 >
                   <FreeSoloDropDown label={"Book Name"} input={"book"} />
                 </Grid>
 
-                <Grid item xs={4} sm={4} paddingLeft={2}>
+                <Grid item xs={5} sm={5} paddingLeft={2}>
                   <InputWithIcon label={"Page"} input={"page"} />
                 </Grid>
               </Grid>
