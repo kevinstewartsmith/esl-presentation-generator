@@ -8,6 +8,7 @@ import "reveal.js/dist/reveal.css";
 //import "reveal.js/plugin/markdown/markdown.css";
 import PreReadingVocabularySection from "./FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
@@ -30,6 +31,7 @@ const PresentationDisplay = ({ presData }) => {
     textBoxInputs,
     discussionForms,
   } = useContext(PresentationContext);
+  const { hidePresentation } = useContext(GlobalVariablesContext);
   console.log("VOCAB LENGTH: " + JSON.stringify(vocabulary));
   console.log("INCLUDED: " + JSON.stringify(included));
 
@@ -57,18 +59,10 @@ const PresentationDisplay = ({ presData }) => {
       style={{
         width: "100vw",
         height: "100vh",
-        // borderWidth: 10,
-        // borderColor: 5,
       }}
     >
-      <button
-        onClick={() => {
-          console.log("cancel clicked");
-        }}
-        className="presentation-cancel-button"
-      >
+      <button onClick={hidePresentation} className="presentation-cancel-button">
         <CancelIcon
-          //fontSize="100%"
           style={{
             width: "100%",
             height: "100%",
@@ -77,33 +71,6 @@ const PresentationDisplay = ({ presData }) => {
       </button>
       {/* <h1>test</h1> */}
       <div className="slides">
-        {/* <button
-          onClick={() => {
-            "cancel clicked";
-          }}
-          style={{
-            backgroundColor: "pink",
-            height: "50px",
-            width: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "5px",
-            borderWidth: "1px",
-            //borderColor: "black",
-            color: "gray",
-            position: "fixed",
-            zIndex: 9999,
-            right: "-20px",
-            top: "10px",
-          }}
-        > */}
-        {/* <CancelIcon
-            fontSize="large"
-            style={{ width: "100%", height: "100%" }}
-          />
-        </button> */}
-
         <section data-background-color="blue" data-font-family="Arial">
           <h1>Slide1</h1>Slide 1
         </section>
@@ -111,8 +78,6 @@ const PresentationDisplay = ({ presData }) => {
         {included["includePreReadingVocabulary"] ? (
           <PreReadingVocabularySection vocabulary={vocabulary} />
         ) : null}
-
-        {/* {included["includeGistReading"] ? <GistReadingInstructions /> : null} */}
 
         <GistReadingInstructions
           gistReadingQuestions={gistReadingQuestions}

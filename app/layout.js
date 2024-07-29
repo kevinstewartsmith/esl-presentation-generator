@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "@styles/globals.css";
 import { AudioTextProvider } from "./contexts/AudioTextContext";
 import { PresentationContextProvider } from "./contexts/PresentationContext";
+import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
 import Nav from "./components/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,9 +17,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <AudioTextProvider>
         <PresentationContextProvider>
-          <body className={inter.className}>
-            <Nav>{children}</Nav>
-          </body>
+          <GlobalVariablesContextProvider>
+            <body className={inter.className}>
+              <Nav>{children}</Nav>
+            </body>
+          </GlobalVariablesContextProvider>
         </PresentationContextProvider>
       </AudioTextProvider>
     </html>

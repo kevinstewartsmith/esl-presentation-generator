@@ -2,12 +2,16 @@ import React, { useContext } from "react";
 import Link from "next/link";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { updateCacheWithNewRows } from "@mui/x-data-grid/hooks/features/rows/gridRowsUtils";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 
 const FinishReading = () => {
-  const { included, updateShowPresentation } = useContext(PresentationContext);
+  //const { included, updateShowPresentation } = useContext(PresentationContext);
+  const { presentationIsShowing, showPresentation } = useContext(
+    GlobalVariablesContext
+  );
   const handleClick = () => {
     //window.open("presentation", "_blank");
-    updateShowPresentation(true);
+    showPresentation(true);
   };
 
   return (

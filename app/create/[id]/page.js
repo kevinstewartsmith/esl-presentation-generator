@@ -20,6 +20,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import StegaIcon from "@app/components/StegaIcon";
 import { Handjet } from "next/font/google";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
@@ -31,8 +32,12 @@ const handjet = Handjet({
 
 const page = ({ params }) => {
   //const [showPresentation, setShowPresentation] = useState(false);
-  const { updateShowPresentation, showPresentation } =
-    useContext(PresentationContext);
+  // const { updateShowPresentation, showPresentation } =
+  //   useContext(PresentationContext);
+
+  const { presentationIsShowing, hidePresentation } = useContext(
+    GlobalVariablesContext
+  );
 
   function arrowClick(dir) {
     console.log("arrow clicked");
@@ -63,7 +68,7 @@ const page = ({ params }) => {
         <title style={{ font: "white" }}>Reveal.js with Next.js</title>
       </Head>
 
-      {showPresentation ? (
+      {presentationIsShowing ? (
         <PresentationDisplay />
       ) : (
         <div
