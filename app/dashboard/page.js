@@ -8,11 +8,6 @@ import LessonModal from "../components/DashboardComponents/lessonModal";
 import { v4 as uuidv4 } from "uuid";
 
 const page = () => {
-  const [num, setNum] = useState(4);
-
-  // function handleAdd() {
-  //   setNum(num + 1);
-  // }
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

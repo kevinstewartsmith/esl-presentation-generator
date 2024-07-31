@@ -52,14 +52,14 @@ const TextBookInfoEntry = ({ category }) => {
       case "QuestionText":
         return (
           <Grid container spacing={0} padding={1} direction={"row"} margin={0}>
-            <Grid item xs={6} sm={6} marginBottom={0}>
+            <Grid item xs={12} marginBottom={0}>
               <InputWithIcon
                 label={"Textbook Exercises"}
                 input={"exercise"}
                 iconFirst={"true"}
               />
             </Grid>
-            <Grid item xs={6} sm={6}>
+            <Grid item xs={12}>
               <InputWithIcon
                 label={"Exercise Page"}
                 input={"exercisePage"}

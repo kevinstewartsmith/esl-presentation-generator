@@ -37,3 +37,6 @@ next-env.d.ts
 
 #prompts
 /utils/prompts.js
+
+#service accounts
+/config

@@ -19,12 +19,7 @@ const style = {
   p: 4,
 };
 
-export default function LessonModal({
-  open,
-  handleClose,
-  handleOpen,
-  addLesson,
-}) {
+export default function LessonModal({ open, handleClose, addLesson }) {
   const [lessonTitle, setLessonTitle] = useState("");
 
   function handleChange(e) {
@@ -62,9 +57,7 @@ export default function LessonModal({
             onChange={handleChange}
           />
         </div>
-        {/* <div style={{ paddingLeft: "0%" }}>
-            <FreeSoloDropDown />
-          </div> */}
+
         <Typography
           id="keep-mounted-modal-description"
           sx={{ mt: 2 }}
