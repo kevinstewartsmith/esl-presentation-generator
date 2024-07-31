@@ -1,60 +1,38 @@
-// lib/firebaseAdmin.js
 import admin from "firebase-admin";
 import path from "path";
 import fs from "fs";
 
-console.log("CONNECTING DB");
-const directory = process.env.SERVICE_ACCOUNT_DIR;
-const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
-const fire = "firebase-service-account.json";
-console.log("Service account file: " + serviceFileName);
-console.log("fire : " + fire);
-//Service account file path
-const serviceFilePath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  directory,
-  fire
-  //serviceFileName
-);
-console.log("PATHGHHH: " + serviceFilePath);
-// Path to the service account JSON file
-const serviceAccountPath = path.resolve(
-  "./config/firebaseServiceAccountKey.json"
-);
+const serviceAccountPath = path.resolve("./config/firebaseServiceAccount.json");
+//console.log("Reading service account JSON file from:", serviceAccountPath);
 
-const serviceAccount = JSON.parse(fs.readFileSync(serviceFilePath, "utf8"));
-//console.log(serviceAccount);
-console.log("Service ACCCC: " + JSON.stringify(serviceAccount));
+const rawJson = fs.readFileSync(serviceAccountPath, "utf8");
+//console.log("Raw JSON content:", rawJson);
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   // Optional: Set the Firestore database URL
-//   // databaseURL: 'https://your-database-name.firebaseio.com',
-// });
-// // }
+const serviceAccountJSON = JSON.parse(rawJson);
+//console.log("Parsed JSON:", serviceAccountJSON);
+
+// Resolve the path to the service account JSON file
+// const serviceAccountPath = path.resolve("./config/firebaseServiceAccount.json");
+
+// Check if the file exists
+if (!fs.existsSync(serviceAccountPath)) {
+  console.error("Service account file not found at:", serviceAccountPath);
+  throw new Error("Service account file not found");
+}
 
 if (!admin.apps.length) {
   try {
-    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccount, "utf8"));
-
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert(serviceAccountJSON),
     });
-    console.log("RRRRRRFirebase Admin SDK initialized successfully.");
+    console.log("Firebase Admin SDK initialized successfully.");
   } catch (error) {
-    console.error("Error initializing Firebase Admin:", error);
+    console.error("Error initializing Firebase Admin SDK:", error);
+    throw error;
   }
 }
 
 const db = admin.firestore();
-console.log("DB Connected?????");
+console.log("Firestore DB Connected");
 
 export { db };

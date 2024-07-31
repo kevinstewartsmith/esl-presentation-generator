@@ -1,42 +1,4 @@
-// const Firestore = require("@google-cloud/firestore");
-// import path from "path";
-// const fs = require("fs");
-
-import { Firestore } from "@google-cloud/firestore";
-import path from "path";
-
-import fs from "fs";
-
-const directory = process.env.SERVICE_ACCOUNT_DIR;
-const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
-const fire = "firebase-service-account.json";
-console.log("Service account file: " + serviceFileName);
-console.log("fire : " + fire);
-//Service account file path
-const serviceFilePath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  directory,
-  fire
-  //serviceFileName
-);
-
-process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
-console.log("Service file exists: " + fs.existsSync(serviceFilePath));
-
-const db = new Firestore({
-  projectId: "esl-presentation-generator",
-  //projectId: "esl-fire-gen",
-  //keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS_FIREBASE,
-});
+import { db } from "@app/utils/firebaseAdmin";
 
 export const GET = async (request) => {
   console.log("trying to GET");
@@ -60,6 +22,6 @@ export const GET = async (request) => {
     });
   } catch (e) {
     console.error(e);
-    return new Response("damn", { status: 200 });
+    return new Response("damn", { status: 500 });
   }
 };
