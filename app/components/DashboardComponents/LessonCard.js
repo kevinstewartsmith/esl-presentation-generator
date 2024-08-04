@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Link from "next/link";
 
-export default function LessonCard({ deleteLesson, lesson }) {
+export default function LessonCard({ deleteLesson, lesson, userID }) {
   const lessonId = lesson.id;
 
   // console.log(lesson);
@@ -20,7 +20,7 @@ export default function LessonCard({ deleteLesson, lesson }) {
       //onClick={() => console.log(lesson.title)}
     >
       <CardActionArea>
-        <Link href={`/dashboard/lesson/${lessonId}`}>
+        <Link href={`/dashboard/${userID}/lesson/${lessonId}`}>
           <CardMedia
             component="img"
             height="140"

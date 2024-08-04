@@ -4,6 +4,7 @@ import { AudioTextProvider } from "./contexts/AudioTextContext";
 import { PresentationContextProvider } from "./contexts/PresentationContext";
 import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
 import Nav from "./components/Nav";
+import { DashboardContextProvider } from "./contexts/DashboardContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,15 +16,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <AudioTextProvider>
-        <PresentationContextProvider>
-          <GlobalVariablesContextProvider>
-            <body className={inter.className}>
-              <Nav>{children}</Nav>
-            </body>
-          </GlobalVariablesContextProvider>
-        </PresentationContextProvider>
-      </AudioTextProvider>
+      <DashboardContextProvider>
+        <AudioTextProvider>
+          <PresentationContextProvider>
+            <GlobalVariablesContextProvider>
+              <body className={inter.className}>
+                <Nav>{children}</Nav>
+              </body>
+            </GlobalVariablesContextProvider>
+          </PresentationContextProvider>
+        </AudioTextProvider>
+      </DashboardContextProvider>
     </html>
   );
 }

@@ -5,13 +5,13 @@ export const POST = async () => {
 
   try {
     // Example document write operation
-    const citiesRef = db.collection("cities");
-    await citiesRef.doc("SF").set({
-      name: "San Francisco",
-      state: "CA",
+    const citiesRef = db.collection("users");
+    await citiesRef.doc("kevinstewartsmith").set({
+      firstName: "Kevin",
+      lastName: "Smith",
+      userId: "kevinstewartsmith",
       country: "USA",
-      capital: false,
-      population: 860000,
+      lessons: [],
     });
 
     return new Response("Document successfully written!", { status: 200 });
