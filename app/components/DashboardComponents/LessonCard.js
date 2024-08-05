@@ -20,7 +20,7 @@ export default function LessonCard({ deleteLesson, lesson, userID }) {
       //onClick={() => console.log(lesson.title)}
     >
       <CardActionArea>
-        <Link href={`/dashboard/${userID}/lesson/${lessonId}`}>
+        <Link href={`/${userID}/lesson/${lessonId}`}>
           <CardMedia
             component="img"
             height="140"

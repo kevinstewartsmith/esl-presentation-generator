@@ -1,23 +1,23 @@
 import { db } from "@app/utils/firebaseAdmin";
 import { getFirestore, doc, collection, getDocs } from "firebase/firestore";
-
+import { getData } from "@app/utils/FirestoreGetMethods";
 export const GET = async (request) => {
   console.log("trying to GET");
   try {
     const url = new URL(request.url);
-    const userId = url.searchParams.get("userId");
-    const lessonId = url.searchParams.get("lessonId");
+    const userId = url.searchParams.get("userID");
+    const lessonId = url.searchParams.get("lessonID");
     const getMethod = url.searchParams.get("method");
     const collectionName = "users";
     console.log("Search Params: ", userId, lessonId, getMethod);
 
-    let data = null;
-    if (getMethod === "getOneLesson") {
-      data = await getUserLesson(userId, lessonId);
-    } else {
-      data = await getUserLessonsCollection(userId);
-    }
-
+    // let data = null;
+    // if (getMethod === "getOneLesson") {
+    //   data = await getUserLesson(userId, lessonId);
+    // } else {
+    //   data = await getUserLessonsCollection(userId);
+    // }
+    const data = await getData(getMethod, userId, lessonId);
     return new Response(JSON.stringify(data), {
       status: 200,
     });

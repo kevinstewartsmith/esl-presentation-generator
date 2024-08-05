@@ -1,7 +1,11 @@
 import { db } from "@app/utils/firebaseAdmin";
 
-export const POST = async () => {
+export const POST = async (request) => {
   console.log("Trying to POST");
+  const url = new URL(request.url);
+  const userID = url.searchParams.get("userID");
+  const lessonID = url.searchParams.get("lessonTitle");
+  const lessonTitle = url.searchParams.get("lessonTitle");
 
   try {
     // Example document write operation
@@ -14,7 +18,7 @@ export const POST = async () => {
       lessons: [],
     });
     const lesson = {
-      title: "Fuck this",
+      title: lessonTitle,
     };
 
     const lessonId = await postUserLesson("kevinstewartsmith", lesson);
@@ -24,6 +28,7 @@ export const POST = async () => {
     const section = {
       title: "Introduction to Example Lesson",
       content: "This is the introduction section.",
+      sectionType: "ReadingforGist",
     };
 
     await postSectionToLesson("kevinstewartsmith", lessonId, section);
