@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
-const TextBookInfoEntry = ({ category }) => {
+const TextBookInfoEntry = ({ category, stageID }) => {
   const inputs = (category) => {
     switch (category) {
       case "BookText":
@@ -18,7 +19,11 @@ const TextBookInfoEntry = ({ category }) => {
             //style={{ borderColor: "red", backgroundColor: "blue" }}
           >
             <Grid item xs={12} sm={12} spacing={0} marginBottom={2}>
-              <FreeSoloDropDown label={"Text Title"} input={"title"} />
+              <FreeSoloDropDown
+                label={"Text Title"}
+                input={"title"}
+                stageID={stageID}
+              />
             </Grid>
             <Grid
               item
@@ -39,11 +44,19 @@ const TextBookInfoEntry = ({ category }) => {
                   sm={7}
                   //className="flex items-center justify-center"
                 >
-                  <FreeSoloDropDown label={"Book Name"} input={"book"} />
+                  <FreeSoloDropDown
+                    label={"Book Name"}
+                    input={"book"}
+                    stageID={stageID}
+                  />
                 </Grid>
 
                 <Grid item xs={5} sm={5} paddingLeft={2}>
-                  <InputWithIcon label={"Page"} input={"page"} />
+                  <InputWithIcon
+                    label={"Page"}
+                    input={"page"}
+                    stageID={stageID}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -57,6 +70,7 @@ const TextBookInfoEntry = ({ category }) => {
                 label={"Textbook Exercises"}
                 input={"exercise"}
                 iconFirst={"true"}
+                stageID={stageID}
               />
             </Grid>
             <Grid item xs={12}>
@@ -64,6 +78,7 @@ const TextBookInfoEntry = ({ category }) => {
                 label={"Exercise Page"}
                 input={"exercisePage"}
                 iconFirst={true}
+                stageID={stageID}
               />
             </Grid>
           </Grid>

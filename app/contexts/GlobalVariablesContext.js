@@ -6,7 +6,7 @@ const GlobalVariablesContext = createContext();
 
 const GlobalVariablesContextProvider = ({ children }) => {
   const [presentationIsShowing, setPresentationIsShowing] = useState(false);
-
+  const loggedInUser = "kevinstewartsmith";
   function hidePresentation() {
     setPresentationIsShowing(false);
   }
@@ -21,6 +21,7 @@ const GlobalVariablesContextProvider = ({ children }) => {
         presentationIsShowing,
         hidePresentation,
         showPresentation,
+        loggedInUser,
       }}
     >
       {children}

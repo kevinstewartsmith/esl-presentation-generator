@@ -2,8 +2,10 @@ import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+//import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
+//import { read } from "fs";
 
 // Styles
 const baseStyle = {
@@ -78,7 +80,7 @@ const img = {
 //   borderColor: "black",
 // };
 
-function AddTextBook({ category }) {
+function AddTextBook({ category, stageID }) {
   console.log("The category is: ", category);
   //const [extractedText, setExtractedText] = useState("");
   const {
@@ -88,7 +90,12 @@ function AddTextBook({ category }) {
     updateQuestions,
     answers,
     updateAnswers,
+    updateTextBoxInputs,
   } = useContext(PresentationContext);
+
+  // const { updateInputTextsReading } = useContext(
+  //   ReadingForGistAndDetailContext
+  // );
 
   //OCR Function
   // async function handleReadText2(file) {
@@ -119,6 +126,7 @@ function AddTextBook({ category }) {
     switch (category) {
       case "BookText":
         updateTextTranscript(text);
+
         return null;
       case "QuestionText":
         updateQuestions(text);
@@ -131,6 +139,17 @@ function AddTextBook({ category }) {
         return null;
     }
   }
+
+  // function updateStageContext(key, value) {
+  //   switch (stageID) {
+  //     case stageID === readingForGistandDetailStage:
+  //       updateInputTextsReading(key, value);
+  //       return null;
+  //     default:
+  //       console.log("No stage selected");
+  //       return null;
+  //   }
+  // }
 
   const [files, setFiles] = useState([]);
 
@@ -282,7 +301,11 @@ function AddTextBook({ category }) {
         }}
       >
         {/* <InputWithIcon label={"Page"} input={"page"} /> */}
-        <TextBookInfoEntry category={category} className="w-half" />
+        <TextBookInfoEntry
+          category={category}
+          className="w-half"
+          stageID={stageID}
+        />
         <div {...getRootProps({ style })}>
           <input {...getInputProps()} />
           <p>

@@ -6,12 +6,21 @@ import PreReadingVocabulary from "../SectionSelector/PreReadingVocabulary";
 import ReadingForDetail from "../SectionSelector/ReadingForDetail";
 import PreReadingGame from "../SectionSelector/PreReadingGame";
 
-const SectionSelector = () => {
+const SectionSelector = ({ stageID }) => {
   const sections = [
-    <PreReadingVocabulary includedId={"includePreReadingVocabulary"} />,
-    <PreReadingGame includedId={"includePreReadingGame"} />,
-    <ReadingForGist includedId={"includeReadingForGistSection"} />,
-    <ReadingForDetail includedId={"includeReadingForDetailSection"} />,
+    <PreReadingVocabulary
+      includedId={"includePreReadingVocabulary"}
+      stageID={stageID}
+    />,
+    <PreReadingGame includedId={"includePreReadingGame"} stageID={stageID} />,
+    <ReadingForGist
+      includedId={"includeReadingForGistSection"}
+      stageID={stageID}
+    />,
+    <ReadingForDetail
+      includedId={"includeReadingForDetailSection"}
+      stageID={stageID}
+    />,
   ];
   return (
     <Grid container className="presentation-grid-container" direction={"row"}>

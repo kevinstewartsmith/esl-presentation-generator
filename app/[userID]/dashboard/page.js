@@ -2,26 +2,28 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Grid } from "@mui/material";
 import LessonCard from "@app/components/DashboardComponents/LessonCard";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { v4 as uuidv4 } from "uuid";
 import { DashboardContext } from "@app/contexts/DashboardContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const page = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =
     useContext(DashboardContext);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
   console.log("Page Params:", params.userID);
   const userID = params.userID;
+
   useEffect(() => {
-    const lessons = localStorage.getItem("lessons");
-    if (lessons) {
-      setLessons(JSON.parse(lessons));
-    }
+    // const lessons = localStorage.getItem("lessons");
+    // if (lessons) {
+    //   setLessons(JSON.parse(lessons));
+    // }
     async function fetchData() {
       try {
         const response = await loadLessons(params.userID, "getAllLessons");
@@ -41,9 +43,8 @@ const page = ({ params }) => {
   }, []);
 
   const addLesson = (title) => {
-    console.log(uuidv4());
-
     const lessonId = uuidv4();
+    console.log("Lesson ID: ", lessonId);
     const newLesson = {
       id: lessonId,
       title: title,
@@ -52,13 +53,13 @@ const page = ({ params }) => {
 
     setLessons([...lessons, newLesson]);
     console.log(lessons);
-    const lessonString = JSON.stringify([...lessons, newLesson]);
+    // const lessonString = JSON.stringify([...lessons, newLesson]);
 
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lessons", lessonString);
-    }
-    console.log("add lesson");
-    console.log("Lesson Length: ", lessons.length);
+    // if (typeof window !== "undefined") {
+    //   localStorage.setItem("lessons", lessonString);
+    // }
+    // console.log("add lesson");
+    // console.log("Lesson Length: ", lessons.length);
     handleClose();
 
     async function dbAddLesson() {
@@ -68,7 +69,8 @@ const page = ({ params }) => {
           throw new Error("Network response was not ok");
         }
         const data = await response; // Parse the JSON response
-        console.log("Lessons data:", data[0].title);
+        //console.log("Lessons data:", data[0].title);
+        console.log(JSON.stringify(data));
       } catch (error) {
         console.error(error);
       }
@@ -94,7 +96,7 @@ const page = ({ params }) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response; // Parse the JSON response
+        const data = await response;
         console.log("Lessons data:", data[0].title);
       } catch (error) {
         console.error(error);

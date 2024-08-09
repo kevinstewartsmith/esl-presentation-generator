@@ -43,3 +43,27 @@ async function getUserLessonsCollection(userID) {
   console.log(lessons);
   return lessons;
 }
+
+export const getAllInputData = async (method, userID, lessonID) => {
+  console.log("made it to getAllInputData ");
+  console.log("Lesson ID: ", lessonID);
+  const inputsRef = db
+    .collection("users")
+    .doc(userID)
+    .collection("lessons")
+    .doc(lessonID)
+    .collection("Sections")
+    .doc("teststage")
+    .collection("inputs")
+    .doc("textInputs");
+
+  const inputsSnapshot = await inputsRef.get();
+
+  const inputs = {
+    id: inputsSnapshot.id,
+    ...inputsSnapshot.data(),
+  };
+
+  console.log(inputs);
+  return inputs;
+};

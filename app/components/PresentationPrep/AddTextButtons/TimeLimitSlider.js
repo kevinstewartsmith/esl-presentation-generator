@@ -3,14 +3,27 @@ import { Grid } from "@mui/material";
 import CheckBoxAndLabel from "./CheckBoxAndLabel";
 import DiscreteSlider from "./DiscreteSlider";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
-const TimeLimitSlider = ({ label, defaultValue, max, min, id, includedId }) => {
+const TimeLimitSlider = ({
+  label,
+  defaultValue,
+  max,
+  min,
+  id,
+  includedId,
+  stageID,
+}) => {
   console.log("TimeLimitSlider at render: " + id);
   const [sliderValue, setSliderValue] = useState(
     defaultValue ? defaultValue : 3
   );
   const { updateSliderStateMemory, addSliderStateMemory, sliders } =
     useContext(PresentationContext);
+
+  const { updateInputTextsReading } = useContext(
+    ReadingForGistAndDetailContext
+  );
 
   if (!sliders[id]) {
     addSliderStateMemory(id, min, max, defaultValue, label);
@@ -31,6 +44,7 @@ const TimeLimitSlider = ({ label, defaultValue, max, min, id, includedId }) => {
     setSliderValue(newValue);
     console.log("sliderValue: " + sliderValue);
     console.log("label: " + label);
+    updateInputTextsReading(id, newValue);
   };
 
   const minuteValue = () => {

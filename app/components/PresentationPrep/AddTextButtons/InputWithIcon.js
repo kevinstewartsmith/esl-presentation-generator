@@ -11,8 +11,10 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 
 export default function InputWithIcon({
   label,
@@ -22,6 +24,7 @@ export default function InputWithIcon({
   discussionLine,
   id,
   index,
+  stageID,
 }) {
   const {
     gistReadingQuestions,
@@ -37,6 +40,12 @@ export default function InputWithIcon({
     updateTextbookExercisePages,
     textbookExercisePages,
   } = useContext(PresentationContext);
+  const { updateInputTextsReading, inputTexts, lessonID } = useContext(
+    ReadingForGistAndDetailContext
+  );
+
+  console.log("INPUT ICON LESSON ID: " + lessonID);
+  const { loggedInUser } = useContext(GlobalVariablesContext);
 
   function setInput() {
     switch (input) {
@@ -63,15 +72,19 @@ export default function InputWithIcon({
     switch (input) {
       case "question":
         updateGistReadingQuestions(event.target.value);
+        updateInputTextsReading("question", event.target.value);
         break;
       case "answer":
         updateGistReadingAnswers(event.target.value);
+        updateInputTextsReading("answer", event.target.value);
         break;
       case "page":
         updateGistReadingPage(event.target.value);
+        updateInputTextsReading("page", event.target.value);
         break;
       case "exercise":
         updateTextbookExercises(event.target.value);
+        updateInputTextsReading("exercise", event.target.value);
         break;
       case "discussion":
         updateDiscussionText(id, index, event.target.value);
@@ -79,6 +92,7 @@ export default function InputWithIcon({
         break;
       case "exercisePage":
         updateTextbookExercisePages(event.target.value);
+        updateInputTextsReading("exercisePage", event.target.value);
       default:
         break;
     }
@@ -103,8 +117,13 @@ export default function InputWithIcon({
     }
   };
 
+  // const getValueFromFirestore = (loggedInUser, input) => {
+  //   getInputValuesFromFirestore(loggedInUser, input);
+  // }
+
   return (
     <Box sx={{ "& > :not(style)": { m: 1 } }}>
+      <h1>{lessonID}</h1>
       <Box
         sx={{
           display: "flex",
@@ -121,7 +140,8 @@ export default function InputWithIcon({
           label={label}
           variant="standard"
           style={{ width: "90%", color: "black" }}
-          value={getValue()}
+          //value={getValue()}
+          value={inputTexts[input] || ""}
           onChange={handleChange}
         />
         {!iconFirst ? setInput() : null}

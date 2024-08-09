@@ -1,7 +1,8 @@
 "use client";
 // audioContext.js
-import { createContext, useState, useEffect } from "react";
-
+import { createContext, useState, useEffect, useMemo } from "react";
+import { useDebouncedUpdate } from "@app/hooks/useDebounceUpdate";
+import { debounce } from "@app/utils/debounce";
 const PresentationContext = createContext();
 
 const PresentationContextProvider = ({ children }) => {
@@ -75,7 +76,30 @@ const PresentationContextProvider = ({ children }) => {
   function updateGistReadingPage(newGistReadingPage) {
     setGistReadingPage(newGistReadingPage);
     console.log(gistReadingPage);
+    console.log("BING BOOM");
   }
+
+  // const debouncedSave = debounce((newData) => {
+  //   //updateDataInFirestore(newData);
+  //   console.log(newData);
+  //   console.log("Calling Firestore");
+  // }, 5000);
+
+  const debouncedSave = useMemo(
+    () =>
+      debounce((newData) => {
+        console.log("Calling Firestore:", newData);
+        //updateDataInFirestore(newData);
+      }, 5000),
+    []
+  );
+
+  useEffect(() => {
+    if (gistReadingPage) {
+      console.log("Data changed: " + gistReadingPage);
+      debouncedSave(gistReadingPage);
+    }
+  }, [gistReadingPage]);
 
   function updateTextbookExercises(newTextbookExercises) {
     setTextbookExercises(newTextbookExercises);
@@ -170,11 +194,25 @@ const PresentationContextProvider = ({ children }) => {
   }
 
   function updateTextBoxInputs(id, text) {
+    console.log("updateTextBoxInputsCONTEXT: " + id + " " + text);
     setTextBoxInputs((prev) => {
       const newInputs = { ...prev };
       newInputs[id] = text;
       return newInputs;
     });
+
+    const debouncedUpdate = useDebouncedUpdate(
+      updateTextBoxInputs(id, text),
+      500
+    );
+
+    // Define the string you want to log
+    const message = "This will be logged after 5 secondsFart";
+
+    // Set a timeout to log the message after 5000 milliseconds (5 seconds)
+    setTimeout(() => {
+      console.log(message);
+    }, 5000);
   }
 
   function updateTextbookExercisePages(newPage) {

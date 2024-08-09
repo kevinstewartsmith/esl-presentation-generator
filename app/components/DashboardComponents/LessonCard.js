@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -9,9 +9,18 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 export default function LessonCard({ deleteLesson, lesson, userID }) {
+  const router = useRouter();
+  const { updateLessonID } = useContext(ReadingForGistAndDetailContext);
   const lessonId = lesson.id;
+
+  const handleNavigation = () => {
+    updateLessonID(lessonId);
+    router.push(`/${userID}/lesson/${lessonId}`);
+  };
 
   // console.log(lesson);
   return (
@@ -19,23 +28,23 @@ export default function LessonCard({ deleteLesson, lesson, userID }) {
       sx={{ maxWidth: 345, borderRadius: 3 }}
       //onClick={() => console.log(lesson.title)}
     >
-      <CardActionArea>
-        <Link href={`/${userID}/lesson/${lessonId}`}>
-          <CardMedia
-            component="img"
-            height="140"
-            image="https://images.unsplash.com/photo-1514037673804-5d655caba9a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MjU5MDR8MHwxfHNlYXJjaHw2fHxsaXphcmR8ZW58MHx8fHwxNzIxOTU5OTI4fDA&ixlib=rb-4.0.3&q=80&w=1080"
-            alt="green iguana"
-          />
-          <CardContent>
-            <h1>{lesson["title"]}</h1>
-            <Typography gutterBottom variant="h5" component="div"></Typography>
-            <Typography variant="body2" sx={{ color: "black", size: 40 }}>
-              {lesson["title"]}
-            </Typography>
-            <Typography>{lesson["id"]}</Typography>
-          </CardContent>
-        </Link>
+      <CardActionArea onClick={handleNavigation}>
+        {/* <Link href={`/${userID}/lesson/${lessonId}`}> */}
+        <CardMedia
+          component="img"
+          height="140"
+          image="https://images.unsplash.com/photo-1514037673804-5d655caba9a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MjU5MDR8MHwxfHNlYXJjaHw2fHxsaXphcmR8ZW58MHx8fHwxNzIxOTU5OTI4fDA&ixlib=rb-4.0.3&q=80&w=1080"
+          alt="green iguana"
+        />
+        <CardContent>
+          <h1>{lesson["title"]}</h1>
+          <Typography gutterBottom variant="h5" component="div"></Typography>
+          <Typography variant="body2" sx={{ color: "black", size: 40 }}>
+            {lesson["title"]}
+          </Typography>
+          <Typography>{lesson["id"]}</Typography>
+        </CardContent>
+        {/* </Link> */}
       </CardActionArea>
 
       <CardActions>

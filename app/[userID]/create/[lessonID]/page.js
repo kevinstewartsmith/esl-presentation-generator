@@ -24,27 +24,50 @@ import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import StegaIcon from "@app/components/StegaIcon";
 import { Handjet } from "next/font/google";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
-
+import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 const handjet = Handjet({
   weight: ["400"],
   subsets: ["latin"],
 });
 
 const page = ({ params }) => {
+  console.log("WHY TF Lesson ID: ", params.lessonID);
+  const {
+    fetchDataFromFirestore,
+    getAllInputDataFromFirestore,
+    updateLessonID,
+    lessonID,
+  } = useContext(ReadingForGistAndDetailContext);
+
+  console.log("Stage ID: ", readingForGistandDetailStage);
   const [lessonData, setLessonData] = useState({});
+  const userID = params.userID;
+  //const lessonID = params.lessonID;
+
   useEffect(() => {
+    //updateLessonID(params.lessonID);
+    console.log("CREATE PAGE USE EFFECT");
+    console.log("Params Lesson ID: ", params.lessonID);
+    console.log("LesSon ID: ", lessonID);
     async function fetchData() {
       const res = await fetch(
-        `/api/firestore/get-lessons?userID=${params.userID}&lessonID=${params.lessonID}&method=getOneLesson`
+        `/api/firestore/get-lessons?userID=${userID}&lessonID=${params.lessonID}&method=getOneLesson`
       );
       const data = await res.json();
+      console.log("LESSON DATA CREATE");
       console.log(data);
       setLessonData(data);
     }
     fetchData();
+    getAllInputDataFromFirestore(
+      params.userID,
+      params.lessonID,
+      params.stageID
+    );
   }, []);
 
-  const { presentationIsShowing, hidePresentation } = useContext(
+  const { presentationIsShowing, hidePresentation, loggedInUser } = useContext(
     GlobalVariablesContext
   );
 
@@ -64,11 +87,11 @@ const page = ({ params }) => {
   }
 
   const sections = [
-    <ReadingContent />,
-    <SectionSelector />,
-    <PreReadingVocabSlides />,
-    <PreReadingGames />,
-    <FinishReading />,
+    <ReadingContent stageID={readingForGistandDetailStage} />,
+    <SectionSelector stageID={readingForGistandDetailStage} />,
+    <PreReadingVocabSlides stageID={readingForGistandDetailStage} />,
+    <PreReadingGames stageID={readingForGistandDetailStage} />,
+    <FinishReading stageID={readingForGistandDetailStage} />,
   ];
   const [sectionNumber, setSectionNumber] = useState(0);
   return (
@@ -84,6 +107,7 @@ const page = ({ params }) => {
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
           <h1 className="ml-20">{lessonData.title}</h1>
+          <h1>{lessonID}</h1>
           <div
             style={{
               backgroundColor: "white",

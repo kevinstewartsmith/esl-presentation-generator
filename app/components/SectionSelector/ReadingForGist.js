@@ -7,7 +7,7 @@ import TimeLimitSlider from "../PresentationPrep/AddTextButtons/TimeLimitSlider"
 import DiscussionForm from "../PresentationPrep/DiscussionForm";
 import GistExerciseInputs from "../PresentationPrep/GistExerciseInputs";
 
-export const ReadingForGist = ({ index, includedId }) => {
+export const ReadingForGist = ({ index, includedId, stageID }) => {
   const [gistReadingChecked, setGistReadingChecked] = useState(true);
 
   const handleCheckBoxChange = () => {
@@ -33,6 +33,7 @@ export const ReadingForGist = ({ index, includedId }) => {
               checked={gistReadingChecked}
               onChange={handleCheckBoxChange}
               includedId={includedId}
+              stageID={stageID}
             />
           </Grid>
 
@@ -55,7 +56,7 @@ export const ReadingForGist = ({ index, includedId }) => {
                   paddingRight={9}
                   paddingLeft={2}
                 >
-                  <GistExerciseInputs />
+                  <GistExerciseInputs stageID={stageID} />
                 </Grid>
                 <Grid item xs={12} sm={12} paddingBottom={4}>
                   <TimeLimitSlider
@@ -65,6 +66,7 @@ export const ReadingForGist = ({ index, includedId }) => {
                     min={0}
                     max={10}
                     includedId={"includeGistReadingTimeLimit"}
+                    stageID={stageID}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} paddingBottom={4}>
@@ -73,6 +75,7 @@ export const ReadingForGist = ({ index, includedId }) => {
                     label={"Question"}
                     input={"question"}
                     size={"wide"}
+                    stageID={stageID}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} paddingBottom={4}>
@@ -80,12 +83,14 @@ export const ReadingForGist = ({ index, includedId }) => {
                     iconFirst={true}
                     label={"Answer"}
                     input={"answer"}
+                    stageID={stageID}
                   />
                 </Grid>
                 {/* <Grid item xs={12} sm={12} paddingBottom={4}> */}
                 <DiscussionForm
                   id={"gistQuestionDiscussion"}
                   includedId={"includeGistReadingQuestionPartnerCheck"}
+                  stageID={stageID}
                 />
                 {/* </Grid> */}
                 <Grid item xs={12} sm={12} paddingBottom={4}>
@@ -98,6 +103,7 @@ export const ReadingForGist = ({ index, includedId }) => {
                     includedId={
                       "includeGistReadingQuestionPartnerCheckTimeLimit"
                     }
+                    stageID={stageID}
                   />
                 </Grid>
               </Grid>

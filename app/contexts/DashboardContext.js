@@ -38,6 +38,7 @@ const DashboardContextProvider = ({ children }) => {
       );
 
       return data.json();
+      //return data;
     } catch (error) {
       console.log(error);
     }

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useState, useContext, useEffect, use } from "react";
+import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
@@ -31,6 +32,7 @@ const handjet = Handjet({
 });
 
 const page = ({ params }) => {
+  console.log("Stage ID: ", readingForGistandDetailStage);
   //const [showPresentation, setShowPresentation] = useState(false);
   // const { updateShowPresentation, showPresentation } =
   //   useContext(PresentationContext);
@@ -55,11 +57,11 @@ const page = ({ params }) => {
   }
 
   const sections = [
-    <ReadingContent />,
-    <SectionSelector />,
-    <PreReadingVocabSlides />,
-    <PreReadingGames />,
-    <FinishReading />,
+    <ReadingContent stageID={readingForGistandDetailStage} />,
+    <SectionSelector stageID={readingForGistandDetailStage} />,
+    <PreReadingVocabSlides stageID={readingForGistandDetailStage} />,
+    <PreReadingGames stageID={readingForGistandDetailStage} />,
+    <FinishReading stageID={readingForGistandDetailStage} />,
   ];
   const [sectionNumber, setSectionNumber] = useState(0);
   return (

@@ -2,7 +2,7 @@ import React from "react";
 import AddTextBook from "./AddTextBook";
 import { Grid } from "@mui/material";
 
-const ReadingContent = () => {
+const ReadingContent = ({ stageID }) => {
   const sections = ["BookText", "QuestionText", "AnswerText"];
   const makeGridItem = (component, key) => {
     return (
@@ -17,7 +17,10 @@ const ReadingContent = () => {
       <Grid container spacing={0} padding={2} direction={"row"}>
         {sections.map((section, index) => (
           <React.Fragment key={index}>
-            {makeGridItem(<AddTextBook category={section} />, index)}
+            {makeGridItem(
+              <AddTextBook category={section} stageID={stageID} />,
+              index
+            )}
           </React.Fragment>
         ))}
       </Grid>

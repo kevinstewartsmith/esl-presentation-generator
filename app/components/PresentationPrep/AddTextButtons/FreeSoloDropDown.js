@@ -4,14 +4,21 @@ import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 //import { useContext } from 'react';
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
-export default function FreeSoloDropDown({ label, input }) {
+export default function FreeSoloDropDown({ label, input, stageID }) {
   const { textBoxInputs, updateTextBoxInputs } =
     useContext(PresentationContext);
 
+  const { updateInputTextsReading, inputTexts } = useContext(
+    ReadingForGistAndDetailContext
+  );
+
   const handleChange = (event, newVal) => {
-    updateTextBoxInputs(input, newVal);
+    //updateTextBoxInputs(input, newVal);
     console.log("textBoxInputs: " + JSON.stringify(textBoxInputs));
+    updateInputTextsReading(input, newVal);
+    console.log("UPDATING INPUT :" + input + " WITH VALUE: " + newVal);
   };
 
   return (
@@ -20,11 +27,13 @@ export default function FreeSoloDropDown({ label, input }) {
       className="w-full h-full"
       sx={{ backgroundColor: "white", left: 0 }}
     >
+      {/* <h1>{inputTexts[input]}</h1>
+      <h1>{"INPUT" + input}</h1> */}
       <Autocomplete
         id="free-solo-demo"
         freeSolo
         options={textBookTitles.map((option) => option.title)}
-        value={textBoxInputs[input] || ""}
+        value={inputTexts[input] || ""}
         onChange={handleChange}
         onInputChange={handleChange}
         renderInput={(params) => (
@@ -32,7 +41,8 @@ export default function FreeSoloDropDown({ label, input }) {
             {...params}
             label={label}
             //onChange={handleChange}
-            value={textBoxInputs[input]}
+            //value={inputTexts[input]}
+            //value={"test"}
           />
         )}
       />
