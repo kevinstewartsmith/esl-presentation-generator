@@ -38,6 +38,7 @@ const page = ({ params }) => {
     getAllInputDataFromFirestore,
     updateLessonID,
     lessonID,
+    getAllDiscussionDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
 
   console.log("Stage ID: ", readingForGistandDetailStage);
@@ -61,6 +62,11 @@ const page = ({ params }) => {
     }
     fetchData();
     getAllInputDataFromFirestore(
+      params.userID,
+      params.lessonID,
+      params.stageID
+    );
+    getAllDiscussionDataFromFirestore(
       params.userID,
       params.lessonID,
       params.stageID

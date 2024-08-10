@@ -25,6 +25,8 @@ export default function InputWithIcon({
   id,
   index,
   stageID,
+  category,
+  text,
 }) {
   const {
     gistReadingQuestions,
@@ -35,16 +37,25 @@ export default function InputWithIcon({
     updateGistReadingPage,
     textbookExercises,
     updateTextbookExercises,
-    updateDiscussionText,
-    discussionForms,
+    //updateDiscussionText,
+
     updateTextbookExercisePages,
     textbookExercisePages,
   } = useContext(PresentationContext);
-  const { updateInputTextsReading, inputTexts, lessonID } = useContext(
-    ReadingForGistAndDetailContext
-  );
+  const {
+    updateInputTextsReading,
+    inputTexts,
+    lessonID,
+    updateDiscussionText,
+    discussionForms,
+  } = useContext(ReadingForGistAndDetailContext);
 
   console.log("INPUT ICON LESSON ID: " + lessonID);
+  console.log("INPUT ICON ID: " + id);
+  console.log("INPUT ICON INDEX: " + index);
+  console.log("INPUT ICON STAGE ID: " + stageID);
+  console.log("INPUT ICON CATEGORY: " + category);
+  console.log("INPUT ICON TEXT: " + text);
   const { loggedInUser } = useContext(GlobalVariablesContext);
 
   function setInput() {
@@ -99,21 +110,33 @@ export default function InputWithIcon({
   };
 
   const getValue = () => {
+    // switch (input) {
+    //   case "question":
+    //     return gistReadingQuestions;
+    //   case "answer":
+    //     return gistReadingAnswers;
+    //   case "page":
+    //     return gistReadingPage;
+    //   case "exercise":
+    //     return textbookExercises;
+    //   case "discussion":
+    //     return discussionForms[id]?.discussionTexts[index] || "";
+    //   case "exercisePage":
+    //     return textbookExercisePages;
+    //   default:
+    //     return "";
+    // }
     switch (input) {
-      case "question":
-        return gistReadingQuestions;
-      case "answer":
-        return gistReadingAnswers;
-      case "page":
-        return gistReadingPage;
-      case "exercise":
-        return textbookExercises;
       case "discussion":
+        console.log("Discussion input in switch");
+        console.log("######################");
+        console.log(
+          "GET VALUE: " + discussionForms[id]?.discussionTexts[index]
+        );
         return discussionForms[id]?.discussionTexts[index] || "";
-      case "exercisePage":
-        return textbookExercisePages;
+      //return JSON.stringify(discussionForms);
       default:
-        return "";
+        return inputTexts[input] || "";
     }
   };
 
@@ -141,7 +164,7 @@ export default function InputWithIcon({
           variant="standard"
           style={{ width: "90%", color: "black" }}
           //value={getValue()}
-          value={inputTexts[input] || ""}
+          value={getValue()}
           onChange={handleChange}
         />
         {!iconFirst ? setInput() : null}

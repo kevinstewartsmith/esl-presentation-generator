@@ -5,12 +5,14 @@ import InputWithIcon from "./AddTextButtons/InputWithIcon";
 import AddIcon from "@mui/icons-material/Add";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { PhotoSizeSelectLargeTwoTone } from "@mui/icons-material";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const DiscussionForm = ({ id, includedId }) => {
-  //const [numberOfDiscussionLines, setNumberOfDiscussionLines] = useState(2)
-  const { discussionForms, addDiscussionLine, updateDiscussionText } =
-    useContext(PresentationContext);
-  //console.log("DiscussionForm render_discussionForms: " + discussionForms);
+  const { discussionForms, addDiscussionLine } = useContext(
+    ReadingForGistAndDetailContext
+  );
+  console.log("COMPONENT discussionForms: " + JSON.stringify(discussionForms));
+  console.log(typeof discussionForms);
   const discussionForm = discussionForms[id] || {
     numberOfDiscussionLines: 2,
     discussionTexts: Array(2).fill(""),
