@@ -197,3 +197,12 @@ button {
 .presentation-cancel-button:hover {
   opacity: 0.35;
 }
+
+/* Drag and Drop */
+
+.stage {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: pink
+}

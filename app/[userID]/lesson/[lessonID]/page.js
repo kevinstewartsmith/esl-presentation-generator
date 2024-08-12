@@ -6,6 +6,7 @@ import { DashboardContext } from "@app/contexts/DashboardContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 
 const page = ({ params }) => {
   const { updateLessonID, lessonID } = useContext(
@@ -55,7 +56,7 @@ const page = ({ params }) => {
         <button>Make Lesson</button>
       </Link>
       <h1>React Beautiful</h1>
-      <DnDSkillsContainer />
+      <StageSorter />
     </div>
   );
 };

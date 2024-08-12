@@ -1,75 +1,98 @@
-// pages/index.js
-import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState } from "react";
+import { closestCorners, DndContext } from "@dnd-kit/core";
+import Column from "./Column";
+import { arrayMove } from "@dnd-kit/sortable";
 
-// Sample data
-const initialItems = [
-  { id: "item-1", content: "Item 1" },
-  { id: "item-2", content: "Item 2" },
-  { id: "item-3", content: "Item 3" },
-];
+const DnDSkillsContainer = () => {
+  const [stages, setStages] = useState([
+    { id: "1", title: "Warm-up" },
+    { id: "2", title: "Presentation" },
+    { id: "3", title: "Practice" },
+    { id: "4", title: "Production" },
+  ]);
 
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
-};
+  const [choices, setChoices] = useState([
+    { id: "1", title: "Choice 1" },
+    { id: "2", title: "Choice 2" },
+    { id: "3", title: "Choice 3" },
+    { id: "4", title: "Choise 4" },
+  ]);
 
-export default function DnDSkillsContainer() {
-  const [items, setItems] = useState(initialItems);
+  // const getTaskPos = (id) => {
+  //   return stages.findIndex((stage) => stage.id === id);
+  // };
+  const getTaskPos = (id) => stages.findIndex((stage) => stage.id === id);
 
-  const onDragEnd = (result) => {
-    if (!result.destination) return; // If dropped outside of droppable area
+  // const handleDragEnd = (event) => {
+  //   console.log("Handle Drag End");
+  //   const { active, over } = event;
+  //   if (active.id === over.id) {
+  //     return;
+  //   }
+  //   setStages((stages) => {
+  //     const originalPos = getTaskPos(active.id);
+  //     console.log("Original Pos: ", originalPos);
+  //     const newPos = getTaskPos(over.id);
+  //     console.log("New Pos: ", newPos);
+  //     return arrayMove(stages, originalPos, newPos);
+  //   });
+  // };
 
-    const newItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-    setItems(newItems);
+    if (!over) return; // Ensure 'over' exists
+
+    const sourceColumn = getColumn(active.id);
+    const destinationColumn = getColumn(over.id);
+
+    if (
+      !sourceColumn ||
+      !destinationColumn ||
+      sourceColumn === destinationColumn
+    )
+      return; // No change if same column
+
+    // Perform updates independently for each column
+    const moveItem = (source, setSource, destination, setDestination) => {
+      const sourceIndex = source.findIndex((item) => item.id === active.id);
+      const destinationIndex = destination.findIndex(
+        (item) => item.id === over.id
+      );
+
+      if (sourceIndex === -1 || destinationIndex === -1) return;
+
+      // Remove item from source column
+      const [movedItem] = source.splice(sourceIndex, 1);
+
+      // Add item to destination column
+      destination.splice(destinationIndex, 0, movedItem);
+
+      setSource([...source]);
+      setDestination([...destination]);
+    };
+
+    if (sourceColumn === "stages") {
+      moveItem(stages, setStages, choices, setChoices);
+    } else {
+      moveItem(choices, setChoices, stages, setStages);
+    }
+  };
+
+  const getColumn = (id) => {
+    if (stages.find((item) => item.id === id)) return "stages";
+    if (choices.find((item) => item.id === id)) return "choices";
+    return null;
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={{
-              padding: 8,
-              width: 250,
-              background: "#f4f4f4",
-              minHeight: "100vh",
-            }}
-          >
-            {items.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      padding: 16,
-                      margin: "0 0 8px 0",
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #ddd",
-                      borderRadius: 4,
-                    }}
-                  >
-                    {item.content}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div>
+      <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+        <Column stages={stages} setStages={setStages} />
+        <Column stages={choices} setStages={setChoices} />
+      </DndContext>
+    </div>
   );
-}
+};
+
+export default DnDSkillsContainer;
