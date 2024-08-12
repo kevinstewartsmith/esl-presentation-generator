@@ -7,6 +7,29 @@ const PresentationContext = createContext();
 
 const PresentationContextProvider = ({ children }) => {
   const [showPresentation, setShowPresentation] = useState(false);
+  //Lesson Stages State
+  const [stages, setStages] = useState({
+    root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
+    container1: [
+      "Warm-Up: Board Race",
+      "Reading For Gist and Detail",
+      "Listening for Gist and Detail",
+      "Advantages/Disadvantages",
+      "Brainstorming",
+      "Speaking: Debate",
+      "Writing: Essay",
+      "Speaking: Role Play",
+      "Speaking: Presentation",
+      "Speaking: Survey",
+    ],
+    // container2: ["7", "8", "9"],
+    // container3: [],
+  });
+
+  function updateStages(newItems) {
+    setStages(newItems);
+  }
+  //End Lesson Stages State
 
   // Presentation Details
   const [textTranscript, setTextTranscript] = useState("");
@@ -257,6 +280,8 @@ const PresentationContextProvider = ({ children }) => {
         updateTextBoxInputs,
         textbookExercisePages,
         updateTextbookExercisePages,
+        stages,
+        updateStages,
       }}
     >
       {children}

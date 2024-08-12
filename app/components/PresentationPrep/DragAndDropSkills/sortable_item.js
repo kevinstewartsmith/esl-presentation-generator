@@ -13,24 +13,20 @@ export function Item(props) {
     justifyContent: "center",
     border: "1px solid black",
     margin: "10px 0",
-    background: "white"
+    background: "white",
+    borderRadius: 10,
   };
 
   return <div style={style}>{id}</div>;
 }
 
 export default function SortableItem(props) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition
-  } = useSortable({ id: props.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: props.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition
+    transition,
   };
 
   return (

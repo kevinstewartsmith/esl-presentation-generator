@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -12,10 +12,14 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import Container from "./container";
 import { Item } from "./sortable_item";
+//import { Padding } from "@mui/icons-material";
+import { PresentationContext } from "@app/contexts/PresentationContext";
 
 const wrapperStyle = {
   display: "flex",
   flexDirection: "row",
+  marginLeft: 200,
+  marginRight: 200,
 };
 
 const defaultAnnouncements = {
@@ -47,13 +51,46 @@ const defaultAnnouncements = {
   },
 };
 
-export default function App() {
+export default function StageSorter() {
+  const { stages, updateStages } = useContext(PresentationContext);
   const [items, setItems] = useState({
-    root: ["1", "2", "3"],
-    container1: ["4", "5", "6"],
+    root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
+    container1: [
+      "Warm-Up: Board Race",
+      "Reading For Gist and Detail",
+      "Listening for Gist and Detail",
+      "Advantages/Disadvantages",
+      "Brainstorming",
+      "Speaking: Debate",
+      "Writing: Essay",
+      "Speaking: Role Play",
+      "Speaking: Presentation",
+      "Speaking: Survey",
+    ],
     // container2: ["7", "8", "9"],
     // container3: [],
   });
+
+  useEffect(() => {
+    console.log("Items: ");
+    console.log(items);
+    function postStagesToDB() {
+      try {
+        const response = fetch(`/api/firestore/post-stages`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //body: JSON.stringify(items),
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    postStagesToDB();
+  }, [items]);
+
   const [activeId, setActiveId] = useState();
 
   const sensors = useSensors(

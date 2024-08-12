@@ -8,11 +8,12 @@ import {
 import SortableItem from "./sortable_item";
 
 const containerStyle = {
-  background: "#dadada",
+  background: "lightgrey",
   //background:"blue",
   padding: 10,
   margin: 10,
   flex: 1,
+  borderRadius: 10,
 };
 
 export default function Container(props) {
