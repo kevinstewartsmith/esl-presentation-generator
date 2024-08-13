@@ -15,20 +15,7 @@ export const POST = async (request) => {
       postSectionsToLesson(userID, lessonID, stage);
     });
 
-    // const stageOrder = includedStages.map((item, index) => {
-    //   const obj = {};
-    //   obj[index] = item;
-    //   return obj;
-    // });
-
     postStageOrderToLesson(userID, lessonID, includedStages);
-
-    // const unincludedStageOrder = unincludedStages.map((item, index) => {
-    //   const obj = {};
-    //   obj[index] = item;
-    //   return obj;
-    // });
-
     postUnincludedStageOrderToLesson(userID, lessonID, unincludedStages);
 
     return new Response("Lesson Stages posted successfully.", {

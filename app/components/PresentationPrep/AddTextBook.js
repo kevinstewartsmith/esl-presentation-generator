@@ -93,23 +93,6 @@ function AddTextBook({ category, stageID }) {
     updateTextBoxInputs,
   } = useContext(PresentationContext);
 
-  // const { updateInputTextsReading } = useContext(
-  //   ReadingForGistAndDetailContext
-  // );
-
-  //OCR Function
-  // async function handleReadText2(file) {
-  //   const worker = await createWorker();
-  //   await worker.loadLanguage("eng");
-  //   await worker.initialize("eng");
-  //   const {
-  //     data: { text },
-  //   } = await worker.recognize(file);
-  //   //setExtractedText(text);
-  //   updateTextTranscript(text);
-  //   await worker.terminate();
-  // }
-
   async function handleReadText(file) {
     const worker = await createWorker();
     await worker.loadLanguage("eng");
@@ -139,17 +122,6 @@ function AddTextBook({ category, stageID }) {
         return null;
     }
   }
-
-  // function updateStageContext(key, value) {
-  //   switch (stageID) {
-  //     case stageID === readingForGistandDetailStage:
-  //       updateInputTextsReading(key, value);
-  //       return null;
-  //     default:
-  //       console.log("No stage selected");
-  //       return null;
-  //   }
-  // }
 
   const [files, setFiles] = useState([]);
 
@@ -253,15 +225,11 @@ function AddTextBook({ category, stageID }) {
       }
     };
     const text = textContent(category);
-    // console.log("The category is: ", category);
-    // console.log("The text content is: ", text);
-    // console.log("the text is: ", text);
+
     const response = await fetch(
       `/api/clean-text-json?query=${text}&category=${category}`
     );
     const data = await response.json();
-    // console.log(data);
-    // console.log(typeof data);
   }
 
   const dragNDropText = (category) => {

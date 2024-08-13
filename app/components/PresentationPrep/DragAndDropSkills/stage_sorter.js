@@ -59,24 +59,6 @@ export default function StageSorter({ lessonID }) {
   const { loggedInUser } = useContext(GlobalVariablesContext);
   //const { stages } = useContext(PresentationContext);
 
-  // const defaultStages = {
-  //   root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
-  //   container1: [
-  //     "Warm-Up: Board Race",
-  //     "Reading For Gist and Detail",
-  //     "Listening for Gist and Detail",
-  //     "Advantages - Disadvantages",
-  //     "Brainstorming",
-  //     "Speaking: Debate",
-  //     "Writing: Essay",
-  //     "Speaking: Role Play",
-  //     "Speaking: Presentation",
-  //     "Speaking: Survey",
-  //   ],
-  // container2: ["7", "8", "9"],
-  // container3: [],
-  //};
-  //const [items, setItems] = useState(defaultStages);
   useEffect(() => {
     console.log("Items: ");
     //change back to items if there is an error
@@ -180,10 +162,6 @@ export default function StageSorter({ lessonID }) {
         // We're at the root droppable of a container
         newIndex = overItems.length + 1;
       } else {
-        // const isBelowLastItem =
-        //   over &&
-        //   overIndex === overItems.length - 1 &&
-        //   draggingRect.offsetTop > over.rect.offsetTop + over.rect.height;
         const isBelowLastItem =
           over &&
           overIndex === overItems.length - 1 &&
