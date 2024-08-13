@@ -16,6 +16,23 @@ export const POST = async (request) => {
   console.log("Lesson ID INSIDE POST: ", lessonID);
   const lesson = {
     title: lessonTitle,
+    stageOrder: [
+      "Class Rules",
+      "Effort and Attitude Score",
+      "Warm-Up: Speaking",
+    ],
+    unincludedStageOrder: [
+      "Warm-Up: Board Race",
+      "Reading For Gist and Detail",
+      "Listening for Gist and Detail",
+      "Advantages - Disadvantages",
+      "Brainstorming",
+      "Speaking: Debate",
+      "Writing: Essay",
+      "Speaking: Role Play",
+      "Speaking: Presentation",
+      "Speaking: Survey",
+    ],
   };
   const sectionID = "ReadingforGistandDetail";
   const section = {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import { PresentationContext } from "@app/contexts/PresentationContext";
 import {
   DndContext,
   DragOverlay,
@@ -14,7 +15,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Container from "./container";
 import { Item } from "./sortable_item";
 //import { Padding } from "@mui/icons-material";
-import { PresentationContext } from "@app/contexts/PresentationContext";
+//import { PresentationContext } from "@app/contexts/PresentationContext";
 
 const wrapperStyle = {
   display: "flex",
@@ -53,28 +54,32 @@ const defaultAnnouncements = {
 };
 
 export default function StageSorter({ lessonID }) {
-  const { stages, updateStages } = useContext(PresentationContext);
+  const { stages, updateStages, items, updateItems } =
+    useContext(PresentationContext);
   const { loggedInUser } = useContext(GlobalVariablesContext);
-  const [items, setItems] = useState({
-    root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
-    container1: [
-      "Warm-Up: Board Race",
-      "Reading For Gist and Detail",
-      "Listening for Gist and Detail",
-      "Advantages - Disadvantages",
-      "Brainstorming",
-      "Speaking: Debate",
-      "Writing: Essay",
-      "Speaking: Role Play",
-      "Speaking: Presentation",
-      "Speaking: Survey",
-    ],
-    // container2: ["7", "8", "9"],
-    // container3: [],
-  });
+  //const { stages } = useContext(PresentationContext);
 
+  // const defaultStages = {
+  //   root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
+  //   container1: [
+  //     "Warm-Up: Board Race",
+  //     "Reading For Gist and Detail",
+  //     "Listening for Gist and Detail",
+  //     "Advantages - Disadvantages",
+  //     "Brainstorming",
+  //     "Speaking: Debate",
+  //     "Writing: Essay",
+  //     "Speaking: Role Play",
+  //     "Speaking: Presentation",
+  //     "Speaking: Survey",
+  //   ],
+  // container2: ["7", "8", "9"],
+  // container3: [],
+  //};
+  //const [items, setItems] = useState(defaultStages);
   useEffect(() => {
     console.log("Items: ");
+    //change back to items if there is an error
     console.log(items);
     function postStagesToDB() {
       try {
@@ -161,8 +166,8 @@ export default function StageSorter({ lessonID }) {
     ) {
       return;
     }
-
-    setItems((prev) => {
+    updateItems((prev) => {
+      //setItems((prev) => {
       const activeItems = prev[activeContainer];
       const overItems = prev[overContainer];
 
@@ -223,7 +228,8 @@ export default function StageSorter({ lessonID }) {
     const overIndex = items[overContainer].indexOf(overId);
 
     if (activeIndex !== overIndex) {
-      setItems((items) => ({
+      updateItems((items) => ({
+        //setItems((items) => ({
         ...items,
         [overContainer]: arrayMove(
           items[overContainer],

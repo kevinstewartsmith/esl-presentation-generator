@@ -18,6 +18,7 @@ export const postData = async (userID, lesson, section) => {
 async function postUserLesson(userId, lesson) {
   const lessonsRef = db.collection("users").doc(userId).collection("lessons");
   const lessonDocRef = await lessonsRef.add(lesson);
+
   return lessonDocRef.id;
 }
 

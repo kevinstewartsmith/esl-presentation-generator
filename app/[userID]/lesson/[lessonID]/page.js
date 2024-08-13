@@ -7,11 +7,14 @@ import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
+import { PresentationContext } from "@app/contexts/PresentationContext";
 
 const page = ({ params }) => {
   const { updateLessonID, lessonID } = useContext(
     ReadingForGistAndDetailContext
   );
+  const { updateLessonIDPresentationContext, updateStages, updateItems } =
+    useContext(PresentationContext);
   //updateLessonID(params.lessonID);
   const userID = params.userID;
   //const lessonID = params.lessonID;
@@ -19,6 +22,7 @@ const page = ({ params }) => {
   const { loadLessons } = useContext(DashboardContext);
   const { loggedInUser } = useContext(GlobalVariablesContext);
   useEffect(() => {
+    //updateLessonIDPresentationContext(params.lessonID);
     //updateLessonID(params.lessonID);
     // if (lessonID) {
     //   // Fetch lesson details from localStorage or an API
@@ -38,12 +42,29 @@ const page = ({ params }) => {
         }
         const data = await response.json(); // Parse the JSON response
         setLesson(data);
+        //updateItems(data);
         console.log("Lessons data:", data.title);
       } catch (error) {
         console.error(error);
       }
     }
     fetchData();
+    async function getLessonStages() {
+      try {
+        const response = await fetch(
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${params.lessonID}`
+        );
+        const data = await response.json();
+        console.log("Lesson Stages:", data.root);
+        //const strings = data.root.map((obj) => Object.values(obj)[0]);
+        //console.log("Strings:", strings);
+        //updateStages(data);
+        updateItems(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getLessonStages();
   }, []);
 
   return (

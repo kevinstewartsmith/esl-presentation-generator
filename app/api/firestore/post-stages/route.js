@@ -2,32 +2,34 @@ import { db } from "@app/utils/firebaseAdmin";
 
 export const POST = async (request) => {
   try {
-    console.log("Trying to POST Lesson Stages");
+    console.log("POST Lesson Stages");
     const url = new URL(request.url);
     const userID = url.searchParams.get("userID");
     const lessonID = url.searchParams.get("lessonID");
     const stages = url.searchParams.get("stages");
     const parsedStages = JSON.parse(stages);
-    console.log(typeof parsedStages);
-
     const includedStages = parsedStages.root;
-    console.log("Included Stages: ", includedStages);
+    const unincludedStages = parsedStages.container1;
 
     includedStages.forEach((stage) => {
-      console.log(stage);
       postSectionsToLesson(userID, lessonID, stage);
     });
 
-    const stageOrder = includedStages.map((item, index) => {
-      const obj = {};
-      obj[index] = item;
-      return obj;
-    });
-    console.log("Result: ", stageOrder);
-    postStageOrderToLesson(userID, lessonID, stageOrder);
-    console.log("Lesson ID INSIDE POST: ", lessonID);
-    console.log("Stages INSIDE POST: ", stages);
-    console.log("User ID INSIDE POST: ", userID);
+    // const stageOrder = includedStages.map((item, index) => {
+    //   const obj = {};
+    //   obj[index] = item;
+    //   return obj;
+    // });
+
+    postStageOrderToLesson(userID, lessonID, includedStages);
+
+    // const unincludedStageOrder = unincludedStages.map((item, index) => {
+    //   const obj = {};
+    //   obj[index] = item;
+    //   return obj;
+    // });
+
+    postUnincludedStageOrderToLesson(userID, lessonID, unincludedStages);
 
     return new Response("Lesson Stages posted successfully.", {
       status: 200,
@@ -40,22 +42,6 @@ export const POST = async (request) => {
     return error;
   }
 };
-
-async function postUserLesson(userId, lesson) {
-  const lessonsRef = db.collection("users").doc(userId).collection("lessons");
-  const lessonDocRef = await lessonsRef.add(lesson);
-  return lessonDocRef.id;
-}
-async function updateUserLesson(userId, lessonId) {
-  const lessonRef = db
-    .collection("users")
-    .doc(userId)
-    .collection("lessons")
-    .doc(lessonId);
-
-  await lessonRef.set(lesson, { merge: true }); // Merges the new data with the existing document
-  return lessonId;
-}
 
 async function postSectionsToLesson(userId, lessonId, sectionId) {
   const sectionRef = db
@@ -88,9 +74,35 @@ async function postStageOrderToLesson(userId, lessonId, stageOrder) {
     .doc(lessonId);
   // .collection("Sections")
   // .doc("stageOrder");
+  console.log("POSTING STAGE ORDER");
 
-  await stageOrderRef.set({ stageOrder: stageOrder });
+  await stageOrderRef.set({ stageOrder: stageOrder }, { merge: true });
   console.log(`Stage Order ${stageOrder} added to lesson ${lessonId}.`);
+
+  //return stageOrder;
+}
+
+async function postUnincludedStageOrderToLesson(
+  userId,
+  lessonId,
+  unincludedStageOrder
+) {
+  const stageOrderRef = db
+    .collection("users")
+    .doc(userId)
+    .collection("lessons")
+    .doc(lessonId);
+  // .collection("Sections")
+  // .doc("stageOrder");
+  console.log("POSTING UNINCLUDED STAGE ORDER");
+
+  await stageOrderRef.set(
+    { unincludedStageOrder: unincludedStageOrder },
+    { merge: true }
+  );
+  console.log(
+    `Unincluded Stage Order ${unincludedStageOrder} added to lesson ${lessonId}.`
+  );
 
   //return stageOrder;
 }

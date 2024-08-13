@@ -1,6 +1,6 @@
 "use client";
 // audioContext.js
-import { createContext, useState, useEffect, useMemo } from "react";
+import { createContext, useState, useEffect, useMemo, use } from "react";
 import { useDebouncedUpdate } from "@app/hooks/useDebounceUpdate";
 import { debounce } from "@app/utils/debounce";
 const PresentationContext = createContext();
@@ -8,13 +8,19 @@ const PresentationContext = createContext();
 const PresentationContextProvider = ({ children }) => {
   const [showPresentation, setShowPresentation] = useState(false);
   //Lesson Stages State
-  const [stages, setStages] = useState({
+  const [stages, setStages] = useState({});
+  const [userID, setUserID] = useState("kevinstewartsmith");
+  const [lessonID, setLessonID] = useState("");
+  function updateLessonIDPresentationContext(newLessonID) {
+    setLessonID(newLessonID);
+  }
+  const defaultStages = {
     root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
     container1: [
       "Warm-Up: Board Race",
       "Reading For Gist and Detail",
       "Listening for Gist and Detail",
-      "Advantages/Disadvantages",
+      "Advantages - Disadvantages",
       "Brainstorming",
       "Speaking: Debate",
       "Writing: Essay",
@@ -24,11 +30,56 @@ const PresentationContextProvider = ({ children }) => {
     ],
     // container2: ["7", "8", "9"],
     // container3: [],
-  });
+  };
+  const [items, setItems] = useState({});
+  function updateItems(newItems) {
+    //setItems(newItems);
+    // const rootArray = newItems.map((obj) => Object.values(obj));
+    // const container1Array = newItems.container1.map(
+    //   (obj) => Object.values(obj)[0]
+    // );
+    // const obj = {
+    //   root: rootArray,
+    //   container1: container1Array,
+    // };
+    console.log("PRES CONTEXT SET ITEMs OBJECT:", newItems);
+    setItems(newItems);
+  }
 
   function updateStages(newItems) {
-    setStages(newItems);
+    console.log("PRES CONTEEXT SET STAGES");
+    console.log(newItems);
+
+    //setStages(newItems);
+
+    const rootArray = newItems.root.map((obj) => Object.values(obj)[0]);
+    const container1Array = newItems.container1.map(
+      (obj) => Object.values(obj)[0]
+    );
+    const obj = {
+      root: rootArray,
+      container1: container1Array,
+    };
+    console.log("PRES CONTEXT SET STAGES OBJECT:", obj);
+    setStages(obj);
   }
+  // useEffect(() => {
+  //   async function getLessonStages() {
+  //     try {
+  //       const response = await fetch(
+  //         `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`
+  //       );
+  //       const data = await response.json();
+  //       console.log("Lesson Stages PRSEISE CONTEXT:", data);
+  //       return data;
+  //     } catch (error) {
+  //       console.error(error);
+  //       return null;
+  //     }
+  //   }
+  //   getLessonStages();
+  // }, []);
+
   //End Lesson Stages State
 
   // Presentation Details
@@ -282,6 +333,10 @@ const PresentationContextProvider = ({ children }) => {
         updateTextbookExercisePages,
         stages,
         updateStages,
+        updateLessonIDPresentationContext,
+        lessonID,
+        items,
+        updateItems,
       }}
     >
       {children}
