@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import {
   DndContext,
   DragOverlay,
@@ -51,15 +52,16 @@ const defaultAnnouncements = {
   },
 };
 
-export default function StageSorter() {
+export default function StageSorter({ lessonID }) {
   const { stages, updateStages } = useContext(PresentationContext);
+  const { loggedInUser } = useContext(GlobalVariablesContext);
   const [items, setItems] = useState({
     root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
     container1: [
       "Warm-Up: Board Race",
       "Reading For Gist and Detail",
       "Listening for Gist and Detail",
-      "Advantages/Disadvantages",
+      "Advantages - Disadvantages",
       "Brainstorming",
       "Speaking: Debate",
       "Writing: Essay",
@@ -76,13 +78,17 @@ export default function StageSorter() {
     console.log(items);
     function postStagesToDB() {
       try {
-        const response = fetch(`/api/firestore/post-stages`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          //body: JSON.stringify(items),
-        });
+        const stages = JSON.stringify(items);
+        const response = fetch(
+          `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            //body: JSON.stringify(items),
+          }
+        );
         console.log(response);
       } catch (error) {
         console.error(error);

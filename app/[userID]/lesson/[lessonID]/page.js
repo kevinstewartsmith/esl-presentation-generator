@@ -56,7 +56,7 @@ const page = ({ params }) => {
         <button>Make Lesson</button>
       </Link>
       <h1>React Beautiful</h1>
-      <StageSorter />
+      <StageSorter lessonID={params.lessonID} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ const DashboardContext = createContext();
 
 const DashboardContextProvider = ({ children }) => {
   const [lessons, setLessons] = useState([]);
+  const { userID, setUserID } = useState("");
 
   async function loadLessons(userID, method, lessonID) {
     if (method === "getAllLessons") {
@@ -72,7 +73,7 @@ const DashboardContextProvider = ({ children }) => {
 
   return (
     <DashboardContext.Provider
-      value={{ lessons, loadLessons, addNewLesson, deleteLessonFromDB }}
+      value={{ lessons, loadLessons, addNewLesson, deleteLessonFromDB, userID }}
     >
       {children}
     </DashboardContext.Provider>

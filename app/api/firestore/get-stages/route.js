@@ -1,35 +1,27 @@
 import { db } from "@app/utils/firebaseAdmin";
 
-export const POST = async (request) => {
+export const GET = async (request) => {
   try {
     console.log("Trying to POST Lesson Stages");
     const url = new URL(request.url);
     const userID = url.searchParams.get("userID");
     const lessonID = url.searchParams.get("lessonID");
-    const stages = url.searchParams.get("stages");
-    const parsedStages = JSON.parse(stages);
-    console.log(typeof parsedStages);
+    // const stages = url.searchParams.get("stages");
+    // const parsedStages = JSON.parse(stages);
+    // console.log(typeof parsedStages);
 
-    const includedStages = parsedStages.root;
-    console.log("Included Stages: ", includedStages);
+    // const includedStages = parsedStages.root;
+    // console.log("Included Stages: ", includedStages);
 
-    includedStages.forEach((stage) => {
-      console.log(stage);
-      postSectionsToLesson(userID, lessonID, stage);
-    });
+    // includedStages.forEach((stage) => {
+    //   console.log(stage);
+    //   postSectionsToLesson(userID, lessonID, stage);
+    // });
 
-    const stageOrder = includedStages.map((item, index) => {
-      const obj = {};
-      obj[index] = item;
-      return obj;
-    });
-    console.log("Result: ", stageOrder);
-    postStageOrderToLesson(userID, lessonID, stageOrder);
-    console.log("Lesson ID INSIDE POST: ", lessonID);
-    console.log("Stages INSIDE POST: ", stages);
-    console.log("User ID INSIDE POST: ", userID);
+    const response = getLessonStages(userID, lessonID);
+    console.log("STAGES INSIDE POST: ", lessonID);
 
-    return new Response("Lesson Stages posted successfully.", {
+    return new Response(JSON.stringify(response), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -80,17 +72,21 @@ async function postSectionsToLesson(userId, lessonId, sectionId) {
   }
 }
 
-async function postStageOrderToLesson(userId, lessonId, stageOrder) {
-  const stageOrderRef = db
+async function getLessonStages(userID, lessonID) {
+  //const lessonsRef = db.collection(doc(db, "users", userId), "lessons");
+  //const lessonsRef = db.collection(db, "users", userId, "lessons");
+  const stagesRef = db
+    //.firestore()
     .collection("users")
-    .doc(userId)
+    .doc(userID)
     .collection("lessons")
-    .doc(lessonId);
-  // .collection("Sections")
-  // .doc("stageOrder");
-
-  await stageOrderRef.set({ stageOrder: stageOrder });
-  console.log(`Stage Order ${stageOrder} added to lesson ${lessonId}.`);
-
-  //return stageOrder;
+    .doc(lessonID)
+    .collection("Sections");
+  const stagesSnapshot = await stagesRef.get();
+  const stages = stagesSnapshot.docs.map((doc) => ({
+    id: doc.id, // Include the document ID
+    ...doc.data(), // Include the document fields
+  }));
+  console.log(stages);
+  return stages;
 }
