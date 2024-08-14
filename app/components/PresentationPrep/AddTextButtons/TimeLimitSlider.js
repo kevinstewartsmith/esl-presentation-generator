@@ -21,7 +21,7 @@ const TimeLimitSlider = ({
   const { updateSliderStateMemory, addSliderStateMemory, sliders } =
     useContext(PresentationContext);
 
-  const { updateInputTextsReading } = useContext(
+  const { updateInputTextsReading, inputTexts } = useContext(
     ReadingForGistAndDetailContext
   );
 
@@ -47,9 +47,16 @@ const TimeLimitSlider = ({
     updateInputTextsReading(id, newValue);
   };
 
+  // const minuteValue = () => {
+  //   if (sliders[id] && sliders[id].value) {
+  //     return sliders[id].value || defaultValue;
+  //   } else {
+  //     return defaultValue;
+  //   }
+  // };
   const minuteValue = () => {
-    if (sliders[id] && sliders[id].value) {
-      return sliders[id].value || defaultValue;
+    if (inputTexts[id]) {
+      return inputTexts[id];
     } else {
       return defaultValue;
     }
@@ -64,7 +71,7 @@ const TimeLimitSlider = ({
     >
       <Grid item xs={12} sm={12}>
         <CheckBoxAndLabel
-          label={`${label} - ${sliderValue} minutes`}
+          label={`${label} - ${inputTexts[id]} minutes`}
           size={"small"}
           includedId={includedId}
         />
@@ -80,7 +87,8 @@ const TimeLimitSlider = ({
           max={10}
           defaultValue={defaultValue ? defaultValue : 3}
           onChange={handleSliderChange}
-          minuteValue={minuteValue()}
+          //minuteValue={minuteValue()}
+          minuteValue={inputTexts[id] ? inputTexts[id] : defaultValue}
         />
       </Grid>
     </Grid>
