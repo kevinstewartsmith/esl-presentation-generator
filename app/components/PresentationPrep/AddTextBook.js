@@ -65,10 +65,16 @@ const thumbInner = {
   overflow: "hidden",
 };
 
+// const img = {
+//   display: "block",
+//   width: "auto",
+//   height: "auto",
+// };
 const img = {
   display: "block",
-  width: "80px",
-  height: "auto",
+  maxWidth: "100%",
+  maxHeight: "100%",
+  objectFit: "contain", // Ensures that the image fits within its container while maintaining its aspect ratio
 };
 
 // const buttonStyle = {

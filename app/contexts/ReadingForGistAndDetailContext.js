@@ -43,17 +43,23 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   async function fetchTextbookDataFromDB(userID, lessonID, stageID) {
+    const stage = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stage);
     console.log("Getting Textbook Data from Firestore");
     try {
       const response = await fetch(
-        `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=teststage`
+        `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
       console.log("Textbook DATA from Firestore:", data);
-      setTextbook(data);
+      data.texts.transcript ? setTextbook(data.texts.transcript) : null;
+      data.questions.transcript
+        ? setQuestions(data.questions.transcript)
+        : null;
+      data.answers.transcript ? setAnswers(data.answers.transcript) : null;
     } catch (error) {
       console.error(error);
     }
@@ -266,6 +272,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
       const data = await response.json(); // Parse the JSON response
       console.log("Data from Firestore:", data);
       setInputTexts(data);
+      //setQuestions(data.questions);
     } catch (error) {
       console.error(error);
     }
@@ -336,6 +343,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         updateTextbook,
         updateQuestions,
         updateAnswers,
+        fetchTextbookDataFromDB,
       }}
     >
       {children}

@@ -39,6 +39,7 @@ const page = ({ params }) => {
     updateLessonID,
     lessonID,
     getAllDiscussionDataFromFirestore,
+    fetchTextbookDataFromDB,
   } = useContext(ReadingForGistAndDetailContext);
 
   console.log("Stage ID: ", readingForGistandDetailStage);
@@ -71,6 +72,7 @@ const page = ({ params }) => {
       params.lessonID,
       params.stageID
     );
+    fetchTextbookDataFromDB(params.userID, params.lessonID, params.stageID);
   }, []);
 
   const { presentationIsShowing, hidePresentation, loggedInUser } = useContext(
