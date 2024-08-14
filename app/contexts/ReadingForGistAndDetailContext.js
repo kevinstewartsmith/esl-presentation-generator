@@ -231,6 +231,28 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     setVocabulary(words);
   }
 
+  useEffect(() => {
+    console.log("Post Vocabulary Data");
+    const stageID = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stageID);
+    console.log("Encoded Stage ID:", encodedStageID);
+
+    const stringifyVocabulary = JSON.stringify(vocabulary);
+    async function postVocabularyData() {
+      try {
+        const response = await fetch(
+          `/api/firestore/post-vocabulary?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifyVocabulary}`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+        console.log("RESPONSE FROM POSTING VOCABULARY DATA:", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postVocabularyData();
+  }, [vocabulary]);
+
   //////////////////////////////////////////////////////////
   //END of Vocabulary state////////////////////////////////
   /////////////////////////////////////////////////////////
