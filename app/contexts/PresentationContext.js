@@ -61,7 +61,7 @@ const PresentationContextProvider = ({ children }) => {
   const [textTranscript, setTextTranscript] = useState("");
   const [questions, setQuestions] = useState();
   const [answers, setAnswers] = useState();
-  const [vocabulary, setVocabulary] = useState();
+  // const [vocabulary, setVocabulary] = useState();
   const [gistReadingQuestions, setGistReadingQuestions] = useState("");
   const [gistReadingAnswers, setGistReadingAnswers] = useState("");
   const [gistReadingPage, setGistReadingPage] = useState("");
@@ -95,22 +95,22 @@ const PresentationContextProvider = ({ children }) => {
     setAnswers(newAnswers);
   }
 
-  function updateVocabulary(newVocabulary) {
-    setVocabulary(newVocabulary);
-  }
+  // function updateVocabulary(newVocabulary) {
+  //   setVocabulary(newVocabulary);
+  // }
 
-  function loadVocabulary(data) {
-    // Add the fields selected: false and img_url: null to each word object
-    const words = data.map((word) => {
-      return {
-        ...word,
-        selected: false,
-        img_url: "",
-      };
-    });
-    console.log(words);
-    setVocabulary(words);
-  }
+  // function loadVocabulary(data) {
+  //   // Add the fields selected: false and img_url: null to each word object
+  //   const words = data.map((word) => {
+  //     return {
+  //       ...word,
+  //       selected: false,
+  //       img_url: "",
+  //     };
+  //   });
+  //   console.log(words);
+  //   setVocabulary(words);
+  // }
 
   function updateGistReadingQuestions(newGistReadingQuestions) {
     setGistReadingQuestions(newGistReadingQuestions);
@@ -267,15 +267,15 @@ const PresentationContextProvider = ({ children }) => {
         textTranscript,
         setTextTranscript,
         questions,
-        vocabulary,
+        //vocabulary,
         setQuestions,
         answers,
         setAnswers,
         updateTextTranscript,
         updateQuestions,
         updateAnswers,
-        updateVocabulary,
-        loadVocabulary,
+        //updateVocabulary,
+        //loadVocabulary,
         gistReadingQuestions,
         gistReadingAnswers,
         updateGistReadingQuestions,

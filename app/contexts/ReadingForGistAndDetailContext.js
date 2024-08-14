@@ -209,6 +209,32 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   //End of Discussion forms state////////////////////////////
   ///////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////
+  //START of Vocabulary state////////////////////////////////
+  ///////////////////////////////////////////////////////////
+  const [vocabulary, setVocabulary] = useState();
+
+  function updateVocabulary(newVocabulary) {
+    setVocabulary(newVocabulary);
+  }
+
+  function loadVocabulary(data) {
+    // Add the fields selected: false and img_url: null to each word object
+    const words = data.map((word) => {
+      return {
+        ...word,
+        selected: false,
+        img_url: "",
+      };
+    });
+    console.log(words);
+    setVocabulary(words);
+  }
+
+  //////////////////////////////////////////////////////////
+  //END of Vocabulary state////////////////////////////////
+  /////////////////////////////////////////////////////////
+
   let counter = 0;
 
   function updateLessonID(id) {
@@ -344,6 +370,11 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         updateQuestions,
         updateAnswers,
         fetchTextbookDataFromDB,
+
+        //Vocabulary
+        vocabulary,
+        loadVocabulary,
+        updateVocabulary,
       }}
     >
       {children}

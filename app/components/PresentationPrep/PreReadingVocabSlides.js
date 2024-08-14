@@ -3,14 +3,22 @@ import { Grid } from "@mui/material";
 import { lightBlue } from "@mui/material/colors";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import PreviewVocabSlides from "@app/components/PresentationPrep/PreviewVocabSlides";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const PreReadingVocabSlides = () => {
   //const words = ['Carpet', 'Dolphin', 'Rubbish', 'Sequence']
   const [selectedVocabNum, setSelectedVocabNum] = useState(0);
   const [selectedVocabulary, setSelectedVocabulary] = useState([]);
 
-  const { textTranscript, vocabulary, updateVocabulary, loadVocabulary } =
-    useContext(PresentationContext);
+  const {
+    textTranscript,
+    // vocabulary,
+    // updateVocabulary,
+    // loadVocabulary
+  } = useContext(PresentationContext);
+  const { textbook, vocabulary, updateVocabulary, loadVocabulary } = useContext(
+    ReadingForGistAndDetailContext
+  );
 
   //const extractedText = "David Have you got ready for the party? Joanna No, ? is ready. We haven't found ? to have it, for a start. We've looked : . David Have you invited ® yet? Joanna Yes, we've invited 50 people and s is coming! David So you've got 50 people coming, but ) for them to come to? Joanna That's right. David Well, we've got to do ® ‘ How about using my house? Joanna What about your parents? David They won't mind. They're going > forthe weekend. I'll make sure ™ is clean and tidy when they get home."
 
@@ -46,8 +54,11 @@ const PreReadingVocabSlides = () => {
 
   async function getVocabulary() {
     try {
+      console.log("TEXTBOOK TEXT GET VOCABULARY");
+      console.log(textbook);
+
       const response = await fetch(
-        `/api/get-vocabulary-chatgpt?query=${textTranscript}&cefr_level=a2`
+        `/api/get-vocabulary-chatgpt?query=${textbook}&cefr_level=a2`
       );
 
       if (!response.ok) {
