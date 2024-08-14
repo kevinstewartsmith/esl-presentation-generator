@@ -63,10 +63,10 @@ export default function StageSorter({ lessonID }) {
     console.log("Items: ");
     //change back to items if there is an error
     console.log(items);
-    function postStagesToDB() {
+    async function postStagesToDB() {
       try {
         const stages = JSON.stringify(items);
-        const response = fetch(
+        const response = await fetch(
           `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
           {
             method: "POST",

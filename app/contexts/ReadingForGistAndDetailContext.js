@@ -13,7 +13,80 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [lessonID, setLessonID] = useState("");
   const [newInput, setNewInput] = useState({});
 
-  //Discussion forms state
+  ///////////////////////////////////////////////////////////////
+  //START: Textbook, Questions, and Answers state////////////////
+  ///////////////////////////////////////////////////////////////
+  const [textbook, setTextbook] = useState();
+  const [questions, setQuestions] = useState();
+  const [answers, setAnswers] = useState();
+
+  // function updateTextbook(key, value) {
+  //   setTextbook({ ...textbook, [key]: value });
+  // }
+  function updateTextbook(newData) {
+    setTextbook(newData);
+  }
+
+  function updateQuestions(key, value) {
+    setQuestions({ ...questions, [key]: value });
+  }
+
+  function updateAnswers(key, value) {
+    setAnswers({ ...answers, [key]: value });
+  }
+
+  async function fetchTextbookDataFromDB(userID, lessonID, stageID) {
+    console.log("Getting Textbook Data from Firestore");
+    try {
+      const response = await fetch(
+        `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=teststage`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json(); // Parse the JSON response
+      console.log("Textbook DATA from Firestore:", data);
+      setTextbook(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Post Textbook Data");
+    const stageID = "Reading For Gist and Detail";
+    //encode stageID
+    const encodedStageID = encodeURIComponent(stageID);
+    console.log("Encoded Stage ID:", encodedStageID);
+    async function postTextbookData() {
+      try {
+        const response = await fetch(
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${textbook}`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postTextbookData();
+  }, [textbook]);
+
+  useEffect(() => {
+    console.log("Post Questions Data");
+  }, [questions]);
+
+  useEffect(() => {
+    console.log("Post Answers Data");
+  }, [answers]);
+
+  ///////////////////////////////////////////////////////////////
+  //END: Textbook, Questions, and Answers state/////////////////
+  ///////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////
+  //Discussion forms state///////////////////////////////////
+  ///////////////////////////////////////////////////////////
   const [discussionForms, setDiscussionForms] = useState({});
 
   const addDiscussionLine = (id) => {
@@ -87,7 +160,9 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
       console.error("Error updating Firestore:", error);
     }
   }
-  //End of discussion form functions
+  ////////////////////////////////////////////////////////////
+  //End of Discussion forms state////////////////////////////
+  ///////////////////////////////////////////////////////////
 
   let counter = 0;
 
@@ -177,16 +252,6 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     []
   );
 
-  //   useEffect(() => {
-  //     // Fetch data when the component mounts
-  //     fetchDataFromFirestore(
-  //       "kevinstewartsmith",
-  //       "muVB5DSX1l0OLg2dokHL",
-  //       "teststage"
-  //     );
-  //     console.log("Context mounts");
-  //   }, []);
-
   useEffect(() => {
     console.log("POSTING USEEFFECT TRIGGERED");
     console.log(Object.keys(inputTexts).length);
@@ -224,6 +289,14 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         addDiscussionLine,
         updateDiscussionText,
         getAllDiscussionDataFromFirestore,
+
+        //Textbook, Questions, and Answers
+        textbook,
+        questions,
+        answers,
+        updateTextbook,
+        updateQuestions,
+        updateAnswers,
       }}
     >
       {children}

@@ -33,15 +33,6 @@ const PresentationContextProvider = ({ children }) => {
   };
   const [items, setItems] = useState({});
   function updateItems(newItems) {
-    //setItems(newItems);
-    // const rootArray = newItems.map((obj) => Object.values(obj));
-    // const container1Array = newItems.container1.map(
-    //   (obj) => Object.values(obj)[0]
-    // );
-    // const obj = {
-    //   root: rootArray,
-    //   container1: container1Array,
-    // };
     console.log("PRES CONTEXT SET ITEMs OBJECT:", newItems);
     setItems(newItems);
   }
@@ -63,22 +54,6 @@ const PresentationContextProvider = ({ children }) => {
     console.log("PRES CONTEXT SET STAGES OBJECT:", obj);
     setStages(obj);
   }
-  // useEffect(() => {
-  //   async function getLessonStages() {
-  //     try {
-  //       const response = await fetch(
-  //         `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`
-  //       );
-  //       const data = await response.json();
-  //       console.log("Lesson Stages PRSEISE CONTEXT:", data);
-  //       return data;
-  //     } catch (error) {
-  //       console.error(error);
-  //       return null;
-  //     }
-  //   }
-  //   getLessonStages();
-  // }, []);
 
   //End Lesson Stages State
 
@@ -152,12 +127,6 @@ const PresentationContextProvider = ({ children }) => {
     console.log(gistReadingPage);
     console.log("BING BOOM");
   }
-
-  // const debouncedSave = debounce((newData) => {
-  //   //updateDataInFirestore(newData);
-  //   console.log(newData);
-  //   console.log("Calling Firestore");
-  // }, 5000);
 
   const debouncedSave = useMemo(
     () =>

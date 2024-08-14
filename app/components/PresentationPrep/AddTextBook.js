@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-//import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 //import { read } from "fs";
@@ -67,8 +67,8 @@ const thumbInner = {
 
 const img = {
   display: "block",
-  width: "auto",
-  height: "100%",
+  width: "20px",
+  height: "auto",
 };
 
 // const buttonStyle = {
@@ -86,12 +86,21 @@ function AddTextBook({ category, stageID }) {
   const {
     textTranscript,
     updateTextTranscript,
-    questions,
-    updateQuestions,
-    answers,
-    updateAnswers,
+    //questions,
+    //updateQuestions,
+    //answers,
+    //updateAnswers,
     updateTextBoxInputs,
   } = useContext(PresentationContext);
+
+  const {
+    textbook,
+    questions,
+    answers,
+    updateTextbook,
+    updateQuestions,
+    updateAnswers,
+  } = useContext(ReadingForGistAndDetailContext);
 
   async function handleReadText(file) {
     const worker = await createWorker();
@@ -108,7 +117,8 @@ function AddTextBook({ category, stageID }) {
     console.log("The category is SWITCH: ", category);
     switch (category) {
       case "BookText":
-        updateTextTranscript(text);
+        //updateTextTranscript(text);
+        updateTextbook(text);
 
         return null;
       case "QuestionText":
@@ -182,10 +192,10 @@ function AddTextBook({ category, stageID }) {
     [isFocused, isDragAccept, isDragReject]
   );
 
-  const handleTextDisplay = (category, textTranscript, questions, answers) => {
+  const handleTextDisplay = (category, textbook, questions, answers) => {
     switch (category) {
       case "BookText":
-        return <h1 style={{ color: "black" }}>{textTranscript}</h1>;
+        return <h1 style={{ color: "black" }}>{textbook}</h1>;
       case "QuestionText":
         return <h1 style={{ color: "black" }}>{questions}</h1>;
       case "AnswerText":
@@ -215,7 +225,7 @@ function AddTextBook({ category, stageID }) {
     const textContent = (category) => {
       switch (category) {
         case "BookText":
-          return textTranscript;
+          return textbook;
         case "QuestionText":
           return questions;
         case "AnswerText":
@@ -283,7 +293,7 @@ function AddTextBook({ category, stageID }) {
         </div>
         <aside style={thumbsContainer}>{thumbs}</aside>
         <div style={{ borderWidth: 1 }}>
-          {handleTextDisplay(category, textTranscript, questions, answers)}
+          {handleTextDisplay(category, textbook, questions, answers)}
         </div>
         {/* <button style={buttonStyle}>Clean Questions</button> */}
         {handleButtonDisplay(category)}
