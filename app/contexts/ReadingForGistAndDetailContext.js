@@ -34,8 +34,12 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     setQuestions(newData);
   }
 
-  function updateAnswers(key, value) {
-    setAnswers({ ...answers, [key]: value });
+  // function updateAnswers(key, value) {
+  //   setAnswers({ ...answers, [key]: value });
+  // }
+
+  function updateAnswers(newData) {
+    setAnswers(newData);
   }
 
   async function fetchTextbookDataFromDB(userID, lessonID, stageID) {
@@ -97,6 +101,22 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("Post Answers Data");
+    const stageID = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stageID);
+    console.log("Encoded Stage ID:", encodedStageID);
+    async function postTextbookData() {
+      try {
+        const response = await fetch(
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${answers}&textType=AnswerText`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+        console.log("RESPONSE FROM POSTING ANSWER TEXT DATA:", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postTextbookData();
   }, [answers]);
 
   ///////////////////////////////////////////////////////////////

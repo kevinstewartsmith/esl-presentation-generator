@@ -67,7 +67,7 @@ const thumbInner = {
 
 const img = {
   display: "block",
-  width: "20px",
+  width: "80px",
   height: "auto",
 };
 
