@@ -27,8 +27,11 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     setTextbook(newData);
   }
 
-  function updateQuestions(key, value) {
-    setQuestions({ ...questions, [key]: value });
+  // function updateQuestions(key, value) {
+  //   setQuestions({ ...questions, [key]: value });
+  // }
+  function updateQuestions(newData) {
+    setQuestions(newData);
   }
 
   function updateAnswers(key, value) {
@@ -55,16 +58,16 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   useEffect(() => {
     console.log("Post Textbook Data");
     const stageID = "Reading For Gist and Detail";
-    //encode stageID
     const encodedStageID = encodeURIComponent(stageID);
     console.log("Encoded Stage ID:", encodedStageID);
     async function postTextbookData() {
       try {
         const response = await fetch(
-          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${textbook}`,
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${textbook}&textType=BookText`,
           { method: "POST" }
         );
         const data = await response.json();
+        console.log("RESPONSE FROM POSTING TEXTBOOK DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -74,6 +77,22 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("Post Questions Data");
+    const stageID = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stageID);
+    console.log("Encoded Stage ID:", encodedStageID);
+    async function postTextbookData() {
+      try {
+        const response = await fetch(
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${questions}&textType=QuestionText`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+        console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postTextbookData();
   }, [questions]);
 
   useEffect(() => {

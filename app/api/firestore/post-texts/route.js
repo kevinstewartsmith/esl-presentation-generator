@@ -9,11 +9,13 @@ export const POST = async (request) => {
     const lessonID = url.searchParams.get("lessonID");
     const stageID = url.searchParams.get("stageID");
     const data = url.searchParams.get("data");
+    const textType = url.searchParams.get("textType");
 
     console.log(`userID: ${userID}`);
     console.log(`lessonID: ${lessonID}`);
     console.log(`stageID: ${stageID}`);
     console.log(`data: ${data}`);
+    console.log(`textType: ${textType}`);
 
     const textData = {
       transcript: data,
@@ -21,7 +23,7 @@ export const POST = async (request) => {
     };
 
     //postTextsToSection(userID, lessonID, "testsection", "testtext");
-    postTextsToSection(userID, lessonID, stageID, textData);
+    postTextsToSection(userID, lessonID, stageID, textData, textType);
 
     return new Response("Lesson Stages posted successfully.", {
       status: 200,
@@ -35,7 +37,13 @@ export const POST = async (request) => {
   }
 };
 
-async function postTextsToSection(userId, lessonId, sectionId, texts) {
+async function postTextsToSection(
+  userId,
+  lessonId,
+  sectionId,
+  texts,
+  textType
+) {
   const sectionRef = db
     .collection("users")
     .doc(userId)
@@ -57,7 +65,29 @@ async function postTextsToSection(userId, lessonId, sectionId, texts) {
     console.log(`Section ${sectionId} already exists in lesson ${lessonId}.`);
 
     // Add the new text to the section
-    await sectionRef.set({ texts: texts }, { merge: true });
+    switch (textType) {
+      case "BookText":
+        await sectionRef.set({ texts: texts }, { merge: true });
+        console.log(
+          `Transcript added to section ${sectionId} in lesson ${lessonId}.`
+        );
+        break;
+      case "QuestionText":
+        await sectionRef.set({ questions: texts }, { merge: true });
+        console.log(
+          `Questions added to section ${sectionId} in lesson ${lessonId}.`
+        );
+        break;
+      case "AnswerText":
+        await sectionRef.set({ answers: texts }, { merge: true });
+        console.log(
+          `Answers added to section ${sectionId} in lesson ${lessonId}.`
+        );
+        break;
+      default:
+        console.log(`Text type ${textType} not recognized.`);
+    }
+    //await sectionRef.set({ texts: texts }, { merge: true });
     console.log(`Texts added to section ${sectionId} in lesson ${lessonId}.`);
   }
 }
