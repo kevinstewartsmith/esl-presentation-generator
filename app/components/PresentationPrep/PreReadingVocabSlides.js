@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, use } from "react";
 import { Grid } from "@mui/material";
 import { lightBlue } from "@mui/material/colors";
 import { PresentationContext } from "@app/contexts/PresentationContext";
@@ -15,12 +15,27 @@ const PreReadingVocabSlides = () => {
     // vocabulary,
     // updateVocabulary,
     // loadVocabulary
+    //lessonID,
   } = useContext(PresentationContext);
-  const { textbook, vocabulary, updateVocabulary, loadVocabulary } = useContext(
-    ReadingForGistAndDetailContext
-  );
+  const {
+    textbook,
+    vocabulary,
+    updateVocabulary,
+    loadVocabulary,
+    fetchVocabulary,
+    userID,
+    lessonID,
+  } = useContext(ReadingForGistAndDetailContext);
+  //fetchVocabulary();
 
-  //const extractedText = "David Have you got ready for the party? Joanna No, ? is ready. We haven't found ? to have it, for a start. We've looked : . David Have you invited ® yet? Joanna Yes, we've invited 50 people and s is coming! David So you've got 50 people coming, but ) for them to come to? Joanna That's right. David Well, we've got to do ® ‘ How about using my house? Joanna What about your parents? David They won't mind. They're going > forthe weekend. I'll make sure ™ is clean and tidy when they get home."
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (count === 0) {
+      console.log("PREREADING VOCAB: FETCHING VOCABULARY");
+      fetchVocabulary(userID, lessonID, "Reading For Gist and Detail");
+      setCount(count + 1);
+    }
+  }, []);
 
   const checkMarkClicked = async (e) => {
     const key = e.target.value;

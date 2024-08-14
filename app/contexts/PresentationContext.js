@@ -7,13 +7,20 @@ const PresentationContext = createContext();
 
 const PresentationContextProvider = ({ children }) => {
   const [showPresentation, setShowPresentation] = useState(false);
-  //Lesson Stages State
+  /////////START: Lesson Stages State
   const [stages, setStages] = useState({});
   const [userID, setUserID] = useState("kevinstewartsmith");
+  /////////////////////////////////////////////
+  ///////START: Lesson ID State////////////////
+  /////////////////////////////////////////////
   const [lessonID, setLessonID] = useState("");
+
   function updateLessonIDPresentationContext(newLessonID) {
     setLessonID(newLessonID);
   }
+  /////////////////////////////////////////////
+  ////////END: Lesson ID State////////////////
+  ///////////////////////////////////////////
   const defaultStages = {
     root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
     container1: [

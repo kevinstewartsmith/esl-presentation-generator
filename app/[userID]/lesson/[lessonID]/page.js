@@ -30,6 +30,7 @@ const page = ({ params }) => {
     //   const lesson = storedLessons?.find((lesson) => lesson.id === lessonID);
     //   setLesson(lesson);
     // }
+    updateLessonID(params.lessonID);
     async function fetchData() {
       try {
         const response = await loadLessons(

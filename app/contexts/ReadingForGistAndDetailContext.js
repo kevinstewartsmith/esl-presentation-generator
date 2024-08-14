@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useState, useEffect, useMemo } from "react";
+import { createContext, useState, useEffect, useMemo, use } from "react";
 import { debounce } from "@app/utils/debounce";
 
 const ReadingForGistAndDetailContext = createContext();
@@ -12,6 +12,19 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [inputTexts, setInputTexts] = useState({});
   const [lessonID, setLessonID] = useState("");
   const [newInput, setNewInput] = useState({});
+  /////////////////////////////////////////////////////////////////
+  //START: Lesson Information/////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
+  const [lessonIDReadingGD, setLessonIDReadingGD] = useState("");
+
+  function updateLessonIDReadingGD(id) {
+    console.log("Update Lesson ID in RFGD Context: " + id);
+    setLessonIDReadingGD(id);
+  }
+
+  /////////////////////////////////////////////////////////////////
+  //END: Lesson Information//////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////
   //START: Textbook, Questions, and Answers state////////////////
@@ -231,6 +244,30 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     setVocabulary(words);
   }
 
+  async function fetchVocabulary(userID, lessonID, stageID) {
+    try {
+      console.log("GET VOCABULARY");
+      const stage = "Reading For Gist and Detail";
+      const encodedStageID = encodeURIComponent(stage);
+
+      const response = await fetch(
+        //`/api/get-vocabulary-chatgpt?query=${textbook}&cefr_level=a2`
+        `/api/firestore/get-vocabulary?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      let data = await response.json(); // Assuming the server returns JSON
+
+      console.log("Raw response data:", data); // Log raw data
+      setVocabulary(data);
+    } catch (error) {
+      console.error("Error fetching vocabulary:", error);
+    }
+  }
+
   useEffect(() => {
     console.log("Post Vocabulary Data");
     const stageID = "Reading For Gist and Detail";
@@ -377,6 +414,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         inputTexts,
         updateLessonID,
         lessonID,
+        userID,
         fetchDataFromFirestore,
         getAllInputDataFromFirestore,
         discussionForms,
@@ -397,6 +435,11 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         vocabulary,
         loadVocabulary,
         updateVocabulary,
+        fetchVocabulary,
+
+        //Lesson Information
+        lessonIDReadingGD,
+        updateLessonIDReadingGD,
       }}
     >
       {children}

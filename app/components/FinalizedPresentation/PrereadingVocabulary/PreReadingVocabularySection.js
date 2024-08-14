@@ -1,9 +1,11 @@
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 //import next/font/google
 import { Lobster_Two } from "next/font/google";
 import { Andada_Pro } from "next/font/google";
 import { and } from "firebase/firestore";
 import { Grid } from "@mui/material";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const lobsterTwo = Lobster_Two({
   subsets: ["latin"],
@@ -17,8 +19,9 @@ const andadaPro = Andada_Pro({
   display: "swap",
 });
 
-const PreReadingVocabularySection = ({ vocabulary }) => {
+const PreReadingVocabularySection = () => {
   //console.log("vocabularyPRES: " + JSON.stringify(vocabulary));
+  const { vocabulary } = useContext(ReadingForGistAndDetailContext);
   return (
     <>
       {vocabulary.map((word, index) => (

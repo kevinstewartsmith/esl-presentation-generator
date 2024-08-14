@@ -49,6 +49,7 @@ const page = ({ params }) => {
 
   useEffect(() => {
     //updateLessonID(params.lessonID);
+    updateLessonID(params.lessonID);
     console.log("CREATE PAGE USE EFFECT");
     console.log("Params Lesson ID: ", params.lessonID);
     console.log("LesSon ID: ", lessonID);
@@ -97,7 +98,10 @@ const page = ({ params }) => {
   const sections = [
     <ReadingContent stageID={readingForGistandDetailStage} />,
     <SectionSelector stageID={readingForGistandDetailStage} />,
-    <PreReadingVocabSlides stageID={readingForGistandDetailStage} />,
+    <PreReadingVocabSlides
+      stageID={readingForGistandDetailStage}
+      lessonID={params.lessonID}
+    />,
     <PreReadingGames stageID={readingForGistandDetailStage} />,
     <FinishReading stageID={readingForGistandDetailStage} />,
   ];
@@ -115,7 +119,7 @@ const page = ({ params }) => {
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
           <h1 className="ml-20">{lessonData.title}</h1>
-          <h1>{lessonID}</h1>
+          <h1>{lessonID || "no lessonID"}</h1>
           <div
             style={{
               backgroundColor: "white",
