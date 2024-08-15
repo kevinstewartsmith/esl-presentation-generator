@@ -25,13 +25,16 @@ const GistReadingInstructions = ({
           {/* <h3> */}
           <li>
             {/* {"Open " + textBoxInputs["book"] + " to p." + gistReadingPage} */}
-            {"Open " + inputTexts["book"] + " to p." + inputTexts["page"]}
+            {"Open "}
+            <stong>{inputTexts["book"]}</stong> {" to p." + inputTexts["page"]}
           </li>
           {/* </h3> */}
           <li>
-            {"Read '" + inputTexts["title"] + "' "}
+            {"Read "} <em>{"'" + inputTexts["title"] + "' "}</em>
             <strong>
-              <em> quickly</em>
+              <em>
+                <u>quickly</u>
+              </em>
             </strong>
           </li>
 

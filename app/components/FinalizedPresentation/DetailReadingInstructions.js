@@ -14,13 +14,17 @@ const DetailReadingInstructions = ({ textbookExercises, slider }) => {
         </h1>
         <ul>
           <li>
-            {"Read '" + inputTexts["title"] + "' "}
+            {"Read "} <em>{"'" + inputTexts["title"] + "' "}</em>
             <strong>
-              <em>slowly</em>
+              <em>
+                <u>slowly</u>
+              </em>
             </strong>
           </li>
           <li>
-            <em>Complete Exercises: </em>
+            <em>
+              {"Complete p." + inputTexts["exercisePage"] + " Exercise(s): "}
+            </em>
 
             {inputTexts["exercise"]}
           </li>

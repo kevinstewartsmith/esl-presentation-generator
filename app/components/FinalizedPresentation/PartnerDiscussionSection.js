@@ -32,7 +32,8 @@ const PartnerDiscussionSection = ({ slider, discussion }) => {
                       <Grid item xs={12} sm={12} marginBottom={1}>
                         <h5 key={index}>
                           <strong>
-                            {index % 2 === 0 ? "Partner A: " : "Partner B: "}
+                            <u>{index % 2 === 0 ? "Partner A" : "Partner B"}</u>
+                            {": "}
                             <em>{text}</em>
                           </strong>
                         </h5>
