@@ -294,6 +294,69 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   //END of Vocabulary state////////////////////////////////
   /////////////////////////////////////////////////////////
 
+  //////////////////////////////////////////////////////////
+  //START: Checkbox and Label State -INCLUDED////////////////
+  //////////////////////////////////////////////////////////
+  const [included, setIncluded] = useState({});
+
+  function updateIncludedSection(id) {
+    console.log("updateIncludedSection READING CONTEXT: " + id);
+    //check if the id is already in the included object
+    //if it is, switch the boolean value
+    //if it is not, add it with a value of true
+    setIncluded((prev) => {
+      const newIncluded = { ...prev };
+      newIncluded[id] = !prev[id];
+      return newIncluded;
+    });
+  }
+
+  async function fetchIncludedDataFromFirestore(userID, lessonID, stageID) {
+    //encode stageID
+    const stage = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stage);
+    console.log("Getting Included Data from Firestore");
+
+    try {
+      const response = await fetch(
+        `/api/firestore/get-included?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json(); // Parse the JSON response
+      console.log("Included DATA from Firestore:", data);
+      setIncluded(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Post Included Data");
+    const stageID = "Reading For Gist and Detail";
+    const encodedStageID = encodeURIComponent(stageID);
+    console.log("Encoded Stage ID:", encodedStageID);
+    const includedDataString = JSON.stringify(included);
+    async function postIncludedData() {
+      try {
+        const response = await fetch(
+          `/api/firestore/post-included?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${includedDataString}`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+        console.log("RESPONSE FROM POSTING INCLUDED DATA:", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postIncludedData();
+  }, [included]);
+
+  //////////////////////////////////////////////////////////
+  //END: Checkbox and Label State - INCLUDED/////////////////
+  //////////////////////////////////////////////////////////
+
   let counter = 0;
 
   function updateLessonID(id) {
@@ -440,6 +503,11 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         //Lesson Information
         lessonIDReadingGD,
         updateLessonIDReadingGD,
+
+        //Checkbox and Label
+        included,
+        updateIncludedSection,
+        fetchIncludedDataFromFirestore,
       }}
     >
       {children}

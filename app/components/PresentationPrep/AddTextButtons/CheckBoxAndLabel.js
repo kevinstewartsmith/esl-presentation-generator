@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { Grid } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const CheckBoxAndLabel = ({
   label,
@@ -11,10 +12,13 @@ const CheckBoxAndLabel = ({
   onChange,
   includedId,
 }) => {
-  const { included, updateIncludedSection } = useContext(PresentationContext);
-
+  //const { included, updateIncludedSection } = useContext(PresentationContext);
+  const { included, updateIncludedSection } = useContext(
+    ReadingForGistAndDetailContext
+  );
   function onCheck() {
     updateIncludedSection(includedId);
+    //updateInputTextsReading(inputTexts[includedId], !included[includedId]);
   }
 
   useEffect(() => {
