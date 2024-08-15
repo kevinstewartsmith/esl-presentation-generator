@@ -2,7 +2,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useState, useContext, useEffect, use } from "react";
+import { useState, useContext, useEffect } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),

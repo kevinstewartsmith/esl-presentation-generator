@@ -8,7 +8,10 @@ const GistReadingInstructions = ({
   included,
   textBoxInputs,
   time,
+  inputTexts,
 }) => {
+  const minutes = inputTexts["gistReadingTime"] === 1 ? "minute" : "minutes";
+
   return (
     <>
       <section>
@@ -21,21 +24,22 @@ const GistReadingInstructions = ({
         <ul>
           {/* <h3> */}
           <li>
-            {"Open " + textBoxInputs["book"] + " to p." + gistReadingPage}
+            {/* {"Open " + textBoxInputs["book"] + " to p." + gistReadingPage} */}
+            {"Open " + inputTexts["book"] + " to p." + inputTexts["page"]}
           </li>
           {/* </h3> */}
           <li>
-            {"Read " + textBoxInputs["title"]}
+            {"Read '" + inputTexts["title"] + "' "}
             <strong>
               <em> quickly</em>
             </strong>
           </li>
 
           <li>
-            <em>Answer the question :</em> {gistReadingQuestions}
+            <em>Answer the question :</em> {inputTexts["question"]}
           </li>
           <li>No talking</li>
-          <li>{sliders[time].value + " minutes"}</li>
+          <li>{inputTexts["gistReadingTime"] + " " + minutes}</li>
         </ul>
       </section>
     </>

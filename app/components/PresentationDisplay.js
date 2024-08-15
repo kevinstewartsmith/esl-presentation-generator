@@ -9,6 +9,7 @@ import "reveal.js/dist/reveal.css";
 import PreReadingVocabularySection from "./FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
@@ -22,15 +23,18 @@ const PresentationDisplay = ({ presData }) => {
   const revealRef = useRef(null);
   console.log(presData);
   const {
-    vocabulary,
-    included,
+    //vocabulary,
+    //included,
     gistReadingQuestions,
     gistReadingPage,
     sliders,
     textbookExercises,
     textBoxInputs,
-    discussionForms,
+    //discussionForms,
   } = useContext(PresentationContext);
+  const { included, vocabulary, inputTexts, discussionForms } = useContext(
+    ReadingForGistAndDetailContext
+  );
   const { hidePresentation } = useContext(GlobalVariablesContext);
   console.log("VOCAB LENGTH: " + JSON.stringify(vocabulary));
   console.log("INCLUDED: " + JSON.stringify(included));
@@ -80,11 +84,13 @@ const PresentationDisplay = ({ presData }) => {
         ) : null}
 
         <GistReadingInstructions
-          gistReadingQuestions={gistReadingQuestions}
-          gistReadingPage={gistReadingPage}
+          gistReadingQuestions={inputTexts["question"]}
+          gistReadingPage={inputTexts["page"]}
           sliders={sliders}
           textBoxInputs={textBoxInputs}
-          time={"gistReadingTime"}
+          inputTexts={inputTexts}
+          //FIX
+          time={inputTexts["gistReadingTime"]}
         />
         <section>
           <h1>Stop and Look</h1>
@@ -93,13 +99,14 @@ const PresentationDisplay = ({ presData }) => {
           <ul>Listen</ul>
         </section>
         <PartnerDiscussionSection
-          slider={sliders["gistDiscussionTime"]}
+          slider={inputTexts["gistDiscussionTime"]}
           discussion={discussionForms["gistQuestionDiscussion"]}
         />
 
         <DetailReadingInstructions
-          sliders={sliders}
-          textbookExercises={textbookExercises}
+          //slider={inputTexts["detailReadingTime"]}
+          textbookExercises={inputTexts["exercise"]}
+          slider={inputTexts["detailReadingDiscussionTimeLimit"]}
         />
         <section>
           <h1>Stop and Look</h1>
@@ -108,7 +115,7 @@ const PresentationDisplay = ({ presData }) => {
           <ul>Listen</ul>
         </section>
         <PartnerDiscussionSection
-          slider={sliders["detailReadingDiscussionTimeLimit"]}
+          slider={inputTexts["detailReadingDiscussionTimeLimit"]}
           time={"detailDiscussionTime"}
           discussion={discussionForms["detailAnswersDiscussion"]}
         />

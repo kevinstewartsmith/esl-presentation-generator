@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
-const DetailReadingInstructions = ({ textbookExercises, sliders }) => {
+const DetailReadingInstructions = ({ textbookExercises, slider }) => {
+  const { inputTexts } = useContext(ReadingForGistAndDetailContext);
+  const minutes = slider === 1 ? "minute" : "minutes";
   return (
     <>
       <section
@@ -11,7 +14,7 @@ const DetailReadingInstructions = ({ textbookExercises, sliders }) => {
         </h1>
         <ul>
           <li>
-            Read Student Book p.23{" "}
+            {"Read '" + inputTexts["title"] + "' "}
             <strong>
               <em>slowly</em>
             </strong>
@@ -19,12 +22,12 @@ const DetailReadingInstructions = ({ textbookExercises, sliders }) => {
           <li>
             <em>Complete Exercises: </em>
 
-            {textbookExercises}
+            {inputTexts["exercise"]}
           </li>
           <li>No talking</li>
           <li>Raise your hand when you are finished</li>
           <li>
-            <em>{sliders["detailReadingTimeLimit"].value + " minutes"}</em>
+            <em>{slider + " " + minutes}</em>
           </li>
         </ul>
       </section>
