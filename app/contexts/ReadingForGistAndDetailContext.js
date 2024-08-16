@@ -33,23 +33,13 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [questions, setQuestions] = useState();
   const [answers, setAnswers] = useState();
 
-  // function updateTextbook(key, value) {
-  //   setTextbook({ ...textbook, [key]: value });
-  // }
   function updateTextbook(newData) {
     setTextbook(newData);
   }
 
-  // function updateQuestions(key, value) {
-  //   setQuestions({ ...questions, [key]: value });
-  // }
   function updateQuestions(newData) {
     setQuestions(newData);
   }
-
-  // function updateAnswers(key, value) {
-  //   setAnswers({ ...answers, [key]: value });
-  // }
 
   function updateAnswers(newData) {
     setAnswers(newData);

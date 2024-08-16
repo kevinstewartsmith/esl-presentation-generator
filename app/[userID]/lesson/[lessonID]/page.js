@@ -22,14 +22,6 @@ const page = ({ params }) => {
   const { loadLessons } = useContext(DashboardContext);
   const { loggedInUser } = useContext(GlobalVariablesContext);
   useEffect(() => {
-    //updateLessonIDPresentationContext(params.lessonID);
-    //updateLessonID(params.lessonID);
-    // if (lessonID) {
-    //   // Fetch lesson details from localStorage or an API
-    //   const storedLessons = JSON.parse(localStorage.getItem("lessons"));
-    //   const lesson = storedLessons?.find((lesson) => lesson.id === lessonID);
-    //   setLesson(lesson);
-    // }
     updateLessonID(params.lessonID);
     async function fetchData() {
       try {

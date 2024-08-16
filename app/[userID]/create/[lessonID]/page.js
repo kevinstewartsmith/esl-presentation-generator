@@ -8,31 +8,19 @@ const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
   { ssr: false }
 );
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
-import AddTextBook from "@app/components/PresentationPrep/AddTextBook";
-import ReadingContent from "@app/components/PresentationPrep/ReadingContent";
-import SectionSelector from "@app/components/PresentationPrep/SectionSelector";
-import PreReadingVocabSlides from "@app/components/PresentationPrep/PreReadingVocabSlides";
-import PreReadingGames from "@app/components/PresentationPrep/PreReadingGames";
+
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
-import FinishReading from "@app/components/SectionSelector/FinishReading";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
-import StegaIcon from "@app/components/StegaIcon";
 import { Handjet } from "next/font/google";
-import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
-import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import ReadingForGistandDetailForm from "@app/components/PresentationPrep/StageForms/ReadingForGistandDetailForm";
 const handjet = Handjet({
   weight: ["400"],
   subsets: ["latin"],
 });
 
 const page = ({ params }) => {
-  console.log("WHY TF Lesson ID: ", params.lessonID);
   const {
     fetchDataFromFirestore,
     getAllInputDataFromFirestore,
@@ -43,20 +31,17 @@ const page = ({ params }) => {
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
 
-  console.log("Stage ID: ", readingForGistandDetailStage);
   const [lessonData, setLessonData] = useState({});
   const userID = params.userID;
-  //const lessonID = params.lessonID;
 
   useEffect(() => {
     //updateLessonID(params.lessonID);
-    updateLessonID(params.lessonID);
-    console.log("CREATE PAGE USE EFFECT");
-    console.log("Params Lesson ID: ", params.lessonID);
-    console.log("LesSon ID: ", lessonID);
+    console.log("CREATE PAGE USE EFFECT TRIGGERED");
+    console.log("LESSON ID: " + lessonID);
+
     async function fetchData() {
       const res = await fetch(
-        `/api/firestore/get-lessons?userID=${userID}&lessonID=${params.lessonID}&method=getOneLesson`
+        `/api/firestore/get-lessons?userID=${userID}&lessonID=${lessonID}&method=getOneLesson`
       );
       const data = await res.json();
       console.log("LESSON DATA CREATE");
@@ -82,9 +67,7 @@ const page = ({ params }) => {
     );
   }, []);
 
-  const { presentationIsShowing, hidePresentation, loggedInUser } = useContext(
-    GlobalVariablesContext
-  );
+  const { presentationIsShowing } = useContext(GlobalVariablesContext);
 
   function arrowClick(dir) {
     console.log("arrow clicked");
@@ -101,21 +84,17 @@ const page = ({ params }) => {
     }
   }
 
-  const sections = [
-    <ReadingContent stageID={readingForGistandDetailStage} />,
-    <SectionSelector stageID={readingForGistandDetailStage} />,
-    <PreReadingVocabSlides
-      stageID={readingForGistandDetailStage}
-      lessonID={params.lessonID}
-    />,
-    <PreReadingGames stageID={readingForGistandDetailStage} />,
-    <FinishReading stageID={readingForGistandDetailStage} />,
-  ];
   const [sectionNumber, setSectionNumber] = useState(0);
+  const [sectionLength, setSectionLength] = useState(0);
+  const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
+  const getSectionLength = (length) => {
+    setSectionLength(length);
+  };
+
   return (
     <div className="test-border">
       <Head style={{ backgroundColor: "red" }}>
-        <title style={{ font: "white" }}>Reveal.js with Next.js</title>
+        <title style={{ font: "white" }}>Lesson generator</title>
       </Head>
 
       {presentationIsShowing ? (
@@ -126,20 +105,12 @@ const page = ({ params }) => {
         >
           <h1 className="ml-20">{lessonData.title}</h1>
           <h1>{lessonID || "no lessonID"}</h1>
-          <div
-            style={{
-              backgroundColor: "white",
-              height: "100vh - 50px",
-              display: "flex",
-              top: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              borderWidth: 0,
-            }}
-          >
-            {sections[sectionNumber]}
-          </div>
-          {sectionNumber < sections.length - 1 ? (
+
+          <ReadingForGistandDetailForm
+            sectionNumber={sectionNumber}
+            getSectionLength={getSectionLength}
+          />
+          {sectionNumber < sectionLength - 1 ? (
             <button
               //onClick={() => setSectionNumber(sectionNumber + 1)}
               onClick={() => arrowClick("left")}
