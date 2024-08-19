@@ -7,7 +7,7 @@ import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 
-const ReadingForGistandDetailForm = ({ sectionNumber, getSectionLength }) => {
+const ReadingForGistandDetailForm = ({ sectionNumber, getSectionsLength }) => {
   const {
     fetchDataFromFirestore,
     getAllInputDataFromFirestore,
@@ -30,8 +30,12 @@ const ReadingForGistandDetailForm = ({ sectionNumber, getSectionLength }) => {
   ];
 
   useEffect(() => {
-    const sectionsLegnth = sections.length;
-    getSectionLength(sectionsLegnth);
+    const sectionsLength = sections.length;
+    console.log("sectionsLength");
+
+    console.log(sectionsLength);
+
+    getSectionsLength(sectionsLength);
   }, []);
 
   return (

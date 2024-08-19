@@ -1,17 +1,10 @@
 // ComponentMap.js
-import {
-  ClassRules,
-  ListeningForGistAndDetail /* other imports */,
-} from "./Components";
+import { ReadingForGistAndDetailForm } from "@app/components/PresentationPrep/CreatePageComponents/ComponentCatalog";
 
 const ComponentMap = {
-  "Class Rules": ClassRules,
   "Listening for Gist and Detail": ListeningForGistAndDetail,
-  "Effort and Attitude Score": EffortAndAttitudeScore,
-  "Warm-Up: Speaking": WarmUpSpeaking,
-  "Reading For Gist and Detail": ReadingForGistAndDetail,
-  "Advantages - Disadvantages": AdvantagesDisadvantages,
-  "Writing: Essay": WritingEssay,
+
+  "Reading For Gist and Detail": ReadingForGistAndDetailForm,
 };
 
 export default ComponentMap;

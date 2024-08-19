@@ -1,4 +1,3 @@
-// pages/presentation-test.js
 "use client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -14,7 +13,9 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { Handjet } from "next/font/google";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-import ReadingForGistandDetailForm from "@app/components/PresentationPrep/StageForms/ReadingForGistandDetailForm";
+import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
+import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
+
 const handjet = Handjet({
   weight: ["400"],
   subsets: ["latin"],
@@ -33,6 +34,11 @@ const page = ({ params }) => {
 
   const [lessonData, setLessonData] = useState({});
   const userID = params.userID;
+
+  const [sectionNumber, setSectionNumber] = useState(0);
+  const [sectionLength, setSectionLength] = useState(0);
+  const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
+  const [currentStageFormIdx, setCurrentStageFormIdx] = useState(0);
 
   useEffect(() => {
     //updateLessonID(params.lessonID);
@@ -68,15 +74,32 @@ const page = ({ params }) => {
   }, []);
 
   const { presentationIsShowing } = useContext(GlobalVariablesContext);
-
+  const [prevSectionLength, setPrevSectionLength] = useState([]);
   function arrowClick(dir) {
     console.log("arrow clicked");
+    console.log("Section Number: " + sectionNumber);
+
     switch (dir) {
-      case "left":
-        setSectionNumber(sectionNumber + 1);
-        break;
       case "right":
-        setSectionNumber(sectionNumber - 1);
+        if (sectionNumber < sectionLength - 1) {
+          setSectionNumber(sectionNumber + 1);
+        } else if (sectionNumber === sectionLength - 1) {
+          updateSectionLengthsArray(currentStageFormIdx, sectionLength);
+          setSectionNumber(0);
+          setCurrentStageFormIdx(currentStageFormIdx + 1);
+          console.log("Current Stage Form Index: " + currentStageFormIdx);
+        }
+        break;
+      case "left":
+        //setSectionNumber(sectionNumber - 1);
+
+        if (sectionNumber === 0 && currentStageFormIdx > 0) {
+          setSectionNumber(prevSectionLength[currentStageFormIdx - 1] - 1);
+          setCurrentStageFormIdx(currentStageFormIdx - 1);
+        } else if (sectionNumber > 0) {
+          setSectionNumber(sectionNumber - 1);
+        }
+
         break;
 
       default:
@@ -84,13 +107,49 @@ const page = ({ params }) => {
     }
   }
 
-  const [sectionNumber, setSectionNumber] = useState(0);
-  const [sectionLength, setSectionLength] = useState(0);
-  const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
-  const getSectionLength = (length) => {
+  const getSectionsLength = (length) => {
+    console.log(length);
     setSectionLength(length);
   };
+  // const getSectionsLength = (length) => {
+  //   console.log("Received section length: " + length);
+  //   setSectionLength(length); // Set the section length in state
+  // };
 
+  const stageOrder = [
+    {
+      stageName: "Reading For Gist and Detail",
+      component: (
+        <ReadingForGistandDetailForm
+          sectionNumber={sectionNumber}
+          getSectionsLength={getSectionsLength}
+        />
+      ),
+      //stageFormLength: 5,
+    },
+    {
+      stageName: "Listening for Gist and Detail",
+
+      component: (
+        <ListeningForGistAndDetail
+          getSectionsLength={getSectionsLength}
+          section={sectionNumber}
+        />
+      ),
+      stageFormLength: getSectionsLength,
+    },
+  ];
+
+  const updateSectionLengthsArray = (idx, newValue) => {
+    // Create a copy of the array
+    const updatedArray = [...prevSectionLength];
+    updatedArray[idx] = newValue;
+    console.log("Updated Array: " + updatedArray);
+
+    setPrevSectionLength(updatedArray);
+  };
+
+  const numberOfStageForms = stageOrder.length;
   return (
     <div className="test-border">
       <Head style={{ backgroundColor: "red" }}>
@@ -106,23 +165,35 @@ const page = ({ params }) => {
           <h1 className="ml-20">{lessonData.title}</h1>
           <h1>{lessonID || "no lessonID"}</h1>
 
-          <ReadingForGistandDetailForm
+          {/* <ReadingForGistandDetailForm
             sectionNumber={sectionNumber}
             getSectionLength={getSectionLength}
-          />
-          {sectionNumber < sectionLength - 1 ? (
+          /> */}
+          {"Section Length: " + sectionLength}
+          {"     sectionNumber: " + sectionNumber}
+          {"     currentStageFormIdx: " + currentStageFormIdx}
+          {"     number of stages : " + numberOfStageForms}
+          {stageOrder[currentStageFormIdx].component}
+          {JSON.stringify(prevSectionLength)}
+
+          {/* {stageOrder.map((stage, index) => {
+            const Component = ComponentMap[stage];
+            return Component ? <Component key={index} /> : null;
+          })} */}
+          {sectionNumber < sectionLength - 1 ||
+          currentStageFormIdx < stageOrder.length - 1 ? (
             <button
               //onClick={() => setSectionNumber(sectionNumber + 1)}
-              onClick={() => arrowClick("left")}
+              onClick={() => arrowClick("right")}
               className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
             >
               <ArrowForwardIosIcon />
             </button>
           ) : null}
-          {sectionNumber === 0 ? null : (
+          {sectionNumber === 0 && currentStageFormIdx === 0 ? null : (
             <button
               // onClick={() => setSectionNumber(sectionNumber - 1)}
-              onClick={() => arrowClick("right")}
+              onClick={() => arrowClick("left")}
               className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
             >
               <ArrowBackIosIcon sx={{}} />
