@@ -13,8 +13,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { Handjet } from "next/font/google";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { PresentationContext } from "@app/contexts/PresentationContext";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
+import ComponentMap from "@app/utils/ComponentMap";
 
 const handjet = Handjet({
   weight: ["400"],
@@ -31,6 +33,7 @@ const page = ({ params }) => {
     fetchTextbookDataFromDB,
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
+  const { items } = useContext(PresentationContext);
 
   const [lessonData, setLessonData] = useState({});
   const userID = params.userID;
@@ -39,6 +42,17 @@ const page = ({ params }) => {
   const [sectionLength, setSectionLength] = useState(0);
   const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
   const [currentStageFormIdx, setCurrentStageFormIdx] = useState(0);
+
+  //Render a component based on the current stage form index
+  // function renderComponent(componentName) {
+  //   const component = ComponentMap[componentName];
+  //   return (
+  //     <component
+  //       sectionNumber={sectionNumber}
+  //       getSectionsLength={getSectionsLength}
+  //     />
+  //   );
+  // }
 
   useEffect(() => {
     //updateLessonID(params.lessonID);
@@ -190,6 +204,7 @@ const page = ({ params }) => {
               <ArrowForwardIosIcon />
             </button>
           ) : null}
+          {JSON.stringify(items)}
           {sectionNumber === 0 && currentStageFormIdx === 0 ? null : (
             <button
               // onClick={() => setSectionNumber(sectionNumber - 1)}
