@@ -38,9 +38,19 @@ const PresentationContextProvider = ({ children }) => {
     // container2: ["7", "8", "9"],
     // container3: [],
   };
+  const [includedStages, setIncludedStages] = useState();
   const [items, setItems] = useState({});
   function updateItems(newItems) {
     console.log("PRES CONTEXT SET ITEMs OBJECT:", newItems);
+    //convert newItems to string array
+    // const rootArray = newItems.root.map((obj) => obj);
+    // console.log("ROOT ARRAY: " + rootArray);
+    // console.log("ROOT ARRAY Length: " + rootArray.length);
+    // console.log("ROOT ARRAY type: " + typeof rootArray);
+    // //get the first item of the root array
+    // console.log("ROOT ARRAY 0: " + rootArray[0]);
+
+    //setIncludedStages(rootArray);
     setItems(newItems);
   }
 
@@ -313,6 +323,8 @@ const PresentationContextProvider = ({ children }) => {
         lessonID,
         items,
         updateItems,
+
+        includedStages,
       }}
     >
       {children}

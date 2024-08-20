@@ -14,7 +14,12 @@ const ClassRules = ({ getSectionsLength, section }) => {
     getSectionsLength(sectionsLength);
   }, []);
 
-  return <div>{sections[section]}</div>;
+  return (
+    <div>
+      {sections[section]}
+      <h1>Class Rules form </h1>
+    </div>
+  );
 };
 
 export default ClassRules;

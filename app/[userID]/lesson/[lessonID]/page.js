@@ -48,7 +48,9 @@ const page = ({ params }) => {
           `/api/firestore/get-stage-order?userID=${userID}&lessonID=${params.lessonID}`
         );
         const data = await response.json();
-        console.log("Lesson Stages:", data.root);
+        console.log("Lesson Stages:", data.root[0]);
+        //get first item of data.root
+
         //const strings = data.root.map((obj) => Object.values(obj)[0]);
         //console.log("Strings:", strings);
         //updateStages(data);

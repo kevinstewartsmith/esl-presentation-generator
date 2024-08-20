@@ -18,7 +18,7 @@ import ClassRules from "@app/components/PresentationPrep/CreatePageComponents/St
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import EffortAndAttitudeScore from "@app/components/PresentationPrep/CreatePageComponents/StageForms/EffortAndAttitudeScore";
 import WarmUpSpeaking from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WarmUpSpeaking";
-import ReadingForGistAndDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
+import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import AdvantagesDisadvantages from "@app/components/PresentationPrep/CreatePageComponents/StageForms/AdvantagesDisadvantages";
 import WritingEssay from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WritingEssay";
 import SpeakingDebate from "@app/components/PresentationPrep/CreatePageComponents/StageForms/SpeakingDebate";
@@ -32,15 +32,15 @@ const ComponentMap = {
   "Class Rules": ClassRules,
   "Listening for Gist and Detail": ListeningForGistAndDetail,
   "Effort and Attitude Score": EffortAndAttitudeScore,
-  "Warm-Up-Speaking": WarmUpSpeaking,
-  "Reading For Gist and Detail": ReadingForGistAndDetailForm,
+  "Warm-Up: Speaking": WarmUpSpeaking,
+  "Reading For Gist and Detail": ReadingForGistandDetailForm,
   "Advantages - Disadvantages": AdvantagesDisadvantages,
-  "Writing-Essay": WritingEssay,
-  "Speaking-Debate": SpeakingDebate,
-  "Speaking-Presentation": SpeakingPresentation,
-  "Speaking-Role Play": SpeakingRolePlay,
-  "Speaking-Survey": SpeakingSurvey,
-  "Warm-Up-Board Race": WarmUpBoardRace,
+  "Writing: Essay": WritingEssay,
+  "Speaking: Debate": SpeakingDebate,
+  "Speaking: Presentation": SpeakingPresentation,
+  "Speaking: Role Play": SpeakingRolePlay,
+  "Speaking: Survey": SpeakingSurvey,
+  "Warm-Up: Board Race": WarmUpBoardRace,
   Brainstorming: Brainstorming,
 };
 

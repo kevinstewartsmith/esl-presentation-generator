@@ -7,7 +7,7 @@ import FinishReading from "@app/components/SectionSelector/FinishReading";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 
-const ReadingForGistandDetailForm = ({ sectionNumber, getSectionsLength }) => {
+const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
   const {
     fetchDataFromFirestore,
     getAllInputDataFromFirestore,
@@ -50,7 +50,7 @@ const ReadingForGistandDetailForm = ({ sectionNumber, getSectionsLength }) => {
         borderWidth: 0,
       }}
     >
-      {sections[sectionNumber]}
+      {sections[section]}
     </div>
   );
 };

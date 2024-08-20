@@ -7,7 +7,6 @@ const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
   { ssr: false }
 );
-
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
@@ -42,17 +41,24 @@ const page = ({ params }) => {
   const [sectionLength, setSectionLength] = useState(0);
   const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
   const [currentStageFormIdx, setCurrentStageFormIdx] = useState(0);
+  const [includedStages, setIncludedStages] = useState([]);
 
   //Render a component based on the current stage form index
-  // function renderComponent(componentName) {
-  //   const component = ComponentMap[componentName];
-  //   return (
-  //     <component
-  //       sectionNumber={sectionNumber}
-  //       getSectionsLength={getSectionsLength}
-  //     />
-  //   );
-  // }
+  function renderComponent(componentName, idx) {
+    //console.log("Component Name: " + componentName);
+    const stageTitle = includedStages[currentStageFormIdx];
+    const ComponentToRender = ComponentMap[stageTitle];
+    //const ComponentToRender = ReadingForGistandDetailForm;
+    if (!ComponentToRender) {
+      return <div>Component not found</div>;
+    }
+    return (
+      <ComponentToRender
+        section={sectionNumber}
+        getSectionsLength={getSectionsLength}
+      />
+    );
+  }
 
   useEffect(() => {
     //updateLessonID(params.lessonID);
@@ -85,6 +91,16 @@ const page = ({ params }) => {
       params.lessonID,
       params.stageID
     );
+    //Create items array
+    //const stageArray = Object.values(items);
+    function makeStageArray() {
+      //const stageArray = Object.root.values(items);
+      const rootArray = items.root.map((obj) => obj);
+      console.log("Make Stage Array");
+      console.log(rootArray);
+      setIncludedStages(rootArray);
+    }
+    makeStageArray();
   }, []);
 
   const { presentationIsShowing } = useContext(GlobalVariablesContext);
@@ -162,8 +178,9 @@ const page = ({ params }) => {
 
     setPrevSectionLength(updatedArray);
   };
-
-  const numberOfStageForms = stageOrder.length;
+  const itemsArray = Object.values(items);
+  const numberOfStageForms = itemsArray.length;
+  //const oneItem = includedStages[0];
   return (
     <div className="test-border">
       <Head style={{ backgroundColor: "red" }}>
@@ -187,15 +204,20 @@ const page = ({ params }) => {
           {"     sectionNumber: " + sectionNumber}
           {"     currentStageFormIdx: " + currentStageFormIdx}
           {"     number of stages : " + numberOfStageForms}
-          {stageOrder[currentStageFormIdx].component}
+          {/* {stageOrder[currentStageFormIdx].component} */}
+          {/* {renderComponent(items.root[0])} */}
+          {renderComponent()}
+          {/* {oneItem} */}
+          {"end of stage order"}
           {JSON.stringify(prevSectionLength)}
+          {JSON.stringify(includedStages[3])}
 
           {/* {stageOrder.map((stage, index) => {
             const Component = ComponentMap[stage];
             return Component ? <Component key={index} /> : null;
           })} */}
           {sectionNumber < sectionLength - 1 ||
-          currentStageFormIdx < stageOrder.length - 1 ? (
+          currentStageFormIdx < includedStages.length - 1 ? (
             <button
               //onClick={() => setSectionNumber(sectionNumber + 1)}
               onClick={() => arrowClick("right")}
@@ -204,7 +226,7 @@ const page = ({ params }) => {
               <ArrowForwardIosIcon />
             </button>
           ) : null}
-          {JSON.stringify(items)}
+
           {sectionNumber === 0 && currentStageFormIdx === 0 ? null : (
             <button
               // onClick={() => setSectionNumber(sectionNumber - 1)}
