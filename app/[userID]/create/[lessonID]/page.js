@@ -16,7 +16,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
-
+import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 const handjet = Handjet({
   weight: ["400"],
   subsets: ["latin"],
@@ -193,6 +193,7 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
+          <HorizontalNonLinearStepper />
           <h1 className="ml-20">{lessonData.title}</h1>
           <h1>{lessonID || "no lessonID"}</h1>
 
