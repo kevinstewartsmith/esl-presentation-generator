@@ -97,7 +97,7 @@ const page = ({ params }) => {
       //const stageArray = Object.root.values(items);
       const rootArray = items.root.map((obj) => obj);
       console.log("Make Stage Array");
-      console.log(rootArray);
+      console.log(typeof rootArray[0]);
       setIncludedStages(rootArray);
     }
     makeStageArray();
@@ -193,7 +193,9 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          <HorizontalNonLinearStepper />
+          <HorizontalNonLinearStepper
+            steps={includedStages ? includedStages : null}
+          />
           <h1 className="ml-20">{lessonData.title}</h1>
           <h1>{lessonID || "no lessonID"}</h1>
 

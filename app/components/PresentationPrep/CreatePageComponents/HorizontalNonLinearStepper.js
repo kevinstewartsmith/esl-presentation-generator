@@ -6,13 +6,13 @@ import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const steps = [
-  "Select campaign settings",
-  "Create an ad group",
-  "Create an ad",
-];
+// const steps = [
+//   "Select campaign settings",
+//   "Create an ad group",
+//   "Create an ad",
+// ];
 
-export default function HorizontalNonLinearStepper() {
+export default function HorizontalNonLinearStepper({ steps }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
 
