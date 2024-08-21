@@ -193,8 +193,13 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
+          {"Section Length: " + sectionLength}
+          {"     sectionNumber: " + sectionNumber}
+          {"     currentStageFormIdx: " + currentStageFormIdx}
+          {"     number of stages : " + numberOfStageForms}
           <HorizontalNonLinearStepper
             steps={includedStages ? includedStages : null}
+            activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
           />
           <h1 className="ml-20">{lessonData.title}</h1>
           <h1>{lessonID || "no lessonID"}</h1>
@@ -203,10 +208,7 @@ const page = ({ params }) => {
             sectionNumber={sectionNumber}
             getSectionLength={getSectionLength}
           /> */}
-          {"Section Length: " + sectionLength}
-          {"     sectionNumber: " + sectionNumber}
-          {"     currentStageFormIdx: " + currentStageFormIdx}
-          {"     number of stages : " + numberOfStageForms}
+
           {/* {stageOrder[currentStageFormIdx].component} */}
           {/* {renderComponent(items.root[0])} */}
           {renderComponent()}
