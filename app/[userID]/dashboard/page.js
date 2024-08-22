@@ -20,20 +20,13 @@ const page = ({ params }) => {
   const userID = params.userID;
 
   useEffect(() => {
-    // const lessons = localStorage.getItem("lessons");
-    // if (lessons) {
-    //   setLessons(JSON.parse(lessons));
-    // }
     async function fetchData() {
       try {
         const response = await loadLessons(params.userID, "getAllLessons");
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json(); // Parse the JSON response
-        //console.log("Lessons data:", data);
-        //console.log("Lesson data type:", typeof data);
+        const data = await response.json();
         setLessons(data);
       } catch (error) {
         console.log(error);
@@ -62,8 +55,7 @@ const page = ({ params }) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response; // Parse the JSON response
-        //console.log("Lessons data:", data[0].title);
+        const data = await response;
         console.log(JSON.stringify(data));
       } catch (error) {
         console.error(error);
@@ -74,15 +66,8 @@ const page = ({ params }) => {
 
   function deleteLesson(lessonID) {
     if (confirm("Are you sure you want to delete this lesson?")) {
-      console.log("delete lesson");
-      console.log(lessonID);
-
       const newLessons = lessons.filter((lesson) => lesson.id !== lessonID);
       setLessons(newLessons);
-      const lessonString = JSON.stringify(newLessons);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("lessons", lessonString);
-      }
 
       //Delete lesson from database
       async function dbDeleteLeeson() {
@@ -92,7 +77,7 @@ const page = ({ params }) => {
             throw new Error("Network response was not ok");
           }
           const data = await response;
-          console.log("Lessons data:", data[0].title);
+          //console.log("Lessons data:", data[0].title);
         } catch (error) {
           console.error(error);
         }
@@ -122,14 +107,12 @@ const page = ({ params }) => {
         ))}
       </Grid>
       <button
-        //onClick={() => setSectionNumber(sectionNumber - 1)}
         className="flex items-center justify-center w-14 h-14 rounded-full add-button "
         onClick={handleOpen}
       >
         <AddIcon sx={{}} />
       </button>
       <LessonModal
-        //handleOpen={handleOpen}
         handleClose={handleClose}
         open={open}
         addLesson={addLesson}
