@@ -199,7 +199,7 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          <h1
+          {/* <h1
             className={anton.className}
             style={{
               fontSize: "1.5rem",
@@ -208,8 +208,8 @@ const page = ({ params }) => {
             }}
           >
             {lessonData.title}
-            {/* {" - " + lessonID || "no lessonID"} */}
-          </h1>
+           
+          </h1> */}
 
           <HorizontalNonLinearStepper
             steps={includedStages ? includedStages : null}

@@ -53,13 +53,7 @@ const page = ({ params }) => {
 
     setLessons([...lessons, newLesson]);
     console.log(lessons);
-    // const lessonString = JSON.stringify([...lessons, newLesson]);
 
-    // if (typeof window !== "undefined") {
-    //   localStorage.setItem("lessons", lessonString);
-    // }
-    // console.log("add lesson");
-    // console.log("Lesson Length: ", lessons.length);
     handleClose();
 
     async function dbAddLesson() {
@@ -79,30 +73,36 @@ const page = ({ params }) => {
   };
 
   function deleteLesson(lessonID) {
-    console.log("delete lesson");
-    console.log(lessonID);
+    if (confirm("Are you sure you want to delete this lesson?")) {
+      console.log("delete lesson");
+      console.log(lessonID);
 
-    const newLessons = lessons.filter((lesson) => lesson.id !== lessonID);
-    setLessons(newLessons);
-    const lessonString = JSON.stringify(newLessons);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lessons", lessonString);
-    }
-
-    //Delete lesson from database
-    async function dbDeleteLeeson() {
-      try {
-        const response = await deleteLessonFromDB(userID, lessonID);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response;
-        console.log("Lessons data:", data[0].title);
-      } catch (error) {
-        console.error(error);
+      const newLessons = lessons.filter((lesson) => lesson.id !== lessonID);
+      setLessons(newLessons);
+      const lessonString = JSON.stringify(newLessons);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("lessons", lessonString);
       }
+
+      //Delete lesson from database
+      async function dbDeleteLeeson() {
+        try {
+          const response = await deleteLessonFromDB(userID, lessonID);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response;
+          console.log("Lessons data:", data[0].title);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      dbDeleteLeeson();
+      console.log("User clicked OK");
+    } else {
+      // User clicked Cancel
+      console.log("User clicked Cancel");
     }
-    dbDeleteLeeson();
   }
 
   return (

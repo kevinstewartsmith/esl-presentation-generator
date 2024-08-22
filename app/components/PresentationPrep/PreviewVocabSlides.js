@@ -30,74 +30,119 @@ const PreviewVocabSlides = ({
   }, [vocabulary]);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <div
-        className="some-class"
+    <Grid
+      container
+      direction="column"
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Grid
+        item
+        xs={8}
+        sm={8}
         style={{
-          //   width: "100%",
-          //   height: "100%",
-          height: "36vh",
-          width: "60vh",
-          borderColor: "green",
-          borderWidth: 1,
-          borderStyle: "solid",
-          marginTop: 40,
-          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {selectedVocabulary[selectedSlide] ? (
-          <img
-            src={selectedVocabulary[selectedSlide].img_url}
-            style={{
-              height: "70%",
-              width: "auto",
-              position: "absolute",
-              top: "30%",
-              left: "50%",
-              transform: "translate(-50%, -30%)",
-            }}
-            alt={selectedVocabulary[selectedSlide].word}
-          />
-        ) : null}
+        <div
+          className="some-class"
+          style={{
+            //   width: "100%",
+            //   height: "100%",
+            height: "90%",
+            width: "90%",
+            borderColor: "orange",
+            borderWidth: 6,
+            borderStyle: "solid",
+            position: "relative",
+          }}
+        >
+          {selectedVocabulary[selectedSlide] ? (
+            <img
+              src={selectedVocabulary[selectedSlide].img_url}
+              style={{
+                height: "70%",
+                width: "auto",
+                position: "absolute",
+                top: "30%",
+                left: "50%",
+                transform: "translate(-50%, -30%)",
+              }}
+              alt={selectedVocabulary[selectedSlide].word}
+            />
+          ) : null}
 
-        {selectedVocabulary[selectedSlide] ? (
-          <h1
-            style={{
-              color: "black",
-              position: "absolute",
-              bottom: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              fontSize: "2rem",
-            }}
-          >
-            {selectedVocabulary[selectedSlide].word}
-          </h1>
-        ) : null}
-      </div>
+          {selectedVocabulary[selectedSlide] ? (
+            <h1
+              style={{
+                color: "black",
+                position: "absolute",
+                bottom: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: "2rem",
+              }}
+            >
+              {selectedVocabulary[selectedSlide].word}
+            </h1>
+          ) : null}
+        </div>
+      </Grid>
       <Grid
         container
-        direction="row"
-        justifyContent="space-between"
+        direction="column"
+        justifyContent="center"
         alignItems="center"
-        style={{ marginTop: 20 }}
       >
-        <Grid item xs={3} sm={3} className="flex items-center justify-center">
-          <button onClick={backButtonClicked}>
-            <ArrowBackIosNewIcon style={{ fontSize: 36, color: "white" }} />
-          </button>
-        </Grid>
-        <Grid item xs={3} sm={6} className="flex items-center justify-center">
-          <button onClick={getVocabularyPressed}>Get Vocabulary</button>
-        </Grid>
-        <Grid item xs={3} sm={3} className="flex items-center justify-center">
-          <button onClick={forwardButtonClicked}>
-            <ArrowForwardIosIcon style={{ fontSize: 36, color: "white" }} />
-          </button>
+        <Grid item xs={1} sm={1}>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ width: "100%", height: "100%" }}
+          >
+            <Grid
+              item
+              xs={3}
+              sm={3}
+              className="flex items-center justify-center"
+            >
+              <button onClick={backButtonClicked}>
+                <ArrowBackIosNewIcon style={{ fontSize: 36, color: "white" }} />
+              </button>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+              sm={3}
+              className="flex items-center justify-center"
+            >
+              <button onClick={getVocabularyPressed}>Get Vocabulary</button>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+              sm={3}
+              className="flex items-center justify-center"
+            >
+              <button onClick={forwardButtonClicked}>
+                <ArrowForwardIosIcon style={{ fontSize: 36, color: "white" }} />
+              </button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
-      <h1 style={{ color: "black" }}>{selectedVocabNum}</h1>
-    </div>
+      <Grid item xs={1} sm={1} style={{ marginTop: 0 }}>
+        <h1 style={{ color: "blue", borderWidth: 1, borderColor: "yellow" }}>
+          {"Number of slides: " + selectedVocabNum}
+        </h1>
+      </Grid>
+    </Grid>
   );
 };
 

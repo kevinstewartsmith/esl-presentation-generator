@@ -248,6 +248,7 @@ const PreReadingVocabSlides = () => {
                           width: "100%",
                           fontSize: 24,
                           marginLeft: 10,
+                          color: "pink",
                         }}
                       >
                         <h1 style={{ color: "gray" }}>
@@ -261,28 +262,28 @@ const PreReadingVocabSlides = () => {
           </Grid>
           {/* </div> */}
         </Grid>
-        <Grid item sm={6}>
-          <div
-            style={{
-              width: "100%",
-              height: "80vh",
-              borderWidth: 1,
-              borderColor: "transparent",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <div style={{ width: "80%", height: "75%" }}>
-              <PreviewVocabSlides
-                vocabulary={vocabulary}
-                selectedVocabNum={selectedVocabNum}
-                selectedVocabulary={selectedVocabulary}
-                selectedSlide={selectedSlide}
-                getVocabularyPressed={getVocabulary}
-                setSelectedSlide={setSelectedSlide}
-              />
-            </div>
-          </div>
+        <Grid
+          item
+          sm={6}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderWidth: 1,
+            borderColor: "green",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {/* <div style={{ width: "80%", height: "100%" }}> */}
+          <PreviewVocabSlides
+            vocabulary={vocabulary}
+            selectedVocabNum={selectedVocabNum}
+            selectedVocabulary={selectedVocabulary}
+            selectedSlide={selectedSlide}
+            getVocabularyPressed={getVocabulary}
+            setSelectedSlide={setSelectedSlide}
+          />
+          {/* </div> */}
         </Grid>
       </Grid>
     </div>

@@ -44,6 +44,7 @@ input {
 
 button {
   background-color: #3c5997;
+  /* background-color: #45973c; */
   color: "white";
   padding: 10;
   border-radius: 5px;
@@ -51,6 +52,7 @@ button {
   margin: 10px;
   border-width: 0;
   border-color: transparent; 
+  
   
 };
 
@@ -71,7 +73,7 @@ button {
   overflow-x: hidden; 
   border-radius:10px; 
   width: 80%; 
-  height: 87vh;
+  height: 75vh;
   margin-top: 1%;
   scroll-behavior: auto;
   padding: 2%;
@@ -159,10 +161,7 @@ button {
 }
 
 
-/* .test-border {
-  border-color: pink;
-  border-width: 10px ;
-} */
+
 
 .lesson-card {
   border-color: lightgray;

@@ -4,6 +4,12 @@ import StegaIcon from "./StegaIcon";
 import { Handjet } from "next/font/google";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { useContext } from "react";
+import { Anton } from "next/font/google";
+//import Anton font from next font
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 const handjet = Handjet({
   weight: ["400"],
@@ -28,10 +34,25 @@ const Nav = ({ children }) => {
         >
           <StegaIcon />{" "}
           <h1
-            style={{ color: "#3C5997", marginLeft: 10, fontSize: 30 }}
+            style={{
+              color: "#3C5997",
+              marginLeft: 20,
+              fontSize: 30,
+              display: "inline",
+            }}
             className={handjet.className}
           >
-            {"  Lesson Generator"}
+            {"  Lesson Generator - "}
+          </h1>
+          <h1
+            className={anton.className}
+            style={{
+              fontSize: 25,
+              marginLeft: 10,
+              color: "lightgray",
+            }}
+          >
+            {"The Loneliest Boy In Britain"}
           </h1>
         </div>
       ) : null}
