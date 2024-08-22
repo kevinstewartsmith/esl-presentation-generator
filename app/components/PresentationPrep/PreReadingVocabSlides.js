@@ -9,7 +9,7 @@ const PreReadingVocabSlides = () => {
   //const words = ['Carpet', 'Dolphin', 'Rubbish', 'Sequence']
   const [selectedVocabNum, setSelectedVocabNum] = useState(0);
   const [selectedVocabulary, setSelectedVocabulary] = useState([]);
-
+  const [selectedSlide, setSelectedSlide] = useState(0);
   const {
     textTranscript,
     // vocabulary,
@@ -145,6 +145,10 @@ const PreReadingVocabSlides = () => {
       const filtered = vocabulary.filter((item) => item.selected);
       setSelectedVocabulary(filtered);
       setSelectedVocabNum(filtered.length);
+      // Automatically set the slide to the first selected word when a new word is selected
+      if (filtered.length > 0) {
+        setSelectedSlide(0); // Start with the first selected word
+      }
     }
 
     console.log("use effect triggered");
@@ -273,7 +277,9 @@ const PreReadingVocabSlides = () => {
                 vocabulary={vocabulary}
                 selectedVocabNum={selectedVocabNum}
                 selectedVocabulary={selectedVocabulary}
+                selectedSlide={selectedSlide}
                 getVocabularyPressed={getVocabulary}
+                setSelectedSlide={setSelectedSlide}
               />
             </div>
           </div>

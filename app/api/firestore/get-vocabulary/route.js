@@ -58,7 +58,9 @@ async function getVocabulary(userID, lessonID, stageID) {
   console.log("VOCABULARY");
   //console.log(vocabulary);
   const vocabularyArray = vocabularySnapshot.data();
-  //console.log(vocabularyArray.vocabulary);
+  console.log(vocabularyArray.vocabulary);
+  console.log("VOCABULARY ARRAY Length: " + vocabularyArray.vocabulary.length);
+
   const vocabulary = vocabularyArray.vocabulary;
   return vocabulary;
 }

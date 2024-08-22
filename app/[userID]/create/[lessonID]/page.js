@@ -17,6 +17,12 @@ import ReadingForGistandDetailForm from "@app/components/PresentationPrep/Create
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
+import { Anton } from "next/font/google";
+//import Anton font from next font
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+});
 const handjet = Handjet({
   weight: ["400"],
   subsets: ["latin"],
@@ -193,34 +199,33 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          {"Section Length: " + sectionLength}
-          {"     sectionNumber: " + sectionNumber}
-          {"     currentStageFormIdx: " + currentStageFormIdx}
-          {"     number of stages : " + numberOfStageForms}
+          <h1
+            className={anton.className}
+            style={{
+              fontSize: "1.5rem",
+              marginLeft: "10%",
+              color: "lightgray",
+            }}
+          >
+            {lessonData.title}
+            {/* {" - " + lessonID || "no lessonID"} */}
+          </h1>
+
           <HorizontalNonLinearStepper
             steps={includedStages ? includedStages : null}
             activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
           />
-          <h1 className="ml-20">{lessonData.title}</h1>
-          <h1>{lessonID || "no lessonID"}</h1>
 
-          {/* <ReadingForGistandDetailForm
-            sectionNumber={sectionNumber}
-            getSectionLength={getSectionLength}
-          /> */}
-
-          {/* {stageOrder[currentStageFormIdx].component} */}
-          {/* {renderComponent(items.root[0])} */}
           {renderComponent()}
           {/* {oneItem} */}
           {"end of stage order"}
           {JSON.stringify(prevSectionLength)}
           {JSON.stringify(includedStages[3])}
+          {"Section Length: " + sectionLength}
+          {"     sectionNumber: " + sectionNumber}
+          {"     currentStageFormIdx: " + currentStageFormIdx}
+          {"     number of stages : " + numberOfStageForms}
 
-          {/* {stageOrder.map((stage, index) => {
-            const Component = ComponentMap[stage];
-            return Component ? <Component key={index} /> : null;
-          })} */}
           {sectionNumber < sectionLength - 1 ||
           currentStageFormIdx < includedStages.length - 1 ? (
             <button

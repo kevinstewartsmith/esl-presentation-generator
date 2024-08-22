@@ -5,6 +5,7 @@ import { debounce } from "@app/utils/debounce";
 const ReadingForGistAndDetailContext = createContext();
 
 const ReadingForGistAndDetailContextProvider = ({ children }) => {
+  const stageID = "Reading For Gist and Detail";
   const [userID, setUserID] = useState("kevinstewartsmith");
   const [title, setTitle] = useState("");
   const [textTitle, setTextTitle] = useState("");
@@ -215,7 +216,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   ////////////////////////////////////////////////////////////
   //START of Vocabulary state////////////////////////////////
   ///////////////////////////////////////////////////////////
-  const [vocabulary, setVocabulary] = useState();
+  const [vocabulary, setVocabulary] = useState([]);
 
   function updateVocabulary(newVocabulary) {
     setVocabulary(newVocabulary);
