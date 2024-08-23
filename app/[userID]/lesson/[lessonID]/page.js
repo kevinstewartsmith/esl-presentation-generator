@@ -20,7 +20,9 @@ const page = ({ params }) => {
   //const lessonID = params.lessonID;
   const [lesson, setLesson] = useState(null);
   const { loadLessons } = useContext(DashboardContext);
-  const { loggedInUser } = useContext(GlobalVariablesContext);
+  const { loggedInUser, lessonTitle, updateLessonTitle } = useContext(
+    GlobalVariablesContext
+  );
   useEffect(() => {
     updateLessonID(params.lessonID);
     async function fetchData() {
@@ -35,6 +37,7 @@ const page = ({ params }) => {
         }
         const data = await response.json(); // Parse the JSON response
         setLesson(data);
+        getLessonTitle(data.title);
         //updateItems(data);
         console.log("Lessons data:", data.title);
       } catch (error) {
@@ -61,6 +64,10 @@ const page = ({ params }) => {
     }
     getLessonStages();
   }, []);
+  function getLessonTitle(title) {
+    console.log("Lesson Title: " + title);
+    updateLessonTitle(title);
+  }
 
   return (
     <div>

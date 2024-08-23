@@ -7,12 +7,20 @@ const GlobalVariablesContext = createContext();
 const GlobalVariablesContextProvider = ({ children }) => {
   const [presentationIsShowing, setPresentationIsShowing] = useState(false);
   const loggedInUser = "kevinstewartsmith";
+
   function hidePresentation() {
     setPresentationIsShowing(false);
   }
 
   function showPresentation() {
     setPresentationIsShowing(true);
+  }
+  //////////////////////////////////////////
+  // START: Lesson title state/////////////
+  ////////////////////////////////////////
+  const [lessonTitle, setLessonTitle] = useState(null);
+  function updateLessonTitle(title) {
+    setLessonTitle(title);
   }
 
   return (
@@ -22,6 +30,10 @@ const GlobalVariablesContextProvider = ({ children }) => {
         hidePresentation,
         showPresentation,
         loggedInUser,
+
+        // Lesson title state
+        lessonTitle,
+        updateLessonTitle,
       }}
     >
       {children}

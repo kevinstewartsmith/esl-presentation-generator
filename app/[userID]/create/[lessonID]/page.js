@@ -13,6 +13,7 @@ import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { Handjet } from "next/font/google";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
@@ -38,6 +39,7 @@ const page = ({ params }) => {
     fetchTextbookDataFromDB,
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
+
   const { items } = useContext(PresentationContext);
 
   const [lessonData, setLessonData] = useState({});
@@ -79,6 +81,7 @@ const page = ({ params }) => {
       console.log("LESSON DATA CREATE");
       console.log(data);
       setLessonData(data);
+      getLessonTitle(data.title);
     }
     fetchData();
     getAllInputDataFromFirestore(
@@ -109,7 +112,14 @@ const page = ({ params }) => {
     makeStageArray();
   }, []);
 
-  const { presentationIsShowing } = useContext(GlobalVariablesContext);
+  function getLessonTitle(title) {
+    console.log("Lesson Title: " + title);
+    updateLessonTitle(title);
+  }
+
+  const { presentationIsShowing, lessonTitle, updateLessonTitle } = useContext(
+    GlobalVariablesContext
+  );
   const [prevSectionLength, setPrevSectionLength] = useState([]);
   function arrowClick(dir) {
     console.log("arrow clicked");

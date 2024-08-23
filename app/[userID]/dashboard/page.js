@@ -16,7 +16,6 @@ const page = ({ params }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
-  console.log("Page Params:", params.userID);
   const userID = params.userID;
 
   useEffect(() => {
@@ -83,9 +82,7 @@ const page = ({ params }) => {
         }
       }
       dbDeleteLeeson();
-      console.log("User clicked OK");
     } else {
-      // User clicked Cancel
       console.log("User clicked Cancel");
     }
   }
