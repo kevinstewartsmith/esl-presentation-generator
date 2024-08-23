@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect, use } from "react";
 import { Grid } from "@mui/material";
-import { lightBlue } from "@mui/material/colors";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import PreviewVocabSlides from "@app/components/PresentationPrep/PreviewVocabSlides";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
@@ -10,13 +8,7 @@ const PreReadingVocabSlides = () => {
   const [selectedVocabNum, setSelectedVocabNum] = useState(0);
   const [selectedVocabulary, setSelectedVocabulary] = useState([]);
   const [selectedSlide, setSelectedSlide] = useState(0);
-  const {
-    textTranscript,
-    // vocabulary,
-    // updateVocabulary,
-    // loadVocabulary
-    //lessonID,
-  } = useContext(PresentationContext);
+
   const {
     textbook,
     vocabulary,
@@ -50,9 +42,15 @@ const PreReadingVocabSlides = () => {
     if (checked) {
       const word = vocabulary[key];
       const img_url = await getPhotos(word.word);
-      console.log(img_url);
+      //const encodedURL = encodeURI(img_url);
+      const encodedURL = encodeURIComponent(img_url);
+      console.log("ENCODED URL:", encodedURL);
       const updatedVocabulary = [...vocabulary];
-      updatedVocabulary[key] = { ...word, img_url, selected: true };
+      updatedVocabulary[key] = {
+        ...word,
+        img_url: encodedURL,
+        selected: true,
+      };
       updateVocabulary(updatedVocabulary);
       console.log(vocabulary);
     } else {
@@ -60,7 +58,7 @@ const PreReadingVocabSlides = () => {
       updatedVocabulary[key] = {
         ...vocabulary[key],
         selected: false,
-        img_url: "",
+        //img_url: "",
       };
       updateVocabulary(updatedVocabulary);
       console.log(vocabulary);
@@ -131,7 +129,10 @@ const PreReadingVocabSlides = () => {
 
       const data = await response.json();
       console.log(data.results[0]?.urls.full || "sheeit");
-      return data.results[0]?.urls.full || ""; // Assuming the first result is desired
+      console.log(typeof data.results[0]?.urls.full);
+      const urlString = data.results[0]?.urls.full || "";
+      //return data.results[0]?.urls.full || ""; // Assuming the first result is desired
+      return urlString;
     } catch (error) {
       console.error("Error fetching photos:", error);
       return "";
@@ -232,10 +233,10 @@ const PreReadingVocabSlides = () => {
                       >
                         <input
                           value={index}
-                          checked={word.selected}
+                          checked={word.selected ? word.selected : false}
                           type="checkbox"
                           style={{ marginLeft: 20, width: 30, height: 30 }}
-                          onClick={checkMarkClicked}
+                          onChange={(e) => checkMarkClicked(e)}
                         />
                       </Grid>
                       <Grid

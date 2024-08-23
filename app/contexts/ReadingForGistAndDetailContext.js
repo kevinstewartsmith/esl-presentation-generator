@@ -261,6 +261,8 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("Post Vocabulary Data");
+    console.log(vocabulary);
+
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     console.log("Encoded Stage ID:", encodedStageID);

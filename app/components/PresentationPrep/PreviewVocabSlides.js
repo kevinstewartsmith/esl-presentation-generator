@@ -29,6 +29,9 @@ const PreviewVocabSlides = ({
       : null;
   }, [vocabulary]);
 
+  const decodedURL = (url) => {
+    return decodeURIComponent(url);
+  };
   return (
     <Grid
       container
@@ -63,7 +66,8 @@ const PreviewVocabSlides = ({
         >
           {selectedVocabulary[selectedSlide] ? (
             <img
-              src={selectedVocabulary[selectedSlide].img_url}
+              //src={selectedVocabulary[selectedSlide].img_url}
+              src={decodedURL(selectedVocabulary[selectedSlide].img_url)}
               style={{
                 height: "70%",
                 width: "auto",

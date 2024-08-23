@@ -147,6 +147,7 @@ function AddTextBook({ category, stageID }) {
       accept: {
         "image/*": [],
       },
+      multiple: false,
       onDrop: (acceptedFiles) => {
         setFiles(
           acceptedFiles.map((file) =>
