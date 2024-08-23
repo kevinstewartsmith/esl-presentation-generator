@@ -7,18 +7,22 @@ import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { v4 as uuidv4 } from "uuid";
 import { DashboardContext } from "@app/contexts/DashboardContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import { usePathname } from "next/navigation";
 const page = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =
     useContext(DashboardContext);
+  const { updatePathname } = useContext(GlobalVariablesContext);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
   const userID = params.userID;
-
+  const pathname = usePathname();
   useEffect(() => {
+    updatePathname(pathname);
+
     async function fetchData() {
       try {
         const response = await loadLessons(params.userID, "getAllLessons");

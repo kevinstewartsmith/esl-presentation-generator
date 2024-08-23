@@ -14,6 +14,7 @@ import { Handjet } from "next/font/google";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 
+import { usePathname } from "next/navigation";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
@@ -31,6 +32,12 @@ const handjet = Handjet({
 
 const page = ({ params }) => {
   const {
+    presentationIsShowing,
+    lessonTitle,
+    updateLessonTitle,
+    updatePathname,
+  } = useContext(GlobalVariablesContext);
+  const {
     fetchDataFromFirestore,
     getAllInputDataFromFirestore,
     updateLessonID,
@@ -39,6 +46,8 @@ const page = ({ params }) => {
     fetchTextbookDataFromDB,
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
+
+  const pathname = usePathname();
 
   const { items } = useContext(PresentationContext);
 
@@ -69,6 +78,7 @@ const page = ({ params }) => {
   }
 
   useEffect(() => {
+    updatePathname(pathname);
     //updateLessonID(params.lessonID);
     console.log("CREATE PAGE USE EFFECT TRIGGERED");
     console.log("LESSON ID: " + lessonID);
@@ -117,9 +127,6 @@ const page = ({ params }) => {
     updateLessonTitle(title);
   }
 
-  const { presentationIsShowing, lessonTitle, updateLessonTitle } = useContext(
-    GlobalVariablesContext
-  );
   const [prevSectionLength, setPrevSectionLength] = useState([]);
   function arrowClick(dir) {
     console.log("arrow clicked");

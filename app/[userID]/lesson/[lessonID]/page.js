@@ -8,8 +8,12 @@ import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkil
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
+import { usePathname } from "next/navigation";
 
 const page = ({ params }) => {
+  const pathname = usePathname();
+
+  console.log("Router: ", pathname);
   const { updateLessonID, lessonID } = useContext(
     ReadingForGistAndDetailContext
   );
@@ -20,11 +24,11 @@ const page = ({ params }) => {
   //const lessonID = params.lessonID;
   const [lesson, setLesson] = useState(null);
   const { loadLessons } = useContext(DashboardContext);
-  const { loggedInUser, lessonTitle, updateLessonTitle } = useContext(
-    GlobalVariablesContext
-  );
+  const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
+    useContext(GlobalVariablesContext);
   useEffect(() => {
     updateLessonID(params.lessonID);
+    updatePathname(pathname);
     async function fetchData() {
       try {
         const response = await loadLessons(
