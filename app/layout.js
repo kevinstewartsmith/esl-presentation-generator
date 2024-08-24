@@ -18,17 +18,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <ReadingForGistAndDetailContextProvider>
-        <DashboardContextProvider>
-          <AudioTextProvider>
-            <PresentationContextProvider>
-              <GlobalVariablesContextProvider>
-                <body className={inter.className}>
-                  <Nav>{children}</Nav>
-                </body>
-              </GlobalVariablesContextProvider>
-            </PresentationContextProvider>
-          </AudioTextProvider>
-        </DashboardContextProvider>
+        {/* <DashboardContextProvider> */}
+        <AudioTextProvider>
+          <PresentationContextProvider>
+            <GlobalVariablesContextProvider>
+              <body className={inter.className}>
+                <Nav>{children}</Nav>
+              </body>
+            </GlobalVariablesContextProvider>
+          </PresentationContextProvider>
+        </AudioTextProvider>
+        {/* </DashboardContextProvider> */}
       </ReadingForGistAndDetailContextProvider>
     </html>
   );

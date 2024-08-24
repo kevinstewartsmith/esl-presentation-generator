@@ -1,29 +1,30 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
+import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import { DashboardContext } from "@app/contexts/DashboardContext";
+import { v4 as uuidv4 } from "uuid";
+import { usePathname } from "next/navigation";
 import { Grid } from "@mui/material";
 import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
-import { v4 as uuidv4 } from "uuid";
-import { DashboardContext } from "@app/contexts/DashboardContext";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
-import { usePathname } from "next/navigation";
-const page = ({ params }) => {
+import { DashboardContextProvider } from "@app/contexts/DashboardContext";
+
+const PageComponent = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =
     useContext(DashboardContext);
   const { updatePathname } = useContext(GlobalVariablesContext);
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
   const userID = params.userID;
   const pathname = usePathname();
+
   useEffect(() => {
     updatePathname(pathname);
 
-    async function fetchData() {
+    async function fetchAllLessons() {
       try {
         const response = await loadLessons(params.userID, "getAllLessons");
         if (!response.ok) {
@@ -35,7 +36,7 @@ const page = ({ params }) => {
         console.log(error);
       }
     }
-    fetchData();
+    fetchAllLessons();
   }, []);
 
   const addLesson = (title) => {
@@ -121,5 +122,11 @@ const page = ({ params }) => {
     </div>
   );
 };
+
+const page = (props) => (
+  <DashboardContextProvider>
+    <PageComponent {...props} />
+  </DashboardContextProvider>
+);
 
 export default page;

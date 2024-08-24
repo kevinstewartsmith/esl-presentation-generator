@@ -169,30 +169,6 @@ const page = ({ params }) => {
   //   setSectionLength(length); // Set the section length in state
   // };
 
-  const stageOrder = [
-    {
-      stageName: "Reading For Gist and Detail",
-      component: (
-        <ReadingForGistandDetailForm
-          sectionNumber={sectionNumber}
-          getSectionsLength={getSectionsLength}
-        />
-      ),
-      //stageFormLength: 5,
-    },
-    {
-      stageName: "Listening for Gist and Detail",
-
-      component: (
-        <ListeningForGistAndDetail
-          getSectionsLength={getSectionsLength}
-          section={sectionNumber}
-        />
-      ),
-      stageFormLength: getSectionsLength,
-    },
-  ];
-
   const updateSectionLengthsArray = (idx, newValue) => {
     // Create a copy of the array
     const updatedArray = [...prevSectionLength];
@@ -216,32 +192,24 @@ const page = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          {/* <h1
-            className={anton.className}
-            style={{
-              fontSize: "1.5rem",
-              marginLeft: "10%",
-              color: "lightgray",
-            }}
-          >
-            {lessonData.title}
-           
-          </h1> */}
-
-          <HorizontalNonLinearStepper
+          {/* <HorizontalNonLinearStepper
             steps={includedStages ? includedStages : null}
             activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
-          />
+          /> */}
 
           {renderComponent()}
           {/* {oneItem} */}
-          {"end of stage order"}
+          {/* {"end of stage order"}
           {JSON.stringify(prevSectionLength)}
           {JSON.stringify(includedStages[3])}
           {"Section Length: " + sectionLength}
           {"     sectionNumber: " + sectionNumber}
           {"     currentStageFormIdx: " + currentStageFormIdx}
-          {"     number of stages : " + numberOfStageForms}
+          {"     number of stages : " + numberOfStageForms} */}
+          <HorizontalNonLinearStepper
+            steps={includedStages ? includedStages : null}
+            activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
+          />
 
           {sectionNumber < sectionLength - 1 ||
           currentStageFormIdx < includedStages.length - 1 ? (

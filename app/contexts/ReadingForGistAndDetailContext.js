@@ -13,6 +13,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [inputTexts, setInputTexts] = useState({});
   const [lessonID, setLessonID] = useState("");
   const [newInput, setNewInput] = useState({});
+
   /////////////////////////////////////////////////////////////////
   //START: Lesson Information/////////////////////////////////////
   ///////////////////////////////////////////////////////////////

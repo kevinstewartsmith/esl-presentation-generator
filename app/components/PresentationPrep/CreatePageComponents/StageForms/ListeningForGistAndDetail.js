@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import ListeningUploadQuestions from "./ListeningForGistAndDetailForms/ListeningUploadQuestions";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [
-    <h1>Listening form 1</h1>,
+    <ListeningUploadQuestions />,
     <h1>Listening form 2</h1>,
     <h1>Listening form 3</h1>,
   ];

@@ -9,8 +9,9 @@ import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndD
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
+import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 
-const page = ({ params }) => {
+const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
 
   console.log("Router: ", pathname);
@@ -34,7 +35,7 @@ const page = ({ params }) => {
         const response = await loadLessons(
           params.userID,
           "getOneLesson",
-          lessonID
+          params.lessonID
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -88,4 +89,9 @@ const page = ({ params }) => {
   );
 };
 
+const page = (props) => (
+  <DashboardContextProvider>
+    <LessonPageComponent {...props} />
+  </DashboardContextProvider>
+);
 export default page;

@@ -18,29 +18,29 @@ const TimeLimitSlider = ({
   const [sliderValue, setSliderValue] = useState(
     defaultValue ? defaultValue : 3
   );
-  const { updateSliderStateMemory, addSliderStateMemory, sliders } =
-    useContext(PresentationContext);
+  // const { updateSliderStateMemory, addSliderStateMemory, sliders } =
+  //   useContext(PresentationContext);
 
   const { updateInputTextsReading, inputTexts } = useContext(
     ReadingForGistAndDetailContext
   );
 
-  if (!sliders[id]) {
-    addSliderStateMemory(id, min, max, defaultValue, label);
-  }
-  console.log("sliders: " + JSON.stringify(sliders));
+  // if (!sliders[id]) {
+  //   addSliderStateMemory(id, min, max, defaultValue, label);
+  // }
+  // console.log("sliders: " + JSON.stringify(sliders));
 
-  useEffect(() => {
-    if (sliders[id] && sliders[id].value) {
-      setSliderValue(sliders[id].value);
-    } else {
-      setSliderValue(defaultValue);
-    }
-  }, [sliders]);
+  // useEffect(() => {
+  //   if (sliders[id] && sliders[id].value) {
+  //     setSliderValue(sliders[id].value);
+  //   } else {
+  //     setSliderValue(defaultValue);
+  //   }
+  // }, [sliders]);
 
   const handleSliderChange = (event, newValue) => {
     console.log("handleSliderChange: " + id);
-    updateSliderStateMemory(id, newValue);
+    //updateSliderStateMemory(id, newValue);
     setSliderValue(newValue);
     console.log("sliderValue: " + sliderValue);
     console.log("label: " + label);

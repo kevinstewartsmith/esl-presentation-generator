@@ -58,10 +58,11 @@ const PreviewVocabSlides = ({
             //   height: "100%",
             height: "90%",
             width: "90%",
-            borderColor: "orange",
-            borderWidth: 6,
+            borderColor: "black",
+            borderWidth: 1,
             borderStyle: "solid",
             position: "relative",
+            borderRadius: 10,
           }}
         >
           {selectedVocabulary[selectedSlide] ? (

@@ -162,9 +162,9 @@ const PreReadingVocabSlides = () => {
         style={{
           color: "lightgrey",
           fontSize: 24,
-          marginLeft: 60,
-          borderColor: "white",
-          top: 0,
+          marginLeft: 0,
+
+          //top: 0,
         }}
       >
         Select words to teach before reading
@@ -177,36 +177,44 @@ const PreReadingVocabSlides = () => {
         spacing={0}
         padding={0}
         sm={12}
-        style={{ width: "100%", height: "90%", borderColor: "red" }}
+        style={{ width: "100%", height: "90%", borderColor: "transparent" }}
       >
         <Grid
           item
           sm={6}
           style={{
             backgroundColor: "white",
-            borderColor: "purple",
-            borderWidth: 5,
+            borderColor: "transparent",
+            borderWidth: 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            overflow: "auto",
-            maxHeight: "100%",
+            // overflow: "auto",
+            //maxHeight: "100%",
             borderRadius: 10,
+            height: "100%",
           }}
         >
+          {/* Container of vocabulary list */}
           <Grid
             container
-            direction={"column"}
+            direction={"row"}
             spacing={0}
             padding={0}
-            style={{ backgroundColor: "white", paddingLeft: 0 }}
+            style={{
+              backgroundColor: "white",
+              paddingLeft: 0,
+              overflow: "auto",
+              maxHeight: "100%",
+            }}
           >
             {vocabulary
               ? vocabulary.map((word, index) => (
                   <Grid
                     item
                     xs={12}
-                    style={{ borderColor: "red", borderWidth: 1, height: 80 }}
+                    style={{ borderColor: "gray", borderWidth: 1, height: 80 }}
+                    marginBottom={2}
                   >
                     <Grid
                       container
@@ -215,7 +223,7 @@ const PreReadingVocabSlides = () => {
                       sm={12}
                       style={{
                         marginBottom: 20,
-                        borderColor: "green",
+                        borderColor: "gray",
                         borderWidth: 1,
                         height: 80,
                       }}
@@ -249,7 +257,7 @@ const PreReadingVocabSlides = () => {
                           width: "100%",
                           fontSize: 24,
                           marginLeft: 10,
-                          color: "pink",
+                          color: "gray",
                         }}
                       >
                         <h1 style={{ color: "gray" }}>
@@ -270,7 +278,7 @@ const PreReadingVocabSlides = () => {
             width: "100%",
             height: "100%",
             borderWidth: 1,
-            borderColor: "green",
+            borderColor: "transparent",
             display: "flex",
             justifyContent: "center",
           }}

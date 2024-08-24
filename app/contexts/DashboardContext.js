@@ -1,12 +1,10 @@
 "use client";
-import { userAgentFromString } from "next/server";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 const DashboardContext = createContext();
 
 const DashboardContextProvider = ({ children }) => {
-  const [lessons, setLessons] = useState([]);
-  const { userID, setUserID } = useState("");
+  const [userID, setUserID] = useState("");
 
   async function loadLessons(userID, method, lessonID) {
     if (method === "getAllLessons") {
@@ -46,8 +44,6 @@ const DashboardContextProvider = ({ children }) => {
   }
 
   async function deleteLessonFromDB(userID, lessonID) {
-    // console.log("Dashboard Context User ID:", userID);
-    // console.log("Dashboard Context Lesson ID:", lessonID);
     try {
       const data = await fetch(
         `/api/firestore/delete-lesson?userID=${userID}&lessonID=${lessonID}`,
@@ -73,7 +69,13 @@ const DashboardContextProvider = ({ children }) => {
 
   return (
     <DashboardContext.Provider
-      value={{ lessons, loadLessons, addNewLesson, deleteLessonFromDB, userID }}
+      value={{
+        //lessons,
+        loadLessons,
+        addNewLesson,
+        deleteLessonFromDB,
+        userID,
+      }}
     >
       {children}
     </DashboardContext.Provider>
