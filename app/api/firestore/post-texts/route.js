@@ -19,7 +19,7 @@ export const POST = async (request) => {
 
     const textData = {
       transcript: data,
-      textEdits: ["shit", "fart"],
+      textEdits: ["", ""],
     };
 
     //postTextsToSection(userID, lessonID, "testsection", "testtext");

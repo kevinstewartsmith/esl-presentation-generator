@@ -82,7 +82,7 @@ export default function StageSorter({ lessonID }) {
       }
     }
     postStagesToDB();
-  }, [items]);
+  }, [items, lessonID]);
 
   const [activeId, setActiveId] = useState();
 

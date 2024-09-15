@@ -20,6 +20,8 @@ import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePa
 import ComponentMap from "@app/utils/ComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 import { Anton } from "next/font/google";
+import { DashboardContextProvider } from "@app/contexts/DashboardContext";
+import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 //import Anton font from next font
 const anton = Anton({
   weight: "400",
@@ -30,7 +32,7 @@ const handjet = Handjet({
   subsets: ["latin"],
 });
 
-const page = ({ params }) => {
+const CreatePageComponent = ({ params }) => {
   const {
     presentationIsShowing,
     lessonTitle,
@@ -49,7 +51,7 @@ const page = ({ params }) => {
 
   const pathname = usePathname();
 
-  const { items } = useContext(PresentationContext);
+  const { items, updateItems } = useContext(PresentationContext);
 
   const [lessonData, setLessonData] = useState({});
   const userID = params.userID;
@@ -63,7 +65,12 @@ const page = ({ params }) => {
   //Render a component based on the current stage form index
   function renderComponent(componentName, idx) {
     //console.log("Component Name: " + componentName);
-    const stageTitle = includedStages[currentStageFormIdx];
+    // const stageTitle = includedStages
+    //   ? includedStages[currentStageFormIdx]
+    //   : null;
+    const stageTitle = includedStages
+      ? includedStages[currentStageFormIdx]
+      : null;
     const ComponentToRender = ComponentMap[stageTitle];
     //const ComponentToRender = ReadingForGistandDetailForm;
     if (!ComponentToRender) {
@@ -112,14 +119,54 @@ const page = ({ params }) => {
     );
     //Create items array
     //const stageArray = Object.values(items);
-    function makeStageArray() {
-      //const stageArray = Object.root.values(items);
-      const rootArray = items.root.map((obj) => obj);
-      console.log("Make Stage Array");
-      console.log(typeof rootArray[0]);
-      setIncludedStages(rootArray);
+    async function getLessonStages() {
+      try {
+        const response = await fetch(
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${params.lessonID}`
+        );
+        const data = await response.json();
+        console.log("Lesson Stages:", data.root[0]);
+        console.log(typeof data.root[0]);
+
+        //get first item of data.root
+
+        //const strings = data.root.map((obj) => Object.values(obj)[0]);
+        //console.log("Strings:", strings);
+        //updateStages(data);
+        //return data;
+
+        console.log("Items: " + JSON.stringify(data.root[0]));
+
+        updateItems(data);
+        setIncludedStages(data.root);
+        //makeStageArray(data.root);
+      } catch (error) {
+        console.error(error);
+      }
     }
-    makeStageArray();
+    // const lessonStages = getLessonStages();
+    // console.log("Lesson Stages: " + lessonStages);
+    getLessonStages();
+
+    //updateItems(lessonStages);
+    //makeStageArray(lessonStages.root);
+
+    function makeStageArray(data) {
+      //const stageArray = Object.root.values(items);
+
+      //make data an array
+
+      // const rootArray = data.root.map((obj) => obj);
+      // console.log("Make Stage Array");
+      // console.log(typeof rootArray[0]);
+      // console.log(rootArray[0]);
+      console.log("Make Stage Array");
+      console.log(data);
+
+      setIncludedStages(data);
+      //setIncludedStages(data.root);
+    }
+    //makeStageArray();
   }, []);
 
   function getLessonTitle(title) {
@@ -206,12 +253,16 @@ const page = ({ params }) => {
           {"     sectionNumber: " + sectionNumber}
           {"     currentStageFormIdx: " + currentStageFormIdx}
           {"     number of stages : " + numberOfStageForms} */}
+          {/* {items ? ( */}
           <HorizontalNonLinearStepper
+            //steps={includedStages ? includedStages : null}
             steps={includedStages ? includedStages : null}
             activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
           />
+          {/* ) : null} */}
 
           {sectionNumber < sectionLength - 1 ||
+          //currentStageFormIdx < includedStages.length - 1 ? (
           currentStageFormIdx < includedStages.length - 1 ? (
             <button
               //onClick={() => setSectionNumber(sectionNumber + 1)}
@@ -234,7 +285,14 @@ const page = ({ params }) => {
         </div>
       )}
     </div>
+    // <h1>{includedStages ? includedStages[0] : "Nope"}</h1>
   );
 };
-
+const page = (props) => (
+  <DashboardContextProvider>
+    <PresentationContextProvider>
+      <CreatePageComponent {...props} />
+    </PresentationContextProvider>
+  </DashboardContextProvider>
+);
 export default page;

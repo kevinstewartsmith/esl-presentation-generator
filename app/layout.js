@@ -20,13 +20,13 @@ export default function RootLayout({ children }) {
       <ReadingForGistAndDetailContextProvider>
         {/* <DashboardContextProvider> */}
         <AudioTextProvider>
-          <PresentationContextProvider>
-            <GlobalVariablesContextProvider>
-              <body className={inter.className}>
-                <Nav>{children}</Nav>
-              </body>
-            </GlobalVariablesContextProvider>
-          </PresentationContextProvider>
+          {/* <PresentationContextProvider> */}
+          <GlobalVariablesContextProvider>
+            <body className={inter.className}>
+              <Nav>{children}</Nav>
+            </body>
+          </GlobalVariablesContextProvider>
+          {/* </PresentationContextProvider> */}
         </AudioTextProvider>
         {/* </DashboardContextProvider> */}
       </ReadingForGistAndDetailContextProvider>

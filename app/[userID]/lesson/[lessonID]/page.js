@@ -10,6 +10,7 @@ import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stag
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
+import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 
 const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
@@ -18,8 +19,12 @@ const LessonPageComponent = ({ params }) => {
   const { updateLessonID, lessonID } = useContext(
     ReadingForGistAndDetailContext
   );
-  const { updateLessonIDPresentationContext, updateStages, updateItems } =
-    useContext(PresentationContext);
+  const {
+    updateLessonIDPresentationContext,
+    updateStages,
+    updateItems,
+    items,
+  } = useContext(PresentationContext);
   //updateLessonID(params.lessonID);
   const userID = params.userID;
   //const lessonID = params.lessonID;
@@ -27,8 +32,8 @@ const LessonPageComponent = ({ params }) => {
   const { loadLessons } = useContext(DashboardContext);
   const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
     useContext(GlobalVariablesContext);
+  updateLessonID(params.lessonID);
   useEffect(() => {
-    updateLessonID(params.lessonID);
     updatePathname(pathname);
     async function fetchData() {
       try {
@@ -68,7 +73,7 @@ const LessonPageComponent = ({ params }) => {
       }
     }
     getLessonStages();
-  }, []);
+  }, [lessonID]);
   function getLessonTitle(title) {
     console.log("Lesson Title: " + title);
     updateLessonTitle(title);
@@ -91,7 +96,9 @@ const LessonPageComponent = ({ params }) => {
 
 const page = (props) => (
   <DashboardContextProvider>
-    <LessonPageComponent {...props} />
+    <PresentationContextProvider>
+      <LessonPageComponent {...props} />
+    </PresentationContextProvider>
   </DashboardContextProvider>
 );
 export default page;
