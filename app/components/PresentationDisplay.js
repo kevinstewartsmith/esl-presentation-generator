@@ -75,23 +75,25 @@ const PresentationDisplay = ({ presData }) => {
       </button>
       {/* <h1>test</h1> */}
       <div className="slides">
-        <section data-background-color="blue" data-font-family="Arial">
+        {/* <section data-background-color="blue" data-font-family="Arial">
           <h1>Slide1</h1>Slide 1
-        </section>
+        </section> */}
 
         {included["includePreReadingVocabulary"] ? (
           <PreReadingVocabularySection vocabulary={vocabulary} />
         ) : null}
 
-        <GistReadingInstructions
-          gistReadingQuestions={inputTexts["question"]}
-          gistReadingPage={inputTexts["page"]}
-          sliders={sliders}
-          textBoxInputs={textBoxInputs}
-          inputTexts={inputTexts}
-          //FIX
-          time={inputTexts["gistReadingTime"]}
-        />
+        {included["includeReadingForGistSection"] ? (
+          <GistReadingInstructions
+            gistReadingQuestions={inputTexts["question"]}
+            gistReadingPage={inputTexts["page"]}
+            sliders={sliders}
+            textBoxInputs={textBoxInputs}
+            inputTexts={inputTexts}
+            //FIX
+            time={inputTexts["gistReadingTime"]}
+          />
+        ) : null}
         <section>
           <h1>Stop and Look</h1>
           <ul>Zip It</ul>
@@ -114,6 +116,7 @@ const PresentationDisplay = ({ presData }) => {
           <ul> Eyes on teacher</ul>
           <ul>Listen</ul>
         </section>
+
         <PartnerDiscussionSection
           slider={inputTexts["detailReadingDiscussionTimeLimit"]}
           time={"detailDiscussionTime"}

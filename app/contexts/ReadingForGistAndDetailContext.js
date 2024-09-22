@@ -253,7 +253,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
       let data = await response.json(); // Assuming the server returns JSON
 
-      console.log("Raw response data:", data); // Log raw data
+      console.log("Raw response data VOCAB:", data); // Log raw data
       setVocabulary(data);
     } catch (error) {
       console.error("Error fetching vocabulary:", error);
