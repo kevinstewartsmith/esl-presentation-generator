@@ -9,6 +9,7 @@ const GistReadingInstructions = ({
   textBoxInputs,
   time,
   inputTexts,
+  includeGistReadingTimeLimit,
 }) => {
   const minutes = inputTexts["gistReadingTime"] === 1 ? "minute" : "minutes";
 
@@ -42,7 +43,10 @@ const GistReadingInstructions = ({
             <em>Answer the question :</em> {inputTexts["question"]}
           </li>
           <li>No talking</li>
-          <li>{inputTexts["gistReadingTime"] + " " + minutes}</li>
+
+          {includeGistReadingTimeLimit ? (
+            <li>{inputTexts["gistReadingTime"] + " " + minutes}</li>
+          ) : null}
         </ul>
       </section>
     </>

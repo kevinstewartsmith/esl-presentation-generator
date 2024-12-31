@@ -92,6 +92,9 @@ const PresentationDisplay = ({ presData }) => {
             inputTexts={inputTexts}
             //FIX
             time={inputTexts["gistReadingTime"]}
+            includeGistReadingTimeLimit={
+              included["includeGistReadingTimeLimit"]
+            }
           />
         ) : null}
         <section>
@@ -100,16 +103,19 @@ const PresentationDisplay = ({ presData }) => {
           <ul> Eyes on teacher</ul>
           <ul>Listen</ul>
         </section>
-        <PartnerDiscussionSection
-          slider={inputTexts["gistDiscussionTime"]}
-          discussion={discussionForms["gistQuestionDiscussion"]}
-        />
-
-        <DetailReadingInstructions
-          //slider={inputTexts["detailReadingTime"]}
-          textbookExercises={inputTexts["exercise"]}
-          slider={inputTexts["detailReadingDiscussionTimeLimit"]}
-        />
+        {included["includeGistReadingQuestionPartnerCheck"] ? (
+          <PartnerDiscussionSection
+            slider={inputTexts["gistDiscussionTime"]}
+            discussion={discussionForms["gistQuestionDiscussion"]}
+          />
+        ) : null}
+        {included["includeReadingForDetailSection"] ? (
+          <DetailReadingInstructions
+            //slider={inputTexts["detailReadingTime"]}
+            textbookExercises={inputTexts["exercise"]}
+            slider={inputTexts["detailReadingDiscussionTimeLimit"]}
+          />
+        ) : null}
         <section>
           <h1>Stop and Look</h1>
           <ul>Zip It</ul>

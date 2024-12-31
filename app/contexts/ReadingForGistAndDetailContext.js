@@ -37,6 +37,21 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
   function updateTextbook(newData) {
     setTextbook(newData);
+    // setTextbook((prevTextbook) => ({
+    //   ...prevTextbook, // Spread the previous state to retain textEdit array
+    //   transcript: newData, // Update the transcript with newData
+    //   //textEdit: [...(prevTextbook?.textEdit || []), newData], // Append newData to the textEdit array
+    // }));
+  }
+
+  function updateTextbookTranscript(newData) {
+    console.log(newData);
+
+    setTextbook((prevTextbook) => ({
+      ...prevTextbook, // Spread the previous state to retain textEdit array
+      //transcript: newData, // Update the transcript with newData
+      textEdit: [...(prevTextbook?.textEdit || []), newData], // Append newData to the textEdit array
+    }));
   }
 
   function updateQuestions(newData) {
@@ -60,11 +75,13 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
       }
       const data = await response.json(); // Parse the JSON response
       console.log("Textbook DATA from Firestore:", data);
-      data.texts.transcript ? setTextbook(data.texts.transcript) : null;
-      data.questions.transcript
-        ? setQuestions(data.questions.transcript)
-        : null;
-      data.answers.transcript ? setAnswers(data.answers.transcript) : null;
+      //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
+      data.texts ? setTextbook(data.texts) : null;
+      // data.questions.transcript
+      //   ? setQuestions(data.questions.transcript)
+      //   : null;
+      data.questions ? setQuestions(data.questions) : null;
+      data.answers ? setAnswers(data.answers) : null;
     } catch (error) {
       console.error(error);
     }
@@ -74,11 +91,13 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     console.log("Post Textbook Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
+    const stringifiedTextbook = JSON.stringify(textbook);
+    const encodedTextbook = encodeURIComponent(stringifiedTextbook);
     console.log("Encoded Stage ID:", encodedStageID);
     async function postTextbookData() {
       try {
         const response = await fetch(
-          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${textbook}&textType=BookText`,
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifiedTextbook}&textType=BookText`,
           { method: "POST" }
         );
         const data = await response.json();
@@ -94,11 +113,16 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     console.log("Post Questions Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
+    const encodedQuestions = encodeURIComponent(questions);
+    const stringifiedQuestions = JSON.stringify(questions);
     console.log("Encoded Stage ID:", encodedStageID);
+    console.log("Stringified Questions:", stringifiedQuestions);
+    console.log("Questions Type:", typeof questions);
+
     async function postTextbookData() {
       try {
         const response = await fetch(
-          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${questions}&textType=QuestionText`,
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifiedQuestions}&textType=QuestionText`,
           { method: "POST" }
         );
         const data = await response.json();
@@ -114,11 +138,12 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     console.log("Post Answers Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
+    const stringifiedAnswers = JSON.stringify(answers);
     console.log("Encoded Stage ID:", encodedStageID);
     async function postTextbookData() {
       try {
         const response = await fetch(
-          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${answers}&textType=AnswerText`,
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifiedAnswers}&textType=AnswerText`,
           { method: "POST" }
         );
         const data = await response.json();
@@ -487,6 +512,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         updateQuestions,
         updateAnswers,
         fetchTextbookDataFromDB,
+        updateTextbookTranscript,
 
         //Vocabulary
         vocabulary,

@@ -11,29 +11,42 @@ export const POST = async (request) => {
     const data = url.searchParams.get("data");
     const textType = url.searchParams.get("textType");
 
+    const decodedData = decodeURIComponent(data);
+
     console.log(`userID: ${userID}`);
     console.log(`lessonID: ${lessonID}`);
     console.log(`stageID: ${stageID}`);
     console.log(`data: ${data}`);
     console.log(`textType: ${textType}`);
 
+    const parsedData = JSON.parse(data);
+
     const textData = {
       transcript: data,
       textEdits: ["", ""],
     };
-
+    //const textData = data;
     //postTextsToSection(userID, lessonID, "testsection", "testtext");
-    postTextsToSection(userID, lessonID, stageID, textData, textType);
+    postTextsToSection(userID, lessonID, stageID, parsedData, textType);
 
-    return new Response("Lesson Stages posted successfully.", {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // return new Response("Lesson Stages posted successfully.", {
+    //   status: 200,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    return new Response(
+      JSON.stringify({ message: "Data saved successfully!" }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error(error);
-    return error;
+    return new Response(JSON.stringify({ error: "Invalid JSON data" }), {
+      status: 400,
+    });
+    //return error;
   }
 };
 

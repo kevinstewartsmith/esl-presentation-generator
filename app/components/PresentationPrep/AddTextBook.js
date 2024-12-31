@@ -106,6 +106,7 @@ function AddTextBook({ category, stageID }) {
     updateTextbook,
     updateQuestions,
     updateAnswers,
+    updateTextbookTranscript,
   } = useContext(ReadingForGistAndDetailContext);
 
   async function handleReadText(file) {
@@ -125,13 +126,25 @@ function AddTextBook({ category, stageID }) {
       case "BookText":
         //updateTextTranscript(text);
         updateTextbook(text);
+        // updateTextbook((prevState) => ({
+        //   ...prevState, // Spread the previous state
+        //   transcript: text, // Update the transcript
+        // }));
 
         return null;
       case "QuestionText":
         updateQuestions(text);
+        // updateQuestions((prevState) => ({
+        //   ...prevState, // Spread the previous state
+        //   transcript: text, // Update the transcript
+        // }));
         return null;
       case "AnswerText":
         updateAnswers(text);
+        // updateAnswers((prevState) => ({
+        //   ...prevState, // Spread the previous state
+        //   transcript: text, // Update the transcript
+        // }));
         return null;
       default:
         console.log("No category selected");
@@ -202,6 +215,9 @@ function AddTextBook({ category, stageID }) {
   const handleTextDisplay = (category, textbook, questions, answers) => {
     switch (category) {
       case "BookText":
+        // return (
+        //   <h1 style={{ color: "black" }}>{textbook?.transcript ?? null}</h1>
+        // );
         return <h1 style={{ color: "black" }}>{textbook}</h1>;
       case "QuestionText":
         return <h1 style={{ color: "black" }}>{questions}</h1>;
@@ -247,6 +263,18 @@ function AddTextBook({ category, stageID }) {
       `/api/clean-text-json?query=${text}&category=${category}`
     );
     const data = await response.json();
+
+    // updatetext so that key textEdits hold the value [...text, textEdits: data]
+    console.log("The data is: ", data);
+    updateTextbookTranscript(data);
+    // handleTextStateMemory(data);
+    // updateText((prevTextEdits) => [
+    //   ...prevTextEdits,
+    //   {
+    //     transcript: transcript,
+    //     textEdits: [...(prevTextEdits?.textEdits || []), data], // Append the latest edit to the array
+    //   },
+    // ]);
   }
 
   const dragNDropText = (category) => {
