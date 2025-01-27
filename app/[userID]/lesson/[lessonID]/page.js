@@ -6,6 +6,7 @@ import { DashboardContext } from "@app/contexts/DashboardContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { AudioTextContext } from "@app/contexts/AudioTextContext";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
@@ -19,6 +20,8 @@ const LessonPageComponent = ({ params }) => {
   const { updateLessonID, lessonID } = useContext(
     ReadingForGistAndDetailContext
   );
+  const { updateLessonIDForAudioData } = useContext(AudioTextContext);
+
   const {
     updateLessonIDPresentationContext,
     updateStages,
@@ -32,7 +35,10 @@ const LessonPageComponent = ({ params }) => {
   const { loadLessons } = useContext(DashboardContext);
   const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
     useContext(GlobalVariablesContext);
+
   updateLessonID(params.lessonID);
+  updateLessonIDForAudioData(params.lessonID);
+
   useEffect(() => {
     updatePathname(pathname);
     async function fetchData() {

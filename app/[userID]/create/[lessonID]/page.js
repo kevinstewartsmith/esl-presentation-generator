@@ -22,6 +22,9 @@ import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreateP
 import { Anton } from "next/font/google";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
+import { AudioTextProvider } from "@app/contexts/AudioTextContext";
+import { AudioTextContext } from "@app/contexts/AudioTextContext";
+
 //import Anton font from next font
 const anton = Anton({
   weight: "400",
@@ -49,6 +52,8 @@ const CreatePageComponent = ({ params }) => {
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
 
+  const { lessonIDAudioContext } = useContext(AudioTextContext);
+
   const pathname = usePathname();
 
   const { items, updateItems } = useContext(PresentationContext);
@@ -64,10 +69,6 @@ const CreatePageComponent = ({ params }) => {
 
   //Render a component based on the current stage form index
   function renderComponent(componentName, idx) {
-    //console.log("Component Name: " + componentName);
-    // const stageTitle = includedStages
-    //   ? includedStages[currentStageFormIdx]
-    //   : null;
     const stageTitle = includedStages
       ? includedStages[currentStageFormIdx]
       : null;
@@ -76,6 +77,7 @@ const CreatePageComponent = ({ params }) => {
     if (!ComponentToRender) {
       return <div>Component not found</div>;
     }
+
     return (
       <ComponentToRender
         section={sectionNumber}
@@ -89,6 +91,7 @@ const CreatePageComponent = ({ params }) => {
     //updateLessonID(params.lessonID);
     console.log("CREATE PAGE USE EFFECT TRIGGERED");
     console.log("LESSON ID: " + lessonID);
+    console.log("LESSON ID AUDIO CONTEXT: " + lessonIDAudioContext);
 
     async function fetchData() {
       const res = await fetch(
@@ -117,8 +120,7 @@ const CreatePageComponent = ({ params }) => {
       params.lessonID,
       params.stageID
     );
-    //Create items array
-    //const stageArray = Object.values(items);
+
     async function getLessonStages() {
       try {
         const response = await fetch(
@@ -127,13 +129,6 @@ const CreatePageComponent = ({ params }) => {
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);
         console.log(typeof data.root[0]);
-
-        //get first item of data.root
-
-        //const strings = data.root.map((obj) => Object.values(obj)[0]);
-        //console.log("Strings:", strings);
-        //updateStages(data);
-        //return data;
 
         console.log("Items: " + JSON.stringify(data.root[0]));
 
@@ -144,22 +139,10 @@ const CreatePageComponent = ({ params }) => {
         console.error(error);
       }
     }
-    // const lessonStages = getLessonStages();
-    // console.log("Lesson Stages: " + lessonStages);
+
     getLessonStages();
 
-    //updateItems(lessonStages);
-    //makeStageArray(lessonStages.root);
-
     function makeStageArray(data) {
-      //const stageArray = Object.root.values(items);
-
-      //make data an array
-
-      // const rootArray = data.root.map((obj) => obj);
-      // console.log("Make Stage Array");
-      // console.log(typeof rootArray[0]);
-      // console.log(rootArray[0]);
       console.log("Make Stage Array");
       console.log(data);
 
@@ -211,10 +194,6 @@ const CreatePageComponent = ({ params }) => {
     console.log(length);
     setSectionLength(length);
   };
-  // const getSectionsLength = (length) => {
-  //   console.log("Received section length: " + length);
-  //   setSectionLength(length); // Set the section length in state
-  // };
 
   const updateSectionLengthsArray = (idx, newValue) => {
     // Create a copy of the array
@@ -226,7 +205,7 @@ const CreatePageComponent = ({ params }) => {
   };
   const itemsArray = Object.values(items);
   const numberOfStageForms = itemsArray.length;
-  //const oneItem = includedStages[0];
+
   return (
     <div className="test-border">
       <Head style={{ backgroundColor: "red" }}>
@@ -239,33 +218,16 @@ const CreatePageComponent = ({ params }) => {
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
         >
-          {/* <HorizontalNonLinearStepper
-            steps={includedStages ? includedStages : null}
-            activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
-          /> */}
-
           {renderComponent()}
-          {/* {oneItem} */}
-          {/* {"end of stage order"}
-          {JSON.stringify(prevSectionLength)}
-          {JSON.stringify(includedStages[3])}
-          {"Section Length: " + sectionLength}
-          {"     sectionNumber: " + sectionNumber}
-          {"     currentStageFormIdx: " + currentStageFormIdx}
-          {"     number of stages : " + numberOfStageForms} */}
-          {/* {items ? ( */}
+
           <HorizontalNonLinearStepper
-            //steps={includedStages ? includedStages : null}
             steps={includedStages ? includedStages : null}
             activeStep={currentStageFormIdx ? currentStageFormIdx : 0}
           />
-          {/* ) : null} */}
 
           {sectionNumber < sectionLength - 1 ||
-          //currentStageFormIdx < includedStages.length - 1 ? (
           currentStageFormIdx < includedStages.length - 1 ? (
             <button
-              //onClick={() => setSectionNumber(sectionNumber + 1)}
               onClick={() => arrowClick("right")}
               className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
             >
@@ -275,7 +237,6 @@ const CreatePageComponent = ({ params }) => {
 
           {sectionNumber === 0 && currentStageFormIdx === 0 ? null : (
             <button
-              // onClick={() => setSectionNumber(sectionNumber - 1)}
               onClick={() => arrowClick("left")}
               className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
             >
@@ -285,7 +246,6 @@ const CreatePageComponent = ({ params }) => {
         </div>
       )}
     </div>
-    // <h1>{includedStages ? includedStages[0] : "Nope"}</h1>
   );
 };
 const page = (props) => (

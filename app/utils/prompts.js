@@ -76,6 +76,7 @@ export function findVocabularyPrompt(text, cefrLevel) {
   Make an array of objects out using this format: { "word": "###", "vietnamese_translation": "###", "ipa_uk": "###", "ipa_usa": "###" }. 
   The ipd_uk field is the word written in the internation phoenetic alphabet for the UK.
   The ipd_usa field is the word written in the internation phoenetic alphabet for the USA.
-  The most difficult words are the ones that are likely to be unfamiliar to a ${cefrLevel} ESL student.`;
+  The most difficult words are the ones that are likely to be unfamiliar to a ${cefrLevel} ESL student.
+  Please only return the array of objects.`;
   return prompt;
 }

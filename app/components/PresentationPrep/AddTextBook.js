@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { AudioTextContext } from "@app/contexts/AudioTextContext";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 //import { read } from "fs";
@@ -109,6 +110,9 @@ function AddTextBook({ category, stageID }) {
     updateTextbookTranscript,
   } = useContext(ReadingForGistAndDetailContext);
 
+  const { audioQuestions, updateAudioQuestions } = useContext(AudioTextContext);
+
+  //Reads the text from the image
   async function handleReadText(file) {
     const worker = await createWorker();
     await worker.loadLanguage("eng");
@@ -145,6 +149,9 @@ function AddTextBook({ category, stageID }) {
         //   ...prevState, // Spread the previous state
         //   transcript: text, // Update the transcript
         // }));
+        return null;
+      case "ListeningQuestionText":
+        updateAudioQuestions(text);
         return null;
       default:
         console.log("No category selected");
@@ -223,6 +230,9 @@ function AddTextBook({ category, stageID }) {
         return <h1 style={{ color: "black" }}>{questions}</h1>;
       case "AnswerText":
         return <h1 style={{ color: "black" }}>{answers}</h1>;
+
+      case "ListeningQuestionText":
+        return <h1 style={{ color: "black" }}>{audioQuestions}</h1>;
       default:
         //console.log("No category selected");
         return null;
@@ -253,6 +263,8 @@ function AddTextBook({ category, stageID }) {
           return questions;
         case "AnswerText":
           return answers;
+        case "ListeningQuestionText":
+          return audioQuestions;
         default:
           return "No category selected";
       }
@@ -285,6 +297,8 @@ function AddTextBook({ category, stageID }) {
         return "Question Text";
       case "AnswerText":
         return "Answer Text";
+      case "ListeningQuestionText":
+        return "Audio Questions";
       default:
         return "No category selected";
     }

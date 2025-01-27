@@ -97,6 +97,12 @@ async function postTextsToSection(
           `Answers added to section ${sectionId} in lesson ${lessonId}.`
         );
         break;
+      case "AudioQuestionText":
+        await sectionRef.set({ audioQuestions: texts }, { merge: true });
+        console.log(
+          `Audio Questions added to section ${sectionId} in lesson ${lessonId}.`
+        );
+        break;
       default:
         console.log(`Text type ${textType} not recognized.`);
     }

@@ -82,14 +82,17 @@ const PreReadingVocabSlides = () => {
 
       console.log("Raw response data:", data); // Log raw data
 
+      const jsonString = data.replace(/```json\n|```/g, "").trim();
+
       // Preprocess the string to remove newline characters and spaces
-      const cleanedData = data.replace(/(\r\n|\n|\r)/gm, "").trim();
+      const cleanedData = jsonString.replace(/(\r\n|\n|\r)/gm, "").trim();
 
       // Parse the cleaned string as JSON
       let parsedData;
+      console.log(jsonString);
 
       try {
-        parsedData = JSON.parse(cleanedData);
+        parsedData = JSON.parse(jsonString);
       } catch (parseError) {
         console.error("Error parsing JSON:", parseError);
         throw new Error("Failed to parse JSON response");
