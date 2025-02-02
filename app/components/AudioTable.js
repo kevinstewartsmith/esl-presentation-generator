@@ -4,6 +4,7 @@ import { AudioTextContext } from "../contexts/AudioTextContext";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import IconButton from "@mui/material/IconButton";
 import { playAudioFile } from "@app/utils/AudioControls";
+import { Grid } from "@mui/material";
 
 function AudioTable(props) {
   const {
@@ -107,27 +108,64 @@ function AudioTable(props) {
     : [];
 
   return (
-    <div style={{ height: 400, width: "100%", backgroundColor: "white" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        rowSelectionModel={selectedRow !== null ? [selectedRow] : []}
-        onRowSelectionModelChange={handleRowSelectionChange}
-      />
-      <h1> api:{bucketContents}</h1>
-      <h1> selected bucket: {selectedAudioFileName}</h1>
-      <h1>{selectedRow}</h1>
-      <br></br>
-      <br></br>
-    </div>
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      justifyContent="center"
+      height={650}
+    >
+      <Grid item xs={12}>
+        <div
+          style={{
+            height: "80%",
+            width: 600,
+            backgroundColor: "white",
+            borderColor: "black",
+          }}
+        >
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            rowSelectionModel={selectedRow !== null ? [selectedRow] : []}
+            onRowSelectionModelChange={handleRowSelectionChange}
+          />
+          <div
+            style={{
+              height: "20%",
+              width: 600,
+              backgroundColor: "white",
+              borderColor: "black",
+              overflow: "auto",
+            }}
+          >
+            <h1> api:{bucketContents}</h1>
+            <h1> selected bucket: {selectedAudioFileName}</h1>
+            <h1>{selectedRow}</h1>
+          </div>
+        </div>
+      </Grid>
+      <Grid item xs={12}>
+        <div
+          style={{
+            height: "100%",
+            width: 600,
+            backgroundColor: "white",
+            borderColor: "black",
+          }}
+        >
+          <h1>Audio Player</h1>
+        </div>
+      </Grid>
+    </Grid>
   );
 }
 

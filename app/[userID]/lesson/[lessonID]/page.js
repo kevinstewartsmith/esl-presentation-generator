@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, use } from "react";
 //import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { DashboardContext } from "@app/contexts/DashboardContext";
@@ -29,24 +29,27 @@ const LessonPageComponent = ({ params }) => {
     items,
   } = useContext(PresentationContext);
   //updateLessonID(params.lessonID);
-  const userID = params.userID;
+
+  const resolvedParams = React.use(params);
+  const userID = resolvedParams.userID;
+  const paramsLessonID = resolvedParams.lessonID;
   //const lessonID = params.lessonID;
   const [lesson, setLesson] = useState(null);
   const { loadLessons } = useContext(DashboardContext);
   const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
     useContext(GlobalVariablesContext);
 
-  updateLessonID(params.lessonID);
-  updateLessonIDForAudioData(params.lessonID);
+  updateLessonID(paramsLessonID);
+  updateLessonIDForAudioData(paramsLessonID);
 
   useEffect(() => {
     updatePathname(pathname);
     async function fetchData() {
       try {
         const response = await loadLessons(
-          params.userID,
+          userID,
           "getOneLesson",
-          params.lessonID
+          paramsLessonID
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -64,7 +67,7 @@ const LessonPageComponent = ({ params }) => {
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${params.lessonID}`
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);
@@ -95,7 +98,7 @@ const LessonPageComponent = ({ params }) => {
         <button>Make Lesson</button>
       </Link>
       <h1>React Beautiful</h1>
-      <StageSorter lessonID={params.lessonID} />
+      <StageSorter lessonID={paramsLessonID} />
     </div>
   );
 };

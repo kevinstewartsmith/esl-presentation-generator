@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { DashboardContext } from "@app/contexts/DashboardContext";
 import { v4 as uuidv4 } from "uuid";
@@ -18,7 +18,8 @@ const PageComponent = ({ params }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
-  const userID = params.userID;
+  const resolvedParams = use(params);
+  const userID = resolvedParams.userID;
   const pathname = usePathname();
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const PageComponent = ({ params }) => {
 
     async function fetchAllLessons() {
       try {
-        const response = await loadLessons(params.userID, "getAllLessons");
+        const response = await loadLessons(userID, "getAllLessons");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -94,7 +95,7 @@ const PageComponent = ({ params }) => {
 
   return (
     <div style={{ marginLeft: 40, marginRight: 40 }}>
-      <h1>{params.userID}</h1>
+      <h1>{resolvedParams.userID}</h1>
       <Grid container spacing={0}>
         {lessons.map((lesson, index) => (
           <Grid item xs={3} padding={2} key={index}>
@@ -102,7 +103,7 @@ const PageComponent = ({ params }) => {
               key={index}
               deleteLesson={deleteLesson}
               lesson={lesson}
-              userID={params.userID}
+              userID={resolvedParams.userID}
               onClick={() => console.log(lesson.id)}
             />
           </Grid>

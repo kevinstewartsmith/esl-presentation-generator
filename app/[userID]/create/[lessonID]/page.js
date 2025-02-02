@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, use } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
@@ -59,7 +59,9 @@ const CreatePageComponent = ({ params }) => {
   const { items, updateItems } = useContext(PresentationContext);
 
   const [lessonData, setLessonData] = useState({});
-  const userID = params.userID;
+
+  const resolvedParams = React.use(params);
+  const userID = resolvedParams.userID;
 
   const [sectionNumber, setSectionNumber] = useState(0);
   const [sectionLength, setSectionLength] = useState(0);
@@ -105,26 +107,30 @@ const CreatePageComponent = ({ params }) => {
     }
     fetchData();
     getAllInputDataFromFirestore(
-      params.userID,
-      params.lessonID,
-      params.stageID
+      resolvedParams.userID,
+      resolvedParams.lessonID,
+      resolvedParams.stageID
     );
     getAllDiscussionDataFromFirestore(
-      params.userID,
-      params.lessonID,
-      params.stageID
+      resolvedParams.userID,
+      resolvedParams.lessonID,
+      resolvedParams.stageID
     );
-    fetchTextbookDataFromDB(params.userID, params.lessonID, params.stageID);
+    fetchTextbookDataFromDB(
+      resolvedParams.userID,
+      resolvedParams.lessonID,
+      resolvedParams.stageID
+    );
     fetchIncludedDataFromFirestore(
-      params.userID,
-      params.lessonID,
-      params.stageID
+      resolvedParams.userID,
+      resolvedParams.lessonID,
+      resolvedParams.stageID
     );
 
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${params.lessonID}`
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${resolvedParams.lessonID}`
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);

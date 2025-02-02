@@ -5,9 +5,8 @@ import ListeningQuestionUploader from "./ListeningForGistAndDetailForms/Listenin
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [
-    // <ListeningUploadQuestions />,
-    // <ListeningUploadandTranscribeAudio />,
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
+    <ListeningUploadandTranscribeAudio />,
   ];
 
   useEffect(() => {
