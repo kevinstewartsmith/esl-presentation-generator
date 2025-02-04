@@ -52,7 +52,8 @@ const CreatePageComponent = ({ params }) => {
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
 
-  const { lessonIDAudioContext } = useContext(AudioTextContext);
+  const { lessonIDAudioContext, fetchAudioQuestionDataFromDB } =
+    useContext(AudioTextContext);
 
   const pathname = usePathname();
 
@@ -122,6 +123,11 @@ const CreatePageComponent = ({ params }) => {
       resolvedParams.stageID
     );
     fetchIncludedDataFromFirestore(
+      resolvedParams.userID,
+      resolvedParams.lessonID,
+      resolvedParams.stageID
+    );
+    fetchAudioQuestionDataFromDB(
       resolvedParams.userID,
       resolvedParams.lessonID,
       resolvedParams.stageID

@@ -26,6 +26,7 @@ const AudioTextProvider = ({ children }) => {
   const [wordTimeArray, setWordTimeArray] = useState();
   const [fullAudioBuffer, setFullAudioBuffer] = useState(); //Full file of an audio track. Updated when a track from the bucket is played
   const [lessonIDAudioContext, setLessonIDAudioContext] = useState("");
+
   //post listening questions to the database
   useEffect(() => {
     console.log("Post Listening Questions Data");
@@ -57,6 +58,62 @@ const AudioTextProvider = ({ children }) => {
     postListeningQuestions();
   }, [audioQuestions]);
   //end post listening questions to the database
+
+  //post audio transcript to the database
+  useEffect(() => {
+    console.log("Post Audio Transcript Data");
+    const stageID = "Listening for Gist and Detail";
+    const encodedStageID = encodeURIComponent(stageID);
+    const encodedTranscript = encodeURIComponent(transcript);
+    const stringifiedTranscript = JSON.stringify(transcript);
+    console.log("Encoded Stage ID:", encodedStageID);
+    console.log("Encoded Transcript:", encodedTranscript);
+    const userID = "kevinstewartsmith";
+    async function postAudioTranscript() {
+      console.log(
+        "THIS IS THE LESSON ID FOR POSTING TRANSCRIPT:",
+        lessonIDAudioContext
+      );
+
+      try {
+        const response = await fetch(
+          `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonIDAudioContext}&stageID=${encodedStageID}&data=${stringifiedTranscript}&textType=AudioTranscript`,
+          { method: "POST" }
+        );
+        const data = await response.json();
+        console.log("RESPONSE FROM POSTING TRANSCRIPT DATA:", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    postAudioTranscript();
+  }, [transcript]);
+  //end post audio transcript to the database
+
+  async function fetchAudioQuestionDataFromDB(userID, lessonID, stageID) {
+    const stage = "Listening for Gist and Detail";
+    const encodedStageID = encodeURIComponent(stage);
+    console.log("Getting Textbook Data from Firestore");
+    try {
+      const response = await fetch(
+        `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json(); // Parse the JSON response
+      console.log("Textbook DATA from Firestore:", data);
+      //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
+      data.audioQuestions ? setAudioQuestions(data.audioQuestions) : null;
+      // data.questions.transcript
+      //   ? setQuestions(data.questions.transcript)
+      //   : null;
+      data.transcript ? setTranscript(data.transcript) : null;
+      data.answers ? setAnswers(data.answers) : null;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   function updateLessonIDForAudioData(id) {
     setLessonIDAudioContext(id);
@@ -164,6 +221,7 @@ const AudioTextProvider = ({ children }) => {
         updateFullAudioBuffer,
         updateLessonIDForAudioData,
         lessonIDAudioContext,
+        fetchAudioQuestionDataFromDB,
       }}
     >
       {children}
