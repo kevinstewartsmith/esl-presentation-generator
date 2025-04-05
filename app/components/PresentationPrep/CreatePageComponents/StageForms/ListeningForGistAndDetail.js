@@ -7,6 +7,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
     <ListeningUploadandTranscribeAudio />,
+    <div></div>,
   ];
 
   useEffect(() => {

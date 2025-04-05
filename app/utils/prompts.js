@@ -80,3 +80,21 @@ export function findVocabularyPrompt(text, cefrLevel) {
   Please only return the array of objects.`;
   return prompt;
 }
+
+export function findSentenceStemsPrompt(
+  theme,
+  number,
+  grammar_tense,
+  cefrLevel
+) {
+  console.log("Prompting for sentence stems with  parameters. ");
+
+  const prompt = `Find ${number} sentence stems for a ${cefrLevel} ESL student on the theme of ${theme} using ${grammar_tense} tense.
+  The sentence stems should an incomplete sentence that the student can complete.
+  Each student should end with ... 
+  Also, include a prompting question that will help the student complete the sentence. Make sure the prompting questions is at an A1 level and is opened ended enough that the student can complete the sentence.
+  Also, include a sharing statement where a student can share what their classmate said with the class. For example, "(name) says she likes cats because they are cute."
+  Make an array of objects out using this format: { "sentence_stem": "###", "prompting_question": "###", "sharing_statement": "###" }.
+  Please only return the array of objects.`;
+  return prompt;
+}

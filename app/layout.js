@@ -4,6 +4,7 @@ import { AudioTextProvider } from "./contexts/AudioTextContext";
 import { PresentationContextProvider } from "./contexts/PresentationContext";
 import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
 import { ReadingForGistAndDetailContextProvider } from "./contexts/ReadingForGistAndDetailContext";
+import { ThinkPairShareProvider } from "./contexts/ThinkPairShareContext";
 import Nav from "./components/Nav";
 import { DashboardContextProvider } from "./contexts/DashboardContext";
 
@@ -17,19 +18,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ReadingForGistAndDetailContextProvider>
-        {/* <DashboardContextProvider> */}
-        <AudioTextProvider>
-          {/* <PresentationContextProvider> */}
-          <GlobalVariablesContextProvider>
-            <body className={inter.className}>
-              <Nav>{children}</Nav>
-            </body>
-          </GlobalVariablesContextProvider>
-          {/* </PresentationContextProvider> */}
-        </AudioTextProvider>
-        {/* </DashboardContextProvider> */}
-      </ReadingForGistAndDetailContextProvider>
+      <ThinkPairShareProvider>
+        <ReadingForGistAndDetailContextProvider>
+          {/* <DashboardContextProvider> */}
+          <AudioTextProvider>
+            {/* <PresentationContextProvider> */}
+            <GlobalVariablesContextProvider>
+              <body className={inter.className}>
+                <Nav>{children}</Nav>
+              </body>
+            </GlobalVariablesContextProvider>
+            {/* </PresentationContextProvider> */}
+          </AudioTextProvider>
+          {/* </DashboardContextProvider> */}
+        </ReadingForGistAndDetailContextProvider>
+      </ThinkPairShareProvider>
     </html>
   );
 }

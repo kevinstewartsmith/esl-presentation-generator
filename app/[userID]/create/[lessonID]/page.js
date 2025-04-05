@@ -18,12 +18,14 @@ import { usePathname } from "next/navigation";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
+import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 import { Anton } from "next/font/google";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { AudioTextProvider } from "@app/contexts/AudioTextContext";
 import { AudioTextContext } from "@app/contexts/AudioTextContext";
+import { unstable_gridTabIndexColumnHeaderFilterSelector } from "@node_modules/@mui/x-data-grid";
 
 //import Anton font from next font
 const anton = Anton({
@@ -61,8 +63,10 @@ const CreatePageComponent = ({ params }) => {
 
   const [lessonData, setLessonData] = useState({});
 
-  const resolvedParams = React.use(params);
-  const userID = resolvedParams.userID;
+  // const resolvedParams = React.use(params);
+  // const userID = resolvedParams.userID;
+  //const { userID, lessonID: paramsLessonID } = params;
+  const { userID, stageID } = params;
 
   const [sectionNumber, setSectionNumber] = useState(0);
   const [sectionLength, setSectionLength] = useState(0);
@@ -107,36 +111,16 @@ const CreatePageComponent = ({ params }) => {
       getLessonTitle(data.title);
     }
     fetchData();
-    getAllInputDataFromFirestore(
-      resolvedParams.userID,
-      resolvedParams.lessonID,
-      resolvedParams.stageID
-    );
-    getAllDiscussionDataFromFirestore(
-      resolvedParams.userID,
-      resolvedParams.lessonID,
-      resolvedParams.stageID
-    );
-    fetchTextbookDataFromDB(
-      resolvedParams.userID,
-      resolvedParams.lessonID,
-      resolvedParams.stageID
-    );
-    fetchIncludedDataFromFirestore(
-      resolvedParams.userID,
-      resolvedParams.lessonID,
-      resolvedParams.stageID
-    );
-    fetchAudioQuestionDataFromDB(
-      resolvedParams.userID,
-      resolvedParams.lessonID,
-      resolvedParams.stageID
-    );
+    getAllInputDataFromFirestore(userID, lessonID, params.stageID);
+    getAllDiscussionDataFromFirestore(userID, lessonID, params.stageID);
+    fetchTextbookDataFromDB(userID, lessonID, params.stageID);
+    fetchIncludedDataFromFirestore(userID, lessonID, params.stageID);
+    fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
 
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${resolvedParams.lessonID}`
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);
@@ -145,7 +129,8 @@ const CreatePageComponent = ({ params }) => {
         console.log("Items: " + JSON.stringify(data.root[0]));
 
         updateItems(data);
-        setIncludedStages(data.root);
+        //setIncludedStages(data.root);
+        setIncludedStages([...data.root, "Start Presentation"]);
         //makeStageArray(data.root);
       } catch (error) {
         console.error(error);
@@ -225,7 +210,7 @@ const CreatePageComponent = ({ params }) => {
       </Head>
 
       {presentationIsShowing ? (
-        <PresentationDisplay />
+        <PresentationDisplay includedStages={includedStages} />
       ) : (
         <div
           style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}

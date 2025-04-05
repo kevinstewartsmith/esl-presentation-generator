@@ -32,6 +32,8 @@ export const POST = async (request) => {
       "Speaking: Role Play",
       "Speaking: Presentation",
       "Speaking: Survey",
+      "Think - Pair - Share",
+      "Vocabulary",
     ],
   };
   const sectionID = "ReadingforGistandDetail";

@@ -1,27 +1,27 @@
 // components/PresentationDisplay.js
 "use client";
 import { useEffect, useRef, useContext } from "react";
-import dynamic from "next/dynamic";
-import "reveal.js/dist/reveal.css";
-//import "reveal.js/dist/theme/black.css";
-//maybe delete this. Ai put it there
-//import "reveal.js/plugin/markdown/markdown.css";
-import PreReadingVocabularySection from "./FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
+
+import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-import GistReadingInstructions from "./FinalizedPresentation/GistReadingInstructions";
-import DetailReadingInstructions from "./FinalizedPresentation/DetailReadingInstructions";
-import PartnerDiscussionSection from "./FinalizedPresentation/PartnerDiscussionSection";
+import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";
+import DetailReadingInstructions from "@app/components/FinalizedPresentation/DetailReadingInstructions";
+import PartnerDiscussionSection from "@app/components/FinalizedPresentation/PartnerDiscussionSection";
+//import ThinkPairShairPresSection from "./FinalPresentationSections/ThinkPairSharePresSection";
 //import "reveal.js/dist/theme/moon.css";
 import CancelIcon from "@mui/icons-material/Cancel";
+import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 
-const PresentationDisplay = ({ presData }) => {
+const PresentationDisplay = ({ presData, includedStages }) => {
   //import("reveal.js/dist/theme/moon.css");
   import("@styles/reveal-hedonic.css");
 
   const revealRef = useRef(null);
   console.log(presData);
+  console.log("Presentation Display - Included Stages: ", includedStages);
+
   const {
     //vocabulary,
     //included,
@@ -30,6 +30,7 @@ const PresentationDisplay = ({ presData }) => {
     sliders,
     textbookExercises,
     textBoxInputs,
+    //includedStages,
     //discussionForms,
   } = useContext(PresentationContext);
   const { included, vocabulary, inputTexts, discussionForms } = useContext(
@@ -55,6 +56,24 @@ const PresentationDisplay = ({ presData }) => {
       })();
     }
   }, []);
+  //Render a component based on the current stage form index
+  function renderComponent(componentName) {
+    const ComponentToRender = PresSectionComponentMap[componentName]
+      ? PresSectionComponentMap[componentName]
+      : null;
+
+    //const ComponentToRender = ReadingForGistandDetailForm;
+
+    if (!ComponentToRender) {
+      return <div>Component not found</div>;
+    }
+    return (
+      <ComponentToRender
+      // section={sectionNumber}
+      // getSectionsLength={getSectionsLength}
+      />
+    );
+  }
 
   return (
     <div
@@ -131,6 +150,15 @@ const PresentationDisplay = ({ presData }) => {
         <section>
           <h1>Book Answers</h1>
         </section>
+        {/* <ThinkPairShairPresSection /> */}
+        {includedStages.map((stage, index) => {
+          if (stage !== "Start Presentation") {
+            const ComponentToRender = renderComponent(stage, index);
+            return ComponentToRender;
+          } else {
+            return null;
+          }
+        })}
       </div>
     </div>
   );

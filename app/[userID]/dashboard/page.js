@@ -18,8 +18,9 @@ const PageComponent = ({ params }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
-  const resolvedParams = use(params);
-  const userID = resolvedParams.userID;
+  //const resolvedParams = use(params);
+  //const userID = resolvedParams.userID;
+  const userID = params.userID;
   const pathname = usePathname();
 
   useEffect(() => {
@@ -95,7 +96,7 @@ const PageComponent = ({ params }) => {
 
   return (
     <div style={{ marginLeft: 40, marginRight: 40 }}>
-      <h1>{resolvedParams.userID}</h1>
+      <h1>{userID}</h1>
       <Grid container spacing={0}>
         {lessons.map((lesson, index) => (
           <Grid item xs={3} padding={2} key={index}>
@@ -103,7 +104,7 @@ const PageComponent = ({ params }) => {
               key={index}
               deleteLesson={deleteLesson}
               lesson={lesson}
-              userID={resolvedParams.userID}
+              userID={userID}
               onClick={() => console.log(lesson.id)}
             />
           </Grid>

@@ -27,6 +27,8 @@ import SpeakingRolePlay from "@app/components/PresentationPrep/CreatePageCompone
 import SpeakingSurvey from "@app/components/PresentationPrep/CreatePageComponents/StageForms/SpeakingSurvey";
 import WarmUpBoardRace from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WarmUpBoardRace";
 import Brainstorming from "@app/components/PresentationPrep/CreatePageComponents/StageForms/Brainstorming";
+import ThinkPairShare from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ThinkPairShare";
+import StartPresentation from "@app/components/PresentationPrep/CreatePageComponents/StartPresentation";
 
 const ComponentMap = {
   "Class Rules": ClassRules,
@@ -42,6 +44,9 @@ const ComponentMap = {
   "Speaking: Survey": SpeakingSurvey,
   "Warm-Up: Board Race": WarmUpBoardRace,
   Brainstorming: Brainstorming,
+  "Think - Pair - Share": ThinkPairShare,
+  Vocabulary: null,
+  "Start Presentation": StartPresentation,
 };
 
 export default ComponentMap;
