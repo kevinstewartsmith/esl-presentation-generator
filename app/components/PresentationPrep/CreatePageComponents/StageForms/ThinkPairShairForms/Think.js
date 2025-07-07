@@ -23,6 +23,18 @@ export default function Think() {
     }));
   };
 
+  const handleSentenceStemChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedStems = [...sentenceStems];
+    updatedStems[index] = {
+      ...updatedStems[index],
+      [name]: value,
+    };
+
+    setSentenceStems(updatedStems);
+    updateThinkPhase(updatedStems); // Assuming your context accepts an array
+  };
+
   async function getSentenceStems() {
     try {
       console.log("getSentenceStems called");
@@ -135,14 +147,14 @@ export default function Think() {
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
               {sentenceStems
                 ? sentenceStems.map((sentenceStem, index) => (
-                    <input
+                    <textarea
                       type="text"
                       name="sentence_stem"
                       value={sentenceStem.sentence_stem}
-                      //onChange={}
+                      onChange={(e) => handleSentenceStemChange(index, e)}
                       className="w-full border rounded px-3 py-2"
                       placeholder="Your your sentence stem"
-                      rows="4"
+                      rows="2"
                     />
                   ))
                 : null}
@@ -154,14 +166,14 @@ export default function Think() {
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
               {sentenceStems
                 ? sentenceStems.map((sentenceStem, index) => (
-                    <input
+                    <textarea
                       type="text"
                       name="prompting_question"
                       value={sentenceStem.prompting_question}
-                      //onChange={}
+                      onChange={(e) => handleSentenceStemChange(index, e)}
                       className="w-full border rounded px-3 py-2"
                       placeholder="Your your sentence stem"
-                      rows="4"
+                      rows="2"
                     />
                   ))
                 : null}
@@ -180,14 +192,14 @@ export default function Think() {
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
               {sentenceStems
                 ? sentenceStems.map((sentenceStem, index) => (
-                    <input
+                    <textarea
                       type="text"
                       name="sharing_statement"
                       value={sentenceStem.sharing_statement}
-                      //onChange={}
+                      onChange={(e) => handleSentenceStemChange(index, e)}
                       className="w-full border rounded px-3 py-2"
                       placeholder="Your your sentence stem"
-                      rows="4"
+                      rows="2"
                     />
                   ))
                 : null}
