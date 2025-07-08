@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Think from "./ThinkPairShairForms/Think";
+import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
 
 const ThinkPairShare = ({ getSectionsLength, section }) => {
+  const { fetchThinkPhaseDataFromDB } = useContext(ThinkPairShareContext);
   const sections = [
     <Think />,
     <div>ThinkPairShare 2</div>,
@@ -15,6 +17,8 @@ const ThinkPairShare = ({ getSectionsLength, section }) => {
     console.log("Think - Pair - Share Length" + sectionsLength);
 
     getSectionsLength(sectionsLength);
+
+    fetchThinkPhaseDataFromDB();
   }, []);
 
   //return <div>ThinkPairShare Component</div>;

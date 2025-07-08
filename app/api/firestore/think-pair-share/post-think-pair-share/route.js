@@ -9,11 +9,13 @@ export const POST = async (request) => {
     const lessonID = url.searchParams.get("lessonID");
     const stageID = url.searchParams.get("stageID");
     const data = url.searchParams.get("data");
+    const phase = url.searchParams.get("phase");
 
     console.log(`userID: ${userID}`);
     console.log(`lessonID: ${lessonID}`);
     console.log(`stageID: ${stageID}`);
     console.log(`data: ${data}`);
+    console.log(`phase: ${phase}`);
 
     const parsedThinkPairShare = JSON.parse(data);
 
@@ -21,7 +23,8 @@ export const POST = async (request) => {
       userID,
       lessonID,
       stageID,
-      parsedThinkPairShare
+      parsedThinkPairShare,
+      phase
     );
 
     return new Response("Think - Pair - Share data posted successfully.", {
@@ -69,5 +72,5 @@ async function postThinkPairShareSection(
   //   }
 
   // Add the new vocabulary to the section
-  await sectionRef.set({ ThinkPairShare: thinkPairShare }, { merge: true });
+  await sectionRef.set({ ThinkPhase: thinkPairShare }, { merge: true });
 }

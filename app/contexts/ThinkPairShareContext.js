@@ -52,7 +52,7 @@ const ThinkPairShareProvider = ({ children }) => {
 
       try {
         const response = await fetch(
-          `/api/firestore/think-pair-share/post-think-pair-share?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}`,
+          `/api/firestore/think-pair-share/post-think-pair-share?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
           { method: "POST" }
         );
         const data = await response.json();
@@ -64,6 +64,37 @@ const ThinkPairShareProvider = ({ children }) => {
     postThinkPairShareData();
   }, [thinkPhase]);
 
+  //////////////////////////////////////////////////////
+  ////Start: Fetch Think Phase Data from Firestore//////
+  //////////////////////////////////////////////////////
+  async function fetchThinkPhaseDataFromDB() {
+    const stage = "Think - Pair - Share"; // Use the stage ID directly
+    const encodedStageID = encodeURIComponent(stage);
+    console.log("Getting Think Data (think - pair - share) from Firestore");
+    try {
+      const response = await fetch(
+        `/api/firestore/think-pair-share/get-think-pair-share?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json(); // Parse the JSON response
+      console.log("Think Phase DATA from Firestore:", data);
+      //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
+      //data.texts ? setTextbook(data.texts) : null;
+      // data.questions.transcript
+      //   ? setQuestions(data.questions.transcript)
+      //   : null;
+      //data.questions ? setQuestions(data.questions) : null;
+      //data.answers ? setAnswers(data.answers) : null;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  ////////////////////////////////////////////////
+  ///End: Fetch Think Phase Data from Firestore///
+  ////////////////////////////////////////////////
+
   return (
     <ThinkPairShareContext.Provider
       value={{
@@ -74,6 +105,7 @@ const ThinkPairShareProvider = ({ children }) => {
         updatePairPhase,
         updateSharePhase,
         updateThinkPairShareLessonID,
+        fetchThinkPhaseDataFromDB,
       }}
     >
       {children}
