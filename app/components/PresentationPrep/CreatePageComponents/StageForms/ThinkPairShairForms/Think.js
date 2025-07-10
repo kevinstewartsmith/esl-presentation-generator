@@ -145,8 +145,9 @@ export default function Think() {
         <Grid item xs={3}>
           <div>
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
-              {sentenceStems
-                ? sentenceStems.map((sentenceStem, index) => (
+              {thinkPhase
+                ? //? sentenceStems.map((sentenceStem, index) => (
+                  thinkPhase.map((sentenceStem, index) => (
                     <textarea
                       type="text"
                       name="sentence_stem"

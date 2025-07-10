@@ -79,14 +79,14 @@ const ThinkPairShareProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Think Phase DATA from Firestore:", data);
-      //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
-      //data.texts ? setTextbook(data.texts) : null;
-      // data.questions.transcript
-      //   ? setQuestions(data.questions.transcript)
-      //   : null;
-      //data.questions ? setQuestions(data.questions) : null;
-      //data.answers ? setAnswers(data.answers) : null;
+      console.log("Think Phase DATA from Firestore:", data.ThinkPhase);
+      //updateThinkPhase(data.ThinkPhase);
+
+      const arrayData = Object.values(data.ThinkPhase);
+      console.log("Array Data:", arrayData);
+      setSentenceStems(arrayData);
+      updateThinkPhase(arrayData);
+      //setThinkPhase
     } catch (error) {
       console.error(error);
     }

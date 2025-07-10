@@ -9,6 +9,7 @@ import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const PageComponent = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =
@@ -21,6 +22,14 @@ const PageComponent = ({ params }) => {
   //const resolvedParams = use(params);
   //const userID = resolvedParams.userID;
   const userID = params.userID;
+  //update userid in lesson store
+  const { setCurrentUserID } = useLessonStore();
+  //setCurrentUserID(params.userID);
+
+  useEffect(() => {
+    setCurrentUserID(userID);
+  }, [userID, setCurrentUserID]);
+
   const pathname = usePathname();
 
   useEffect(() => {

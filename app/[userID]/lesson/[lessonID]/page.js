@@ -13,9 +13,12 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
+  const { currentUserID, setCurrentLessonID, currentLessonID } =
+    useLessonStore();
 
   console.log("Router: ", pathname);
   const { updateLessonID, lessonID } = useContext(
@@ -45,6 +48,14 @@ const LessonPageComponent = ({ params }) => {
   updateLessonID(paramsLessonID);
   updateLessonIDForAudioData(paramsLessonID);
   updateThinkPairShareLessonID(paramsLessonID);
+
+  //setCurrentLessonID(paramsLessonID);
+
+  //update currentLessonID in lesson store with useEffect
+  useEffect(() => {
+    setCurrentLessonID(paramsLessonID);
+  }, [paramsLessonID]);
+
   useEffect(() => {
     updatePathname(pathname);
     async function fetchData() {
@@ -93,6 +104,8 @@ const LessonPageComponent = ({ params }) => {
 
   return (
     <div>
+      <h1>{"Zustand Store: " + currentUserID}</h1>
+      <h1>{"ZustandLesson ID: " + currentLessonID}</h1>
       <h1>{lessonID}</h1>
       <h1>{lesson ? lesson.title : "No title"}</h1>
       {/* <h1>{lesson.title}</h1> */}
