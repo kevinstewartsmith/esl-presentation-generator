@@ -19,7 +19,7 @@ export const POST = async (request) => {
 
     const parsedThinkPairShare = JSON.parse(data);
 
-    const response = await postThinkPairShareSection(
+    await postThinkPairShareSection(
       userID,
       lessonID,
       stageID,
@@ -60,7 +60,7 @@ async function postThinkPairShareSection(
     .collection("ThinkPairShare")
     .doc("thinkPairShare");
 
-  const sectionDoc = await sectionRef.get();
+  //const sectionDoc = await sectionRef.get();
 
   // Check if the section already exists
   //   if (!sectionDoc.exists) {

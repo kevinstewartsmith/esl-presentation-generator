@@ -1,19 +1,30 @@
+"use client";
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
-export const useLessonStore = create((set) => ({
-  //Current logged in user
-  currentUserID: null,
+export const useLessonStore = create(
+  subscribeWithSelector((set, get) => ({
+    // Current logged-in user
+    currentUserID: null,
 
-  //Current lesson details
-  currentLessonID: null,
+    // Current lesson details
+    currentLessonID: null,
 
-  presentationIsShowing: false,
-  hidePresentation: () => set({ presentationIsShowing: false }),
-  showPresentation: () => set({ presentationIsShowing: true }),
+    presentationIsShowing: false,
+    hidePresentation: () => set({ presentationIsShowing: false }),
+    showPresentation: () => set({ presentationIsShowing: true }),
 
-  setCurrentUserID: (id) => set({ currentUserID: id }),
-  setCurrentLessonID: (id) => set({ currentLessonID: id }),
+    setCurrentUserID: (id) => set({ currentUserID: id }),
+    setCurrentLessonID: (id) => set({ currentLessonID: id }),
 
-  //   warmup: {},
-  //   updateWarmup: (data) => set((state) => ({ warmup: { ...state.warmup, ...data } })),
-}));
+    thinkPhase: [],
+
+    updateThinkPhase: (newPhase) => {
+      console.log("🧠 Updating thinkPhase - Old ref:", get().thinkPhase);
+      set({ thinkPhase: [...newPhase] });
+      console.log("✅ New ref:", get().thinkPhase);
+    },
+
+    clearThinkPhase: () => set({ thinkPhase: [] }),
+  }))
+);

@@ -7,6 +7,9 @@ import { ReadingForGistAndDetailContextProvider } from "./contexts/ReadingForGis
 import { ThinkPairShareProvider } from "./contexts/ThinkPairShareContext";
 import Nav from "./components/Nav";
 import { DashboardContextProvider } from "./contexts/DashboardContext";
+import dynamic from "next/dynamic";
+// Dynamically import the client-only component
+import ZustandSyncWrapper from "@app/stores/ZustandSyncWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,21 +21,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ThinkPairShareProvider>
-        <ReadingForGistAndDetailContextProvider>
-          {/* <DashboardContextProvider> */}
-          <AudioTextProvider>
-            {/* <PresentationContextProvider> */}
-            <GlobalVariablesContextProvider>
-              <body className={inter.className}>
+      <body className={inter.className}>
+        <ZustandSyncWrapper />
+        <ThinkPairShareProvider>
+          <ReadingForGistAndDetailContextProvider>
+            {/* <DashboardContextProvider> */}
+            <AudioTextProvider>
+              {/* <PresentationContextProvider> */}
+              <GlobalVariablesContextProvider>
+                {/* <body className={inter.className}> */}
                 <Nav>{children}</Nav>
-              </body>
-            </GlobalVariablesContextProvider>
-            {/* </PresentationContextProvider> */}
-          </AudioTextProvider>
-          {/* </DashboardContextProvider> */}
-        </ReadingForGistAndDetailContextProvider>
-      </ThinkPairShareProvider>
+                {/* </body> */}
+              </GlobalVariablesContextProvider>
+              {/* </PresentationContextProvider> */}
+            </AudioTextProvider>
+            {/* </DashboardContextProvider> */}
+          </ReadingForGistAndDetailContextProvider>
+        </ThinkPairShareProvider>
+      </body>
     </html>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useContext } from "react";
 import Think from "./ThinkPairShairForms/Think";
 import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
@@ -18,7 +19,7 @@ const ThinkPairShare = ({ getSectionsLength, section }) => {
 
     getSectionsLength(sectionsLength);
 
-    fetchThinkPhaseDataFromDB();
+    //fetchThinkPhaseDataFromDB();
   }, []);
 
   //return <div>ThinkPairShare Component</div>;

@@ -13,7 +13,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
-import { useLessonStore } from "@app/stores/useLessonStore";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 
 const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
@@ -78,6 +78,7 @@ const LessonPageComponent = ({ params }) => {
       }
     }
     fetchData();
+
     async function getLessonStages() {
       try {
         const response = await fetch(
@@ -85,11 +86,7 @@ const LessonPageComponent = ({ params }) => {
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);
-        //get first item of data.root
 
-        //const strings = data.root.map((obj) => Object.values(obj)[0]);
-        //console.log("Strings:", strings);
-        //updateStages(data);
         updateItems(data);
       } catch (error) {
         console.error(error);

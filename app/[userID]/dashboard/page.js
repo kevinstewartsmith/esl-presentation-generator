@@ -9,7 +9,8 @@ import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
-import { useLessonStore } from "@app/stores/useLessonStore";
+import { useLessonStore } from "@app/stores/UseLessonStore";
+//import ZustandSyncClient from "@app/stores/ZustandSyncClient"; // Import ZustandSyncClient
 
 const PageComponent = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =
@@ -135,9 +136,11 @@ const PageComponent = ({ params }) => {
 };
 
 const page = (props) => (
-  <DashboardContextProvider>
-    <PageComponent {...props} />
-  </DashboardContextProvider>
+  <>
+    <DashboardContextProvider>
+      <PageComponent {...props} />
+    </DashboardContextProvider>
+  </>
 );
 
 export default page;

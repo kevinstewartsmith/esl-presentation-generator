@@ -1,12 +1,18 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-//mui grid
 import { Grid } from "@mui/material";
-
 import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
+import { useLessonStore } from "@app/stores/UseLessonStore";
+import DebugZustandButton from "@app/stores/DebugZustandButton";
 
 export default function Think() {
-  const { thinkPhase, updateThinkPhase } = useContext(ThinkPairShareContext);
+  //const { thinkPhase, updateThinkPhase } = useContext(ThinkPairShareContext);
+  // const { updateThinkPhase, thinkPhase, currentUserID, currentLessonID } =
+  //   useLessonStore();
+  const updateThinkPhase = useLessonStore((state) => state.updateThinkPhase);
+  const thinkPhase = useLessonStore((state) => state.thinkPhase);
+  const currentUserID = useLessonStore((state) => state.currentUserID);
+  const currentLessonID = useLessonStore((state) => state.currentLessonID);
   const [formData, setFormData] = useState({
     theme: "",
     number: "",
@@ -25,13 +31,13 @@ export default function Think() {
 
   const handleSentenceStemChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedStems = [...sentenceStems];
+    const updatedStems = [...thinkPhase];
     updatedStems[index] = {
       ...updatedStems[index],
       [name]: value,
     };
 
-    setSentenceStems(updatedStems);
+    //setSentenceStems(updatedStems);
     updateThinkPhase(updatedStems); // Assuming your context accepts an array
   };
 
@@ -74,10 +80,16 @@ export default function Think() {
       console.log(typeof parsedData); // Log the type of parsed data
 
       //loadVocabulary(parsedData);
-      setSentenceStems(parsedData);
+      //setSentenceStems(parsedData);
+      //updateThinkPhase(parsedData);
       updateThinkPhase(parsedData);
+      console.log(
+        "👁 thinkPhase in component after update:",
+        useLessonStore.getState().thinkPhase
+      );
+
       console.log("Updated thinkPhase:", thinkPhase);
-      console.log("Updated sentence stems:", sentenceStems);
+      //console.log("Updated sentence stems:", sentenceStems);
     } catch (error) {
       console.error("Error fetching vocabulary:", error);
     }
@@ -92,7 +104,14 @@ export default function Think() {
 
   return (
     <>
-      <h1>Think crap</h1>
+      <h1>Think - Pair - Share</h1>
+      <h1>{"Zustand Store: " + currentUserID}</h1>
+      <h1>{"ZustandLesson ID: " + currentLessonID}</h1>
+      <button onClick={() => updateThinkPhase([{ sentence_stem: "test" }])}>
+        🔁 Trigger thinkPhase Update
+      </button>
+      <DebugZustandButton />
+
       <Grid container spacing={2} direction="row">
         <Grid item xs={3}>
           <form
@@ -149,6 +168,7 @@ export default function Think() {
                 ? //? sentenceStems.map((sentenceStem, index) => (
                   thinkPhase.map((sentenceStem, index) => (
                     <textarea
+                      key={sentenceStem.id || index}
                       type="text"
                       name="sentence_stem"
                       value={sentenceStem.sentence_stem}
@@ -165,9 +185,10 @@ export default function Think() {
         <Grid item xs={3}>
           <div>
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
-              {sentenceStems
-                ? sentenceStems.map((sentenceStem, index) => (
+              {thinkPhase
+                ? thinkPhase.map((sentenceStem, index) => (
                     <textarea
+                      key={sentenceStem.id || index}
                       type="text"
                       name="prompting_question"
                       value={sentenceStem.prompting_question}
@@ -179,21 +200,15 @@ export default function Think() {
                   ))
                 : null}
             </form>
-            {/* {sentenceStems
-              ? sentenceStems.map((sentenceStem, index) => (
-                  <div key={index}>
-                    <h2>{sentenceStem.prompting_question}</h2>
-                  </div>
-                ))
-              : null} */}
           </div>
         </Grid>
         <Grid item xs={3}>
           <div>
             <form className="max-w-md mx-auto p-4 shadow-lg rounded-xl space-y-4">
-              {sentenceStems
-                ? sentenceStems.map((sentenceStem, index) => (
+              {thinkPhase
+                ? thinkPhase.map((sentenceStem, index) => (
                     <textarea
+                      key={sentenceStem.id || index}
                       type="text"
                       name="sharing_statement"
                       value={sentenceStem.sharing_statement}
