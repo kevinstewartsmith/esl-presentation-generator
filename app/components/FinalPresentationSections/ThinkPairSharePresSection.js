@@ -1,10 +1,12 @@
 import { useEffect, useRef, useContext } from "react";
 import "reveal.js/dist/reveal.css";
-import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
+//import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 
 const ThinkPairSharePresSection = () => {
   import("@styles/reveal-hedonic.css");
-  const { thinkPhase } = useContext(ThinkPairShareContext);
+  // const { thinkPhase } = useContext(ThinkPairShareContext);
+  const thinkPhase = useLessonStore((state) => state.thinkPhase);
 
   useEffect(() => {
     console.log("thinkPhase updated in Pres Section:", thinkPhase);

@@ -41,6 +41,18 @@ export default function Think() {
     updateThinkPhase(updatedStems); // Assuming your context accepts an array
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `/api/firestore/think-pair-share/get-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=Think%20-%20Pair%20-%20Share`
+      );
+      const json = await res.json();
+      useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
+    };
+
+    fetchData();
+  }, []);
+
   async function getSentenceStems() {
     try {
       console.log("getSentenceStems called");

@@ -25,6 +25,13 @@ export const useLessonStore = create(
       console.log("✅ New ref:", get().thinkPhase);
     },
 
+    setHydratedThinkPhase: (data) => {
+      set({
+        thinkPhase: data,
+        hasHydratedThinkPhase: true,
+      });
+    },
+
     clearThinkPhase: () => set({ thinkPhase: [] }),
   }))
 );

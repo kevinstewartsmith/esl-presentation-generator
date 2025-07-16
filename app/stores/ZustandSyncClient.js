@@ -43,15 +43,6 @@ export default function ZustandSyncClient() {
   useEffect(() => {
     console.log("✅ ZustandSyncClient mounted");
 
-    // let currentUserID = useLessonStore.getState().currentUserID;
-    // let currentLessonID = useLessonStore.getState().currentLessonID;
-    // let currentUserID = useLessonStore((state) => state.currentUserID);
-    // let currentLessonID = useLessonStore((state) => state.currentLessonID);
-
-    // console.log("🧪 Initial currentUserID:", currentUserID);
-    // console.log("🧪 Initial currentLessonID:", currentLessonID);
-    // console.log("Should have logged currentUserID and currentLessonID");
-
     const state = useLessonStore.getState();
     console.log("🧪 Zustand current state:", state);
 
@@ -74,45 +65,39 @@ export default function ZustandSyncClient() {
 
     const unsubThinkPhase = useLessonStore.subscribe(
       (state) => state.thinkPhase,
-      async (thinkPhase) => {
-        clearTimeout(debounceTimer);
-        // Get fresh state values each time
-        debounceTimer = setTimeout(async () => {
-          const { currentUserID, currentLessonID } = useLessonStore.getState();
-          console.log("🧪 Updating thinkPhase");
+      (thinkPhase) => {
+        const { currentUserID, currentLessonID, hasHydratedThinkPhase } =
+          useLessonStore.getState();
 
+        // 🧯 Skip autosave until we've hydrated from Firestore
+        if (!hasHydratedThinkPhase) {
+          console.log("⏭ Skipping autosave: hydration not complete");
+          return;
+        }
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
           if (
             !Array.isArray(thinkPhase) ||
             !currentUserID ||
             !currentLessonID
           ) {
-            console.log("⛔ Missing values", {
-              thinkPhase,
-              currentUserID,
-              currentLessonID,
-            });
+            console.log("⛔ Missing values for autosave");
             return;
           }
-
-          console.log("🧪 Subscribing to thinkPhase changes...");
-          console.log("🔥 Zustand: thinkPhase changed", {
-            currentUserID,
-            currentLessonID,
-            thinkPhase,
-          });
 
           const encodedStageID = encodeURIComponent("Think - Pair - Share");
           const stringifiedThinkPhase = JSON.stringify(thinkPhase);
 
           try {
-            const response = await fetch(
+            const res = await fetch(
               `/api/firestore/think-pair-share/post-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
               { method: "POST" }
             );
-            const data = await response.json();
-            console.log("✅ Autosaved to Firestore:", data);
-          } catch (error) {
-            console.error("❌ Error autosaving thinkPhase:", error);
+            const data = await res.json();
+            console.log("✅ Autosaved:", data);
+          } catch (err) {
+            console.error("❌ Autosave failed", err);
           }
         }, 5000);
       }
