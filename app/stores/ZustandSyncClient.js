@@ -70,42 +70,51 @@ export default function ZustandSyncClient() {
     );
     console.log("📡 Subscribed to currentLessonID");
 
+    let debounceTimer;
+
     const unsubThinkPhase = useLessonStore.subscribe(
       (state) => state.thinkPhase,
       async (thinkPhase) => {
+        clearTimeout(debounceTimer);
         // Get fresh state values each time
-        const { currentUserID, currentLessonID } = useLessonStore.getState();
-        console.log("🧪 Updating thinkPhase");
+        debounceTimer = setTimeout(async () => {
+          const { currentUserID, currentLessonID } = useLessonStore.getState();
+          console.log("🧪 Updating thinkPhase");
 
-        if (!Array.isArray(thinkPhase) || !currentUserID || !currentLessonID) {
-          console.log("⛔ Missing values", {
-            thinkPhase,
+          if (
+            !Array.isArray(thinkPhase) ||
+            !currentUserID ||
+            !currentLessonID
+          ) {
+            console.log("⛔ Missing values", {
+              thinkPhase,
+              currentUserID,
+              currentLessonID,
+            });
+            return;
+          }
+
+          console.log("🧪 Subscribing to thinkPhase changes...");
+          console.log("🔥 Zustand: thinkPhase changed", {
             currentUserID,
             currentLessonID,
+            thinkPhase,
           });
-          return;
-        }
 
-        console.log("🧪 Subscribing to thinkPhase changes...");
-        console.log("🔥 Zustand: thinkPhase changed", {
-          currentUserID,
-          currentLessonID,
-          thinkPhase,
-        });
+          const encodedStageID = encodeURIComponent("Think - Pair - Share");
+          const stringifiedThinkPhase = JSON.stringify(thinkPhase);
 
-        const encodedStageID = encodeURIComponent("Think - Pair - Share");
-        const stringifiedThinkPhase = JSON.stringify(thinkPhase);
-
-        try {
-          const response = await fetch(
-            `/api/firestore/think-pair-share/post-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
-            { method: "POST" }
-          );
-          const data = await response.json();
-          console.log("✅ Autosaved to Firestore:", data);
-        } catch (error) {
-          console.error("❌ Error autosaving thinkPhase:", error);
-        }
+          try {
+            const response = await fetch(
+              `/api/firestore/think-pair-share/post-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
+              { method: "POST" }
+            );
+            const data = await response.json();
+            console.log("✅ Autosaved to Firestore:", data);
+          } catch (error) {
+            console.error("❌ Error autosaving thinkPhase:", error);
+          }
+        }, 5000);
       }
     );
     console.log("📡 Subscribed to thinkPhase changes");
@@ -136,11 +145,13 @@ export default function ZustandSyncClient() {
     );
 
     return () => {
+      clearTimeout(debounceTimer);
       unsubUserID();
       unsubLessonID();
       unsubThinkPhase();
       unsubTest();
       unsubAll();
+
       console.log("📴 All subscriptions unsubscribed");
     };
   }, []);
