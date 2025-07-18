@@ -3,7 +3,11 @@ import AddTextBook from "@app/components/PresentationPrep/AddTextBook";
 import { Grid } from "@mui/material";
 
 const ListeningQuestionUploader = ({ stageID }) => {
-  const sections = ["ListeningQuestionText"];
+  const sections = [
+    "ListeningQuestionText",
+    "ListeningAnswersText",
+    "ListeningTranscript",
+  ];
   const makeGridItem = (component, key) => {
     return (
       <Grid item xs={4} sm={4} key={key} padding={1}>

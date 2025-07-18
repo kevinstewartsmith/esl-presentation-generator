@@ -12,34 +12,6 @@ export default function ZustandSyncClient() {
     console.log("🧩 ZustandSyncClient initialized");
   }, []);
 
-  ////////////////////////////////////////
-  const currentUserID = useLessonStore((state) => state.currentUserID);
-  const currentLessonID = useLessonStore((state) => state.currentLessonID);
-  const thinkPhase = useLessonStore((state) => state.thinkPhase);
-
-  useEffect(() => {
-    console.log(
-      "React subscription useEFFECT - currentUserID changed:",
-      currentUserID
-    );
-  }, [currentUserID]);
-
-  useEffect(() => {
-    console.log(
-      "React subscription useEFFECT - currentLessonID changed:",
-      currentLessonID
-    );
-  }, [currentLessonID]);
-
-  useEffect(() => {
-    console.log(
-      "React subscription useEFFECT - thinkPhase changed:",
-      thinkPhase
-    );
-  }, [thinkPhase]);
-
-  ////////////////////////////////////////
-
   useEffect(() => {
     console.log("✅ ZustandSyncClient mounted");
 
@@ -129,6 +101,29 @@ export default function ZustandSyncClient() {
       }
     );
 
+    // Audio Stage - Start
+    const unsubAudioTranscript = useLessonStore.subscribe(
+      (state) => state.audioTranscript,
+      (transcript) => {
+        console.log("✍️Audio Transcript updated:", transcript);
+      }
+    );
+    console.log("📡 Subscribed to audioTranscript changes");
+    const unsubAudioQuestions = useLessonStore.subscribe(
+      (state) => state.audioQuestions,
+      (questions) => {
+        console.log("❓Audio Questions updated:", questions);
+      }
+    );
+    console.log("📡 Subscribed to audioQuestions changes");
+    const unsubAudioAnswers = useLessonStore.subscribe(
+      (state) => state.audioAnswers,
+      (answers) => {
+        console.log("🗣️Audio Answers updated:", answers);
+      }
+    );
+    console.log("📡 Subscribed to audioAnswers changes");
+
     return () => {
       clearTimeout(debounceTimer);
       unsubUserID();
@@ -136,6 +131,10 @@ export default function ZustandSyncClient() {
       unsubThinkPhase();
       unsubTest();
       unsubAll();
+
+      unsubAudioTranscript();
+      unsubAudioQuestions();
+      unsubAudioAnswers();
 
       console.log("📴 All subscriptions unsubscribed");
     };

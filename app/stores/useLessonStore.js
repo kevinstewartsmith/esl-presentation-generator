@@ -17,6 +17,7 @@ export const useLessonStore = create(
     setCurrentUserID: (id) => set({ currentUserID: id }),
     setCurrentLessonID: (id) => set({ currentLessonID: id }),
 
+    // Think-Pair-Share Phase - Start
     thinkPhase: [],
 
     updateThinkPhase: (newPhase) => {
@@ -33,5 +34,18 @@ export const useLessonStore = create(
     },
 
     clearThinkPhase: () => set({ thinkPhase: [] }),
+    // Think-Pair-Share Phase - End
+
+    // Audio Stage - Start
+    audioTranscript: "",
+    updateAudioTranscript: (text) => set({ audioTranscript: text }),
+
+    audioQuestions: [],
+    updateAudioQuestions: (questions) => set({ audioQuestions: questions }),
+
+    audioAnswers: [],
+    updateAudioAnswers: (answers) => set({ audioAnswers: answers }),
+
+    // Audio Stage - End
   }))
 );

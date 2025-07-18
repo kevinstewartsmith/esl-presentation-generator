@@ -4,8 +4,8 @@ import { createWorker } from "tesseract.js";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { AudioTextContext } from "@app/contexts/AudioTextContext";
-import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 //import { read } from "fs";
 
 // Styles
@@ -66,26 +66,12 @@ const thumbInner = {
   overflow: "hidden",
 };
 
-// const img = {
-//   display: "block",
-//   width: "auto",
-//   height: "auto",
-// };
 const img = {
   display: "block",
   maxWidth: "100%",
   maxHeight: "100%",
   objectFit: "contain", // Ensures that the image fits within its container while maintaining its aspect ratio
 };
-
-// const buttonStyle = {
-//   backgroundColor: "blue",
-//   color: "white",
-//   padding: 10,
-//   borderRadius: 5,
-//   borderWidth: 1,
-//   borderColor: "black",
-// };
 
 function AddTextBook({ category, stageID }) {
   console.log("The category is: ", category);
@@ -110,8 +96,19 @@ function AddTextBook({ category, stageID }) {
     updateTextbookTranscript,
   } = useContext(ReadingForGistAndDetailContext);
 
-  const { audioQuestions, updateAudioQuestions } = useContext(AudioTextContext);
-
+  //Audio Questions and Answers for useLessonStore
+  const audioQuestions = useLessonStore((state) => state.audioQuestions);
+  const updateAudioQuestions = useLessonStore(
+    (state) => state.updateAudioQuestions
+  );
+  const audioAnswers = useLessonStore((state) => state.audioAnswers);
+  const updateAudioAnswers = useLessonStore(
+    (state) => state.updateAudioAnswers
+  );
+  const audioTranscript = useLessonStore((state) => state.audioTranscript);
+  const updateAudioTranscript = useLessonStore(
+    (state) => state.updateAudioTranscript
+  );
   //Reads the text from the image
   async function handleReadText(file) {
     const worker = await createWorker();
@@ -145,13 +142,16 @@ function AddTextBook({ category, stageID }) {
         return null;
       case "AnswerText":
         updateAnswers(text);
-        // updateAnswers((prevState) => ({
-        //   ...prevState, // Spread the previous state
-        //   transcript: text, // Update the transcript
-        // }));
+
         return null;
       case "ListeningQuestionText":
         updateAudioQuestions(text);
+        return null;
+      case "ListeningAnswersText":
+        updateAudioAnswers(text);
+        return null;
+      case "ListeningTranscript":
+        updateAudioTranscript(text);
         return null;
       default:
         console.log("No category selected");
@@ -222,17 +222,17 @@ function AddTextBook({ category, stageID }) {
   const handleTextDisplay = (category, textbook, questions, answers) => {
     switch (category) {
       case "BookText":
-        // return (
-        //   <h1 style={{ color: "black" }}>{textbook?.transcript ?? null}</h1>
-        // );
         return <h1 style={{ color: "black" }}>{textbook}</h1>;
       case "QuestionText":
         return <h1 style={{ color: "black" }}>{questions}</h1>;
       case "AnswerText":
         return <h1 style={{ color: "black" }}>{answers}</h1>;
-
       case "ListeningQuestionText":
         return <h1 style={{ color: "black" }}>{audioQuestions}</h1>;
+      case "ListeningAnswersText":
+        return <h1 style={{ color: "black" }}>{audioAnswers}</h1>;
+      case "ListeningTranscript":
+        return <h1 style={{ color: "black" }}>{audioTranscript}</h1>;
       default:
         //console.log("No category selected");
         return null;
@@ -247,6 +247,13 @@ function AddTextBook({ category, stageID }) {
         return <button onClick={handleClick}>Clean Questions</button>;
       case "AnswerText":
         return <button onClick={handleClick}>Clean Answers</button>;
+      case "ListeningQuestionText":
+        return <button onClick={handleClick}>Clean Audio Questions</button>;
+      case "ListeningAnswersText":
+        return <button onClick={handleClick}>Clean Audio Answers</button>;
+      case "ListeningTranscript":
+        return <button onClick={handleClick}>Clean Audio Transcript</button>;
+
       default:
         //console.log("No category selected");
         return null;
@@ -265,6 +272,10 @@ function AddTextBook({ category, stageID }) {
           return answers;
         case "ListeningQuestionText":
           return audioQuestions;
+        case "ListeningAnswersText":
+          return audioAnswers;
+        case "ListeningTranscript":
+          return audioTranscript;
         default:
           return "No category selected";
       }
@@ -279,14 +290,6 @@ function AddTextBook({ category, stageID }) {
     // updatetext so that key textEdits hold the value [...text, textEdits: data]
     console.log("The data is: ", data);
     updateTextbookTranscript(data);
-    // handleTextStateMemory(data);
-    // updateText((prevTextEdits) => [
-    //   ...prevTextEdits,
-    //   {
-    //     transcript: transcript,
-    //     textEdits: [...(prevTextEdits?.textEdits || []), data], // Append the latest edit to the array
-    //   },
-    // ]);
   }
 
   const dragNDropText = (category) => {
@@ -294,11 +297,15 @@ function AddTextBook({ category, stageID }) {
       case "BookText":
         return "Book Text";
       case "QuestionText":
-        return "Question Text";
+        return "QUESTION Text";
       case "AnswerText":
-        return "Answer Text";
+        return "ANSWER Text";
       case "ListeningQuestionText":
-        return "Audio Questions";
+        return "Audio QUESTIONS";
+      case "ListeningAnswersText":
+        return "Audio ANSWERS";
+      case "ListeningTranscript":
+        return "Audio TRANSCRIPT";
       default:
         return "No category selected";
     }
