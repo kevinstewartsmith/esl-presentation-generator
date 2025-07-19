@@ -28,36 +28,47 @@ export function snippetPrompt(questions, transcriptStr, wordsArray) {
   snip_ends.end_word_idx: The position of the end word within the array elementas a string. 
   
   Here is the transcript array: ${wordsArray}`;
-
-  const prompt2 = `Read the given questions: ${questions}. Determine what kind of questions they are (open-ended, true/false, fill in the blank).
-  Generate JSON data with the following properties and no natural language response. Make sure the results are a stringified array of objects. Respond with only the data:
-  {
-    question:###,
-    answer: ###,
-    snippet: ###,
-    start_word_idx: ###,
-    end_word_idx: ###,
-  }
-  question: the given questions as a string.
-  answer: The answer as a string.
-  snippet: the segment of the transcript that answers the question. It should not include the question as a string.
-  start_word_idx: The position of the first word of snippet. Use this array to find the index: ${wordsArray}. For example, if the snippet is: "I like cats.", the index should be for the word "I" because it's the first word of the snippet. 
-  snip_ends.end_word_idx: The position of the ending word of snippet within this array: ${wordsArray}.  For example, if the snippet is: "I like cats.", the index should be for the word "cats because it is the last word of the snippet.". 
-  
-  Here is the transcript string: ${transcriptStr}`;
-
-  return prompt2;
 }
+
+//   const prompt2 = `Read the given questions: ${questions}. Determine what kind of questions they are (open-ended, true/false, fill in the blank).
+//   Generate JSON data with the following properties and no natural language response. Make sure the results are a stringified array of objects. Respond with only the data:
+//   {
+//     question:###,
+//     answer: ###,
+//     snippet: ###,
+//     start_word_idx: ###,
+//     end_word_idx: ###,
+//   }
+//   question: the given questions as a string.
+//   answer: The answer as a string.
+//   snippet: the segment of the transcript that answers the question. It should not include the question as a string.
+//   start_word_idx: The position of the first word of snippet. Use this array to find the index: ${wordsArray}. For example, if the snippet is: "I like cats.", the index should be for the word "I" because it's the first word of the snippet.
+//   snip_ends.end_word_idx: The position of the ending word of snippet within this array: ${wordsArray}.  For example, if the snippet is: "I like cats.", the index should be for the word "cats because it is the last word of the snippet.".
+
+//   Here is the transcript string: ${transcriptStr}`;
+
+//   return prompt2;
+// }
 
 export function makeQuestionsPrompt(searchQuery) {
-  const prompt = `Make an array JS objects out of this text in {number: ##, question:## } format. Do not include the question number in the text of the question value: ${searchQuery}`;
+  const prompt = `Make an array of JS objects out of this text in {number: ##, question:## } format. Do not include the question number in the text of the question value: ${searchQuery}`;
   return prompt;
 }
-
+export function makeQuestionsArrayPrompt(searchQuery) {
+  const prompt = `Return ONLY an array of JS objects in this format: [{"number": 1, "question": "..."}, ...]. Do not include any explanation or formatting. Use valid JSON. Input: ${searchQuery}`;
+  return prompt;
+}
 export function makeAnswersPrompt(searchQuery) {
   const prompt = `Make an array of JS objects out of this text in {number: ##, answer: ## } format. 
   From the text, you will see the number comes before the answer.
   Do not include the answer number in the text of the answer value: ${searchQuery}`;
+  return prompt;
+}
+export function makeAnswersArrayPrompt(searchQuery) {
+  const prompt = `Return only a JSON array of JavaScript objects in this exact format: [{"number": 1, "answer": "..."}, ...].
+  Do not include the number inside the text of the "answer" field. The number appears before the answer in the input text, which you should use to extract and assign each object its correct "number".
+  Do not include any explanation, formatting, or code blocks in your response. Input text: ${searchQuery}`;
+
   return prompt;
 }
 

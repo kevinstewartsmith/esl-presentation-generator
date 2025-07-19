@@ -16,7 +16,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 
 import { usePathname } from "next/navigation";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
-import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
+import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";

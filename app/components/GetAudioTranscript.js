@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AudioTextContext } from "../contexts/AudioTextContext";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 
 const GetAudioTranscript = () => {
   const {
@@ -7,9 +8,22 @@ const GetAudioTranscript = () => {
     transcript,
     updateS2tData,
     selectedAudioFileName,
-    wordTimeArray,
-    updateWordTimeArray,
+    //wordTimeArray,
+    //updateWordTimeArray,
   } = useContext(AudioTextContext);
+
+  const updateS2TAudioTranscript = useLessonStore(
+    (state) => state.updateS2TAudioTranscript
+  );
+
+  const updateWordTimeArray = useLessonStore(
+    (state) => state.updateWordTimeArray
+  );
+  const s2TAudioTranscript = useLessonStore(
+    (state) => state.s2TAudioTranscript
+  );
+
+  const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
 
   async function getTranscript() {
     const response = await fetch(
@@ -22,8 +36,11 @@ const GetAudioTranscript = () => {
     }
 
     const data = await response.json();
+
     updateS2tData(data);
     createTimeArray(data);
+    // Update Zustand store with the S2T audio transcript
+    updateS2TAudioTranscript(data);
 
     const combinedTranscript = data
       .map((element) => {
@@ -31,22 +48,23 @@ const GetAudioTranscript = () => {
       })
       .join(" ");
     console.log(combinedTranscript);
-    // for (let i = 0; i < data.length; i++) {
-    //   console.log(data[i].alternatives[0].transcript);
-    // }
 
     updateTranscript(combinedTranscript);
+    updateS2TAudioTranscript(combinedTranscript);
   }
 
   function createTimeArray(text) {
     const wordsInfo = text[text.length - 1].alternatives[0].words;
     updateWordTimeArray(wordsInfo);
+    console.log("⏳ Word Time array created:");
+
     console.log(JSON.stringify(wordsInfo));
   }
   return (
     <div>
       <button onClick={getTranscript}>Get Transcript</button>
-      <p>{transcript ? <p>{transcript}</p> : null}</p>
+      <p>{s2TAudioTranscript ? <p>{s2TAudioTranscript}</p> : null}</p>
+      {/* <p>{wordTimeArray ? <p>{JSON.stringify(wordTimeArray)}</p> : null}</p> */}
     </div>
   );
 };

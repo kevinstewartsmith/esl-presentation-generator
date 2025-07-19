@@ -124,6 +124,13 @@ export default function ZustandSyncClient() {
     );
     console.log("📡 Subscribed to audioAnswers changes");
 
+    const unsubCompleteListeningStageData = useLessonStore.subscribe(
+      (state) => state.completeListeningStageData,
+      (data) => {
+        console.log("📜 Complete Listening Stage Data updated:", data);
+      }
+    );
+
     return () => {
       clearTimeout(debounceTimer);
       unsubUserID();

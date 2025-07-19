@@ -15,7 +15,7 @@
 //   WarmUpBoardRace,
 //  from "@app/components/PresentationPrep/CreatePageComponents/StageForms";
 import ClassRules from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ClassRules";
-import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetail";
+import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/ListeningForGistAndDetail";
 import EffortAndAttitudeScore from "@app/components/PresentationPrep/CreatePageComponents/StageForms/EffortAndAttitudeScore";
 import WarmUpSpeaking from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WarmUpSpeaking";
 import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";

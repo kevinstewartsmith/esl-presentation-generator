@@ -46,6 +46,35 @@ export const useLessonStore = create(
     audioAnswers: [],
     updateAudioAnswers: (answers) => set({ audioAnswers: answers }),
 
+    s2TAudioTranscript: "",
+    updateS2TAudioTranscript: (text) => set({ s2TAudioTranscript: text }),
+
+    wordTimeArray: [],
+    updateWordTimeArray: (array) => set({ wordTimeArray: array }),
+
+    audioClipQuestionData: [],
+    updateAudioClipQuestionData: (data) => set({ audioClipQuestionData: data }),
+
+    updateAudioClipQuestionDataByIndex: (index, key, value) =>
+      set((state) => {
+        const updated = [...state.audioClipQuestionData];
+        if (!updated[index]) return {}; // safeguard
+
+        updated[index] = {
+          ...updated[index],
+          [key]: value,
+        };
+
+        return { audioClipQuestionData: updated };
+      }),
+
+    completeListeningStageData: {
+      questionsAndAnswers: [],
+      transcript: "",
+      wordArray: [],
+    },
+    updateCompleteListeningStageData: (data) =>
+      set({ completeListeningStageData: data }),
     // Audio Stage - End
   }))
 );

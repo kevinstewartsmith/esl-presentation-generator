@@ -1,13 +1,15 @@
 import React, { useEffect, useContext } from "react";
-import ListeningUploadQuestions from "./ListeningForGistAndDetailForms/ListeningUploadQuestions";
-import ListeningUploadandTranscribeAudio from "./ListeningForGistAndDetailForms/ListeningUploadandTranscribeAudio";
-import ListeningQuestionUploader from "./ListeningForGistAndDetailForms/ListeningQuestionUploader";
+import ListeningUploadQuestions from "./ListeningUploadQuestions";
+import ListeningUploadandTranscribeAudio from "./ListeningUploadandTranscribeAudio";
+import ListeningQuestionUploader from "./ListeningQuestionUploader";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
+import CreeateAudioSnippets from "./CreeateAudioSnippets";
+
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
     <ListeningUploadandTranscribeAudio />,
-    <div></div>,
+    <CreeateAudioSnippets />,
   ];
 
   useEffect(() => {
