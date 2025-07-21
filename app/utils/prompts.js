@@ -49,6 +49,11 @@ export function snippetPrompt(questions, transcriptStr, wordsArray) {
 
 //   return prompt2;
 // }
+export function getPassages(QuestionsAndAnswers, Transcript) {
+  const prompt = `Extract passages from the following transcript that correspond to the given questions and answers. Here are the questions and answers: ${QuestionsAndAnswers}. Here is the transcript: ${Transcript}
+  For each question in questionsAndAnswers, return a "passage" field that shows the exact phrase in the transcript that supports the answer. Do not paraphrase. Retrurn only a stringified array of passages strings in the order of the questions and answers. Do not include any other text or explanation.`;
+  return prompt;
+}
 
 export function makeQuestionsPrompt(searchQuery) {
   const prompt = `Make an array of JS objects out of this text in {number: ##, question:## } format. Do not include the question number in the text of the question value: ${searchQuery}`;

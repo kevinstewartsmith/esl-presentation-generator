@@ -3,7 +3,7 @@ import ListeningUploadQuestions from "./ListeningUploadQuestions";
 import ListeningUploadandTranscribeAudio from "./ListeningUploadandTranscribeAudio";
 import ListeningQuestionUploader from "./ListeningQuestionUploader";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
-import CreeateAudioSnippets from "./CreeateAudioSnippets";
+import CreeateAudioSnippets from "./CreateAudioSnippets";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [

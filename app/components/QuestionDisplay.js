@@ -2,8 +2,25 @@ import React from "react";
 import { Grid, Item } from "@mui/material";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import SnippetPlayer from "./SnippetPlayer";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 
-function QuestionDisplay({ questions, answers }) {
+function QuestionDisplay() {
+  const completeListeningStageData = useLessonStore(
+    (state) => state.completeListeningStageData
+  );
+  const questions = completeListeningStageData.questionsAndAnswers
+    ? completeListeningStageData.questionsAndAnswers.map(
+        (item) => item.question
+      )
+    : [];
+  const answers = completeListeningStageData.questionsAndAnswers
+    ? completeListeningStageData.questionsAndAnswers.map((item) => item.answer)
+    : [];
+
+  const passages = completeListeningStageData.questionsAndAnswers
+    ? completeListeningStageData.questionsAndAnswers.map((item) => item.passage)
+    : [];
+
   return (
     <>
       <h1 style={{ textAlign: "center" }}>
@@ -30,11 +47,14 @@ function QuestionDisplay({ questions, answers }) {
                       <div style={{ width: "100%", height: "100%" }}>
                         <h1 style={{ fontSize: "2rem" }}>
                           <strong>
-                            {`${index + 1} - ` + questions[index].question}
+                            {`${index + 1} - ` +
+                              questions[index] +
+                              " - " +
+                              answers[index]}
                           </strong>
                         </h1>
                         <h1>
-                          <em>{answers[index].answer}</em>
+                          <em>{passages[index]}</em>
                           {/* <strong>Answer: </strong> */}
                         </h1>
                         <h1 style={{ fontSize: "1.5rem" }}>

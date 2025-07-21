@@ -4,6 +4,7 @@ import { useLessonStore } from "@app/stores/UseLessonStore";
 
 const CreateAudioSnippets = () => {
   //audioQuestions
+  const [readyForSnippets, setReadyForSnippets] = useState(false);
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
   const updateWordTimeArray = useLessonStore(
     (state) => state.updateWordTimeArray
@@ -14,6 +15,9 @@ const CreateAudioSnippets = () => {
   const [audioAnswerObj, setAudioAnswerObj] = useState([]);
   const updateCompleteListeningStageData = useLessonStore(
     (state) => state.updateCompleteListeningStageData
+  );
+  const completeListeningStageData = useLessonStore(
+    (state) => state.completeListeningStageData
   );
 
   const audioClipQuestionData = useLessonStore(
@@ -35,8 +39,49 @@ const CreateAudioSnippets = () => {
   useEffect(() => {
     if (audioQuestionObj.length > 0 && audioAnswerObj.length > 0) {
       mergeQuestionsAndAnswers(audioQuestionObj, audioAnswerObj);
+      setReadyForSnippets(true);
+      console.log("Ready for snippets:", readyForSnippets);
     }
   }, [audioQuestionObj, audioAnswerObj]);
+
+  // Call snippet api to get answer passages if theres a transcript, questions and answers
+  useEffect(() => {
+    if (
+      readyForSnippets &&
+      completeListeningStageData.transcript &&
+      completeListeningStageData.questionsAndAnswers.length > 0
+    ) {
+      // Call your snippet API here
+      console.log("Calling snippet API with transcript and questions/answers");
+      // Example API call
+      fetch(
+        `/api/get-audio-snippets-codes?questionsandanswers=${JSON.stringify(
+          completeListeningStageData.questionsAndAnswers
+        )}&transcript=${completeListeningStageData.transcript}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Received passages:", data);
+          console.log("Type of data:", typeof data);
+          const parsedPassageData = JSON.parse(data);
+          // Update the audioClipQuestionData with the passages
+          //updateAudioClipQuestionData(data);
+          //mapPassagesToQuestions(data);
+          const updatedQAWithPassages = addPassagesToQuestions(
+            completeListeningStageData.questionsAndAnswers,
+            parsedPassageData
+          );
+          updateCompleteListeningStageData({
+            ...completeListeningStageData,
+            questionsAndAnswers: updatedQAWithPassages,
+          });
+          console.log("Updated questions and answers with passages:");
+        })
+        .catch((error) => {
+          console.error("Error fetching passages:", error);
+        });
+    }
+  }, [readyForSnippets]);
 
   async function getAudioQuestionParts(type) {
     let response;
@@ -83,9 +128,24 @@ const CreateAudioSnippets = () => {
       wordArray: wordTimeArray,
     });
   }
-  return (
-    <QuestionDisplay questions={audioQuestionObj} answers={audioAnswerObj} />
-  );
+
+  function mapPassagesToQuestions(passages) {
+    const updated = completeListeningStageData.questionsAndAnswers.map(
+      (item, i) => ({
+        ...item,
+        passage: passages[i] ?? "", // Use nullish coalescing in case passage is undefined
+      })
+    );
+
+    updateCompleteListeningStageData(updated);
+  }
+  function addPassagesToQuestions(questionsAndAnswers, passages) {
+    return questionsAndAnswers.map((qa, index) => ({
+      ...qa,
+      passage: passages[index] ?? "", // fallback to "" if undefined
+    }));
+  }
+  return <QuestionDisplay />;
   //return <h1>{JSON.stringify(audioQuestionObj)}</h1>;
 };
 
