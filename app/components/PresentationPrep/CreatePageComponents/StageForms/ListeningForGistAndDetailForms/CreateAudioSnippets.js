@@ -5,6 +5,7 @@ import { useLessonStore } from "@app/stores/UseLessonStore";
 const CreateAudioSnippets = () => {
   //audioQuestions
   const [readyForSnippets, setReadyForSnippets] = useState(false);
+  const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
   const updateWordTimeArray = useLessonStore(
     (state) => state.updateWordTimeArray
@@ -75,6 +76,7 @@ const CreateAudioSnippets = () => {
             ...completeListeningStageData,
             questionsAndAnswers: updatedQAWithPassages,
           });
+          setReadyForWordTimeData(true);
           console.log("Updated questions and answers with passages:");
         })
         .catch((error) => {
@@ -82,6 +84,22 @@ const CreateAudioSnippets = () => {
         });
     }
   }, [readyForSnippets]);
+  //SO NOT DONE
+  useEffect(() => {
+    const indices = findBatchPassageIndices(
+      completeListeningStageData.questionsAndAnswers.map((qa) => qa.passage),
+      wordTimeArray
+    );
+    console.log("Indices for passages:", indices);
+    //use the indices and log an array of parts of the wordTimeArray for each set of indices
+    const snippets = indices.map((index) => {
+      if (index) {
+        return wordTimeArray.slice(index.start, index.end + 1);
+      }
+      return [];
+    });
+    console.log("Snippets from wordTimeArray:", snippets);
+  }, [readyForWordTimeData]);
 
   async function getAudioQuestionParts(type) {
     let response;
@@ -145,6 +163,27 @@ const CreateAudioSnippets = () => {
       passage: passages[index] ?? "", // fallback to "" if undefined
     }));
   }
+  function findBatchPassageIndices(passagesArray, wordObjectsArray) {
+    return passagesArray.map((passage) =>
+      findPassageIndices(passage, wordObjectsArray)
+    );
+  }
+
+  function findPassageIndices(passage, wordObjectsArray) {
+    const wordsArray = wordObjectsArray.map((obj) => obj.word);
+    const passageWords = passage.trim().split(/\s+/);
+    const passageLength = passageWords.length;
+
+    for (let i = 0; i <= wordsArray.length - passageLength; i++) {
+      const window = wordsArray.slice(i, i + passageLength);
+      if (window.join(" ") === passageWords.join(" ")) {
+        return { start: i, end: i + passageLength - 1 };
+      }
+    }
+
+    return null;
+  }
+
   return <QuestionDisplay />;
   //return <h1>{JSON.stringify(audioQuestionObj)}</h1>;
 };

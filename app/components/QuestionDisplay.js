@@ -54,7 +54,7 @@ function QuestionDisplay() {
                           </strong>
                         </h1>
                         <h1>
-                          <em>{passages[index]}</em>
+                          <em>{'"' + passages[index] + '"'}</em>
                           {/* <strong>Answer: </strong> */}
                         </h1>
                         <h1 style={{ fontSize: "1.5rem" }}>
