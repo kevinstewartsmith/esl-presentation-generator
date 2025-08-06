@@ -108,7 +108,7 @@ const CreateAudioSnippets = () => {
     });
     console.log("Snippets from wordTimeArray:", snippets);
   }, [readyForWordTimeData]);
-
+  // Sends ocr data to the Chatgpt API to create a JSON object with questions or answers
   async function getAudioQuestionParts(type) {
     let response;
     if (type === "question") {
@@ -178,8 +178,8 @@ const CreateAudioSnippets = () => {
   }
 
   function findPassageIndices(passage, wordObjectsArray) {
-    const wordsArray = wordObjectsArray.map((obj) => obj.word);
-    const passageWords = passage.trim().split(/\s+/);
+    const wordsArray = wordObjectsArray.map((obj) => normalizeWord(obj.word));
+    const passageWords = passage.trim().split(/\s+/).map(normalizeWord);
     const passageLength = passageWords.length;
 
     for (let i = 0; i <= wordsArray.length - passageLength; i++) {
@@ -192,6 +192,9 @@ const CreateAudioSnippets = () => {
     return null;
   }
 
+  function normalizeWord(word) {
+    return word.toLowerCase().replace(/[’'‘”“"!?.,;:()]/g, ""); // remove punctuation, support smart quotes too
+  }
   return <QuestionDisplay />;
   //return <h1>{JSON.stringify(audioQuestionObj)}</h1>;
 };
