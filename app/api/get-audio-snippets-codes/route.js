@@ -50,8 +50,9 @@ export const GET = async (request) => {
     console.log(results);
     console.log("results end");
     console.log(typeof results);
+    const parsed = JSON.parse(results);
 
-    return new Response(JSON.stringify(results), {
+    return new Response(results, {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

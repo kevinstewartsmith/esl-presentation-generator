@@ -37,7 +37,7 @@ export const GET = async (request) => {
     console.log("results end");
     console.log(typeof results);
 
-    return new Response(JSON.stringify(results), {
+    return new Response(JSON.parse(results), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

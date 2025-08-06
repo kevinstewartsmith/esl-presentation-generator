@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
 import { useLessonStore } from "@app/stores/UseLessonStore";
+//import { parse } from "@node_modules/next/dist/build/swc/generated-native";
 
 const CreateAudioSnippets = () => {
   //audioQuestions
@@ -60,17 +61,24 @@ const CreateAudioSnippets = () => {
           completeListeningStageData.questionsAndAnswers
         )}&transcript=${completeListeningStageData.transcript}`
       )
-        .then((response) => response.json())
+        .then((response) => {
+          console.log("Raw Response from snippet API:", response);
+          console.log("Raw Response type:", typeof response);
+
+          return response.json();
+        })
         .then((data) => {
           console.log("Received passages:", data);
           console.log("Type of data:", typeof data);
-          const parsedPassageData = JSON.parse(data);
-          // Update the audioClipQuestionData with the passages
-          //updateAudioClipQuestionData(data);
-          //mapPassagesToQuestions(data);
+          console.log(Array.isArray(data)); // returns true if data is an array
+
           const updatedQAWithPassages = addPassagesToQuestions(
             completeListeningStageData.questionsAndAnswers,
-            parsedPassageData
+            data
+          );
+          console.log(
+            "Updated questions and answers with passages:",
+            updatedQAWithPassages
           );
           updateCompleteListeningStageData({
             ...completeListeningStageData,
@@ -119,7 +127,7 @@ const CreateAudioSnippets = () => {
     const data = await response.json();
 
     if (type === "question") {
-      console.log("Response data MAKE QUESTIONS🅠⁉️: " + data);
+      console.log("Response data MAKE QUESTIONS🅠⁉️: " + JSON.stringify(data));
       console.log("Response data type: " + typeof data);
       setAudioQuestionObj(data);
       // map data to audioClipQuestionData
