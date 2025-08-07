@@ -5,7 +5,7 @@ import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite
 import IconButton from "@mui/material/IconButton";
 import { playAudioFile } from "@app/utils/AudioControls";
 import { Grid } from "@mui/material";
-import { saveFile, deleteFile } from "@app/utils/indexedDBWrapper";
+import { saveFile, deleteFile } from "@app/utils/IndexedDBWrapper";
 import { useLessonStore } from "@app/stores/UseLessonStore";
 
 function AudioTable(props) {

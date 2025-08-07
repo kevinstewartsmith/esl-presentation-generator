@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
 import { useLessonStore } from "@app/stores/UseLessonStore";
 import {
@@ -6,9 +6,12 @@ import {
   addPassagesToQuestions,
   findBatchPassageIndices,
 } from "@app/utils/CreateAudioSnippetsUtil";
+import { splitAudioFile } from "@app/utils/AudioSplittingUtil";
 
 const CreateAudioSnippets = () => {
   //audioQuestions
+  const [trimmedAudioClips, setTrimmedAudioClips] = useState([]);
+  const [readyForAudioClips, setReadyFoAudioClips] = useState(false);
   const [readyForSnippets, setReadyForSnippets] = useState(false);
   const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
@@ -130,7 +133,33 @@ const CreateAudioSnippets = () => {
       "Updated completeListeningStageData with snippets and indices" +
         JSON.stringify(completeListeningStageData.questionsAndAnswers)
     );
+    setReadyFoAudioClips(true);
   }, [readyForWordTimeData]);
+
+  useEffect(() => {
+    //Cannot be null: completeListeningStageData.questionsAndAnswers, completeListeningStageData.transcript, wordTimeArray, audioFileName, completeListeningStageData.questionsAndAnswers.indices, completeListeningStageData.questionsAndAnswers.snippet
+    if (
+      !completeListeningStageData.questionsAndAnswers
+      // ||
+      // !wordTimeArray ||
+      // !audioFileName
+    ) {
+      // !completeListeningStageData.questionsAndAnswers.some(
+      //   (qa) => qa.indices && qa.snippet
+
+      console.log("Not ready for audio clips yet");
+      return;
+    }
+
+    console.log("Ready for audio clips:", readyForAudioClips);
+    console.log("Complete Listening Stage Data:", completeListeningStageData);
+    console.log("Word Time Array:", wordTimeArray);
+    console.log("Audio File Name:", audioFileName);
+    console.log("Now creating audio clips");
+
+    splitAudioFile(completeListeningStageData);
+    //Update complete data with audio clip names
+  }, [readyForAudioClips]);
 
   // Sends ocr data to the Chatgpt API to create a JSON object with questions or answers
   async function getAudioQuestionParts(type) {
@@ -174,19 +203,7 @@ const CreateAudioSnippets = () => {
     });
   }
 
-  // function mapPassagesToQuestions(passages) {
-  //   const updated = completeListeningStageData.questionsAndAnswers.map(
-  //     (item, i) => ({
-  //       ...item,
-  //       passage: passages[i] ?? "", // Use nullish coalescing in case passage is undefined
-  //     })
-  //   );
-
-  //   updateCompleteListeningStageData(updated);
-  // }
-
   return <QuestionDisplay />;
-  //return <h1>{JSON.stringify(audioQuestionObj)}</h1>;
 };
 
 export default CreateAudioSnippets;
