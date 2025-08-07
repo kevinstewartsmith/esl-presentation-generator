@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
 import { useLessonStore } from "@app/stores/UseLessonStore";
-//import { parse } from "@node_modules/next/dist/build/swc/generated-native";
+import {
+  mergeItems,
+  addPassagesToQuestions,
+  findBatchPassageIndices,
+} from "@app/utils/CreateAudioSnippetsUtil";
 
 const CreateAudioSnippets = () => {
   //audioQuestions
@@ -21,7 +25,7 @@ const CreateAudioSnippets = () => {
   const completeListeningStageData = useLessonStore(
     (state) => state.completeListeningStageData
   );
-
+  const audioFileName = useLessonStore((state) => state.AudioFileName);
   const audioClipQuestionData = useLessonStore(
     (state) => state.audioClipQuestionData
   );
@@ -107,7 +111,27 @@ const CreateAudioSnippets = () => {
       return [];
     });
     console.log("Snippets from wordTimeArray:", snippets);
+    //map through completeListeningStageData.questionsAndAnswers and add the snippets and indices to each question
+    const updatedQuestionsAndAnswers =
+      completeListeningStageData.questionsAndAnswers.map((qa, i) => ({
+        ...qa,
+        snippet: snippets[i] || [], // Use empty array if no snippet found
+        indices: indices[i] || null, // Use null if no indices found
+      }));
+    console.log(
+      "Updated questions and answers with snippets and indices:",
+      updatedQuestionsAndAnswers
+    );
+    updateCompleteListeningStageData({
+      ...completeListeningStageData,
+      questionsAndAnswers: updatedQuestionsAndAnswers,
+    });
+    console.log(
+      "Updated completeListeningStageData with snippets and indices" +
+        JSON.stringify(completeListeningStageData.questionsAndAnswers)
+    );
   }, [readyForWordTimeData]);
+
   // Sends ocr data to the Chatgpt API to create a JSON object with questions or answers
   async function getAudioQuestionParts(type) {
     let response;
@@ -139,62 +163,28 @@ const CreateAudioSnippets = () => {
   }
 
   function mergeQuestionsAndAnswers(questions, answers) {
-    const merged = questions.map((q) => {
-      const match = answers.find((a) => a.number === q.number);
-      return {
-        ...q,
-        ...match, // adds answer field if match is found
-      };
-    });
+    const merged = mergeItems(questions, answers);
     console.log("Merged Questions and Answers:");
     console.log(merged);
     updateCompleteListeningStageData({
       questionsAndAnswers: merged,
       transcript: s2TAudioTranscript,
       wordArray: wordTimeArray,
+      audioFileName: audioFileName,
     });
   }
 
-  function mapPassagesToQuestions(passages) {
-    const updated = completeListeningStageData.questionsAndAnswers.map(
-      (item, i) => ({
-        ...item,
-        passage: passages[i] ?? "", // Use nullish coalescing in case passage is undefined
-      })
-    );
+  // function mapPassagesToQuestions(passages) {
+  //   const updated = completeListeningStageData.questionsAndAnswers.map(
+  //     (item, i) => ({
+  //       ...item,
+  //       passage: passages[i] ?? "", // Use nullish coalescing in case passage is undefined
+  //     })
+  //   );
 
-    updateCompleteListeningStageData(updated);
-  }
-  function addPassagesToQuestions(questionsAndAnswers, passages) {
-    return questionsAndAnswers.map((qa, index) => ({
-      ...qa,
-      passage: passages[index] ?? "", // fallback to "" if undefined
-    }));
-  }
-  function findBatchPassageIndices(passagesArray, wordObjectsArray) {
-    return passagesArray.map((passage) =>
-      findPassageIndices(passage, wordObjectsArray)
-    );
-  }
+  //   updateCompleteListeningStageData(updated);
+  // }
 
-  function findPassageIndices(passage, wordObjectsArray) {
-    const wordsArray = wordObjectsArray.map((obj) => normalizeWord(obj.word));
-    const passageWords = passage.trim().split(/\s+/).map(normalizeWord);
-    const passageLength = passageWords.length;
-
-    for (let i = 0; i <= wordsArray.length - passageLength; i++) {
-      const window = wordsArray.slice(i, i + passageLength);
-      if (window.join(" ") === passageWords.join(" ")) {
-        return { start: i, end: i + passageLength - 1 };
-      }
-    }
-
-    return null;
-  }
-
-  function normalizeWord(word) {
-    return word.toLowerCase().replace(/[’'‘”“"!?.,;:()]/g, ""); // remove punctuation, support smart quotes too
-  }
   return <QuestionDisplay />;
   //return <h1>{JSON.stringify(audioQuestionObj)}</h1>;
 };

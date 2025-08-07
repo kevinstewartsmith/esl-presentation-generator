@@ -5,8 +5,11 @@ import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite
 import IconButton from "@mui/material/IconButton";
 import { playAudioFile } from "@app/utils/AudioControls";
 import { Grid } from "@mui/material";
+import { saveFile, deleteFile } from "@app/utils/indexedDBWrapper";
+import { useLessonStore } from "@app/stores/UseLessonStore";
 
 function AudioTable(props) {
+  const { updateAudioFileName } = useLessonStore();
   const {
     bucketContents,
     updateBucketContents,
@@ -23,8 +26,53 @@ function AudioTable(props) {
       bucketContents
         ? updateSelectedAudioFileName(bucketContents[newSelection[0] - 1])
         : null;
+      //Save the selected audio file to IndexedDB
+      if (bucketContents && bucketContents[newSelection[0] - 1]) {
+        const fileName = bucketContents[newSelection[0] - 1];
+        fetch(`/api/audio?name=${fileName}`)
+          .then((response) => response.blob())
+          .then((blob) => {
+            saveFile(fileName, blob)
+              .then(() => {
+                console.log(`File ${fileName} saved to IndexedDB.`);
+                // Update completeListeningStageData with the audio file name
+                updateAudioFileName(fileName);
+              })
+              .catch((error) => {
+                console.error("Error saving file to IndexedDB:", error);
+              });
+            //update completeListeningStageData with the audio file name
+            // updateCompleteListeningStageData((prevData) => ({
+            //   ...prevData,
+            //   audioFileName: fileName,
+            // }));
+          })
+          .catch((error) => {
+            console.error("Error fetching audio file:", error);
+          });
+      }
     } else {
       setSelectedRow(null);
+      console.log("Selected row cleared");
+      //Delete the selected audio file from IndexedDB
+      if (selectedAudioFileName) {
+        deleteFile(selectedAudioFileName)
+          .then(() => {
+            console.log(
+              `File ${selectedAudioFileName} deleted from IndexedDB.`
+            );
+          })
+          .catch((error) => {
+            console.error("Error deleting file from IndexedDB:", error);
+          });
+      }
+      updateSelectedAudioFileName(null);
+      updateFullAudioBuffer(null);
+      // updateCompleteListeningStageData((prevData) => ({
+      //   ...prevData,
+      //   audioFileName: "",
+      // }));
+      console.log("Selected audio file name cleared");
     }
   };
 
@@ -49,13 +97,6 @@ function AudioTable(props) {
 
       const audioBuffer = await response.arrayBuffer();
       playAudioFile(audioBuffer);
-      // const audioContext = new AudioContext();
-      // const audioSource = audioContext.createBufferSource();
-      // audioContext.decodeAudioData(audioBuffer, (buffer) => {
-      //     audioSource.buffer = buffer;
-      //     audioSource.connect(audioContext.destination);
-      //     audioSource.start(0);
-      // });
     } catch (error) {
       console.error("Error playing audio:", error);
     }
@@ -108,22 +149,6 @@ function AudioTable(props) {
     : [];
 
   return (
-    // <Grid
-    //   container
-    //   spacing={0}
-    //   direction="column"
-    //   justifyContent="center"
-    //   height={650}
-    // >
-    //   <Grid item xs={12}>
-    //     <div
-    //       style={{
-    //         height: "80%",
-    //         width: 600,
-    //         backgroundColor: "white",
-    //         borderColor: "black",
-    //       }}
-    //     >
     <>
       <DataGrid
         rows={rows}
@@ -153,9 +178,6 @@ function AudioTable(props) {
         <h1>{selectedRow}</h1>
       </div>
     </>
-    // </div>
-    //   </Grid>
-    // </Grid>
   );
 }
 

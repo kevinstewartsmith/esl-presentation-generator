@@ -131,6 +131,14 @@ export default function ZustandSyncClient() {
       }
     );
 
+    const unsubAudioFileName = useLessonStore.subscribe(
+      (state) => state.AudioFileName,
+      (fileName) => {
+        console.log("🔈 Audio File Name updated:", fileName);
+      }
+    );
+    console.log("📡 Subscribed to AudioFileName changes");
+
     return () => {
       clearTimeout(debounceTimer);
       unsubUserID();
@@ -142,6 +150,7 @@ export default function ZustandSyncClient() {
       unsubAudioTranscript();
       unsubAudioQuestions();
       unsubAudioAnswers();
+      unsubCompleteListeningStageData();
 
       console.log("📴 All subscriptions unsubscribed");
     };

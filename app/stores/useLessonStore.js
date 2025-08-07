@@ -1,4 +1,5 @@
 "use client";
+import { AudioFile } from "@node_modules/@mui/icons-material";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
@@ -49,6 +50,9 @@ export const useLessonStore = create(
     s2TAudioTranscript: "",
     updateS2TAudioTranscript: (text) => set({ s2TAudioTranscript: text }),
 
+    AudioFileName: "",
+    updateAudioFileName: (fileName) => set({ AudioFileName: fileName }),
+
     wordTimeArray: [],
     updateWordTimeArray: (array) => set({ wordTimeArray: array }),
 
@@ -72,9 +76,20 @@ export const useLessonStore = create(
       questionsAndAnswers: [],
       transcript: "",
       wordArray: [],
+      audioFileName: "",
     },
     updateCompleteListeningStageData: (data) =>
       set({ completeListeningStageData: data }),
+
+    //Update audio file name in completeListeningStageData
+    // updateAudioFileName: (fileName) =>
+    //   set((state) => ({
+    //     completeListeningStageData: {
+    //       ...state.completeListeningStageData,
+    //       audioFileName: fileName,
+    //     },
+    //   })),
+
     // Audio Stage - End
   }))
 );
