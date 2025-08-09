@@ -20,7 +20,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [lessonIDReadingGD, setLessonIDReadingGD] = useState("");
 
   function updateLessonIDReadingGD(id) {
-    console.log("Update Lesson ID in RFGD Context: " + id);
+    //console.log("Update Lesson ID in RFGD Context: " + id);
     setLessonIDReadingGD(id);
   }
 
@@ -45,7 +45,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   function updateTextbookTranscript(newData) {
-    console.log(newData);
+    //console.log(newData);
 
     setTextbook((prevTextbook) => ({
       ...prevTextbook, // Spread the previous state to retain textEdit array
@@ -65,7 +65,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   async function fetchTextbookDataFromDB(userID, lessonID, stageID) {
     const stage = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stage);
-    console.log("Getting Textbook Data from Firestore");
+    //console.log("Getting Textbook Data from Firestore");
     try {
       const response = await fetch(
         `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
@@ -74,7 +74,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Textbook DATA from Firestore:", data);
+      //console.log("Textbook DATA from Firestore:", data);
       //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
       data.texts ? setTextbook(data.texts) : null;
       // data.questions.transcript
@@ -88,12 +88,12 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log("Post Textbook Data");
+    //console.log("Post Textbook Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     const stringifiedTextbook = JSON.stringify(textbook);
     const encodedTextbook = encodeURIComponent(stringifiedTextbook);
-    console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Encoded Stage ID:", encodedStageID);
     async function postTextbookData() {
       try {
         const response = await fetch(
@@ -110,14 +110,14 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }, [textbook]);
 
   useEffect(() => {
-    console.log("Post Questions Data");
+    //console.log("Post Questions Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     const encodedQuestions = encodeURIComponent(questions);
     const stringifiedQuestions = JSON.stringify(questions);
-    console.log("Encoded Stage ID:", encodedStageID);
-    console.log("Stringified Questions:", stringifiedQuestions);
-    console.log("Questions Type:", typeof questions);
+    //console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Stringified Questions:", stringifiedQuestions);
+    //console.log("Questions Type:", typeof questions);
 
     async function postTextbookData() {
       try {
@@ -126,7 +126,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
           { method: "POST" }
         );
         const data = await response.json();
-        console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
+        //console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -135,11 +135,11 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }, [questions]);
 
   useEffect(() => {
-    console.log("Post Answers Data");
+    //console.log("Post Answers Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     const stringifiedAnswers = JSON.stringify(answers);
-    console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Encoded Stage ID:", encodedStageID);
     async function postTextbookData() {
       try {
         const response = await fetch(
@@ -147,7 +147,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
           { method: "POST" }
         );
         const data = await response.json();
-        console.log("RESPONSE FROM POSTING ANSWER TEXT DATA:", data);
+        //console.log("RESPONSE FROM POSTING ANSWER TEXT DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -182,7 +182,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   };
 
   async function getAllDiscussionDataFromFirestore(userID, lessonID, stageID) {
-    console.log("Getting all discussion data from Firestore");
+    //console.log("Getting all discussion data from Firestore");
     try {
       const response = await fetch(
         `/api/firestore/get-discussions?userID=${userID}&lessonID=${lessonID}&stageID=teststage`
@@ -191,9 +191,9 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Discussion DATA from Firestore:", data);
-      //const parsedData = JSON.parse(data);
-      console.log("Parsed Discussion Data Type:", typeof data);
+      //console.log("Discussion DATA from Firestore:", data);
+      const parsedData = JSON.parse(data);
+      //console.log("Parsed Discussion Data Type:", typeof data);
       setDiscussionForms(data);
     } catch (error) {
       console.error(error);
@@ -201,7 +201,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   function updateDiscussionText(id, index, text) {
-    console.log("updateDiscussionText NEW CONTEXT");
+    //console.log("updateDiscussionText NEW CONTEXT");
     setDiscussionForms((prev) => {
       const form = prev[id] || { discussionTexts: [] };
       const newTexts = [...form.discussionTexts];
@@ -217,9 +217,9 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   async function updateDiscussionTextsDataInFirestore(newData, lessonID) {
-    console.log("updateDiscussionTextsDataInFirestore NEW CONTEXT");
-    console.log("Updating Firestore with new data:", newData);
-    console.log("Lesson ID in Input post method:", lessonID);
+    //console.log("updateDiscussionTextsDataInFirestore NEW CONTEXT");
+    //console.log("Updating Firestore with new data:", newData);
+    //console.log("Lesson ID in Input post method:", lessonID);
 
     const data = JSON.stringify(newData);
     try {
@@ -229,7 +229,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
           method: "POST",
         }
       );
-      console.log("Response from Firestore:", response);
+      //console.log("Response from Firestore:", response);
       return response;
     } catch (error) {
       console.error("Error updating Firestore:", error);
@@ -263,7 +263,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
 
   async function fetchVocabulary(userID, lessonID, stageID) {
     try {
-      console.log("GET VOCABULARY");
+      //console.log("GET VOCABULARY");
       const stage = "Reading For Gist and Detail";
       const encodedStageID = encodeURIComponent(stage);
 
@@ -286,12 +286,12 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log("Post Vocabulary Data");
-    console.log(vocabulary);
+    //console.log("Post Vocabulary Data");
+    //console.log(vocabulary);
 
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
-    console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Encoded Stage ID:", encodedStageID);
 
     const stringifyVocabulary = JSON.stringify(vocabulary);
     async function postVocabularyData() {
@@ -301,7 +301,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
           { method: "POST" }
         );
         const data = await response.json();
-        console.log("RESPONSE FROM POSTING VOCABULARY DATA:", data);
+        //console.log("RESPONSE FROM POSTING VOCABULARY DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -319,7 +319,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const [included, setIncluded] = useState({});
 
   function updateIncludedSection(id) {
-    console.log("updateIncludedSection READING CONTEXT: " + id);
+    //console.log("updateIncludedSection READING CONTEXT: " + id);
     //check if the id is already in the included object
     //if it is, switch the boolean value
     //if it is not, add it with a value of true
@@ -334,7 +334,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     //encode stageID
     const stage = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stage);
-    console.log("Getting Included Data from Firestore");
+    //console.log("Getting Included Data from Firestore");
 
     try {
       const response = await fetch(
@@ -352,10 +352,10 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log("Post Included Data");
+    //console.log("Post Included Data");
     const stageID = "Reading For Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
-    console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Encoded Stage ID:", encodedStageID);
     const includedDataString = JSON.stringify(included);
     async function postIncludedData() {
       try {
@@ -379,13 +379,13 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   let counter = 0;
 
   function updateLessonID(id) {
-    console.log("Update Lesson ID in RFGD Context: " + id);
+    //console.log("Update Lesson ID in RFGD Context: " + id);
     setLessonID(id);
   }
 
   function updateInputTextsReading(key, value) {
-    console.log("Updating input texts in RFGD Context:", key, value);
-    console.log("LEsson ID in update text input :", lessonID);
+    //console.log("Updating input texts in RFGD Context:", key, value);
+    //console.log("LLesson ID in update text input :", lessonID);
     setInputTexts({ ...inputTexts, [key]: value });
     setNewInput({ [key]: value });
     counter++;
@@ -410,9 +410,9 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   }
 
   async function updateInputDataInFirestore(newData, lessonID) {
-    console.log("Updating Firestore with new data:", newData);
-    console.log("Lesson ID in Input post method:", lessonID);
-    console.log("User ID in Input post method:", userID);
+    //console.log("Updating Firestore with new data:", newData);
+    //console.log("Lesson ID in Input post method:", lessonID);
+    //console.log("User ID in Input post method:", userID);
 
     const id = "KKlHzoJ0AV4sWd4VISzA";
     const data = JSON.stringify(newData);
@@ -437,7 +437,7 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Data from Firestore:", data);
+      //console.log("Data from Firestore:", data);
       setInputTexts(data);
       //setQuestions(data.questions);
     } catch (error) {
@@ -458,32 +458,32 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
   const debouncedSaveDiscussionTexts = useMemo(
     () =>
       debounce((newData, lessonID) => {
-        console.log("Calling Firestore READING CONTEXT:", newData);
-        console.log("Lesson ID in debounced save:", lessonID);
+        //console.log("Calling Firestore READING CONTEXT:", newData);
+        //console.log("Lesson ID in debounced save:", lessonID);
         updateDiscussionTextsDataInFirestore(newData, lessonID);
       }, 5000),
     []
   );
 
   useEffect(() => {
-    console.log("POSTING USEEFFECT TRIGGERED");
-    console.log(Object.keys(inputTexts).length);
-    console.log("Lesson ID in useEffect:", lessonID);
+    //console.log("POSTING USEEFFECT TRIGGERED");
+    //console.log(Object.keys(inputTexts).length);
+    //console.log("Lesson ID in useEffect:", lessonID);
     if (Object.keys(inputTexts).length > 0) {
-      console.log("Data changed: " + inputTexts);
+      //console.log("Data changed: " + inputTexts);
       debouncedSave(inputTexts, lessonID);
-      console.log("Inside of posting triggered");
+      //console.log("Inside of posting triggered");
     } else {
       console.log("No data to post");
     }
   }, [inputTexts]);
 
   useEffect(() => {
-    console.log("Discussion forms changed:", discussionForms);
+    //console.log("Discussion forms changed:", discussionForms);
     if (Object.keys(discussionForms).length > 0 && discussionsLoaded) {
-      console.log("Data changed: " + discussionForms);
+      //console.log("Data changed: " + discussionForms);
       debouncedSaveDiscussionTexts(discussionForms, lessonID);
-      console.log("Inside of posting triggered");
+      //console.log("Inside of posting triggered");
     } else {
       console.log("No data to post");
     }

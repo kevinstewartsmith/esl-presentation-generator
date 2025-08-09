@@ -29,20 +29,20 @@ const AudioTextProvider = ({ children }) => {
 
   //post listening questions to the database
   useEffect(() => {
-    console.log("Post Listening Questions Data");
+    //console.log("Post Listening Questions Data");
     const stageID = "Listening for Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     const encodedQuestions = encodeURIComponent(audioQuestions);
     const stringifiedQuestions = JSON.stringify(audioQuestions);
-    console.log("Encoded Stage ID:", encodedStageID);
-    console.log("Stringified Questions:", stringifiedQuestions);
-    console.log("Questions Type:", typeof audioQuestions);
+    //console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Stringified Questions:", stringifiedQuestions);
+    //console.log("Questions Type:", typeof audioQuestions);
     const userID = "kevinstewartsmith";
     async function postListeningQuestions() {
-      console.log(
-        "THIS IS THE LESSON ID FOR POSTING QUESTIONS:",
-        lessonIDAudioContext
-      );
+      //console.log(
+      //   "THIS IS THE LESSON ID FOR POSTING QUESTIONS:",
+      //   lessonIDAudioContext
+      // );
 
       try {
         const response = await fetch(
@@ -50,7 +50,7 @@ const AudioTextProvider = ({ children }) => {
           { method: "POST" }
         );
         const data = await response.json();
-        console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
+        //console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -61,19 +61,19 @@ const AudioTextProvider = ({ children }) => {
 
   //post audio transcript to the database
   useEffect(() => {
-    console.log("Post Audio Transcript Data");
+    //console.log("Post Audio Transcript Data");
     const stageID = "Listening for Gist and Detail";
     const encodedStageID = encodeURIComponent(stageID);
     const encodedTranscript = encodeURIComponent(transcript);
     const stringifiedTranscript = JSON.stringify(transcript);
-    console.log("Encoded Stage ID:", encodedStageID);
-    console.log("Encoded Transcript:", encodedTranscript);
+    //console.log("Encoded Stage ID:", encodedStageID);
+    //console.log("Encoded Transcript:", encodedTranscript);
     const userID = "kevinstewartsmith";
     async function postAudioTranscript() {
-      console.log(
-        "THIS IS THE LESSON ID FOR POSTING TRANSCRIPT:",
-        lessonIDAudioContext
-      );
+      // console.log(
+      //   "THIS IS THE LESSON ID FOR POSTING TRANSCRIPT:",
+      //   lessonIDAudioContext
+      // );
 
       try {
         const response = await fetch(
@@ -93,7 +93,7 @@ const AudioTextProvider = ({ children }) => {
   async function fetchAudioQuestionDataFromDB(userID, lessonID, stageID) {
     const stage = "Listening for Gist and Detail";
     const encodedStageID = encodeURIComponent(stage);
-    console.log("Getting Textbook Data from Firestore");
+    //console.log("Getting Textbook Data from Firestore");
     try {
       const response = await fetch(
         `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
@@ -102,7 +102,7 @@ const AudioTextProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Textbook DATA from Firestore:", data);
+      //console.log("Textbook DATA from Firestore:", data);
       //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
       data.audioQuestions ? setAudioQuestions(data.audioQuestions) : null;
       // data.questions.transcript
@@ -117,7 +117,7 @@ const AudioTextProvider = ({ children }) => {
 
   function updateLessonIDForAudioData(id) {
     setLessonIDAudioContext(id);
-    console.log("Lesson ID for audio:", id);
+    //console.log("Lesson ID for audio:", id);
   }
 
   function updateFullAudioBuffer(buffer) {
@@ -157,7 +157,7 @@ const AudioTextProvider = ({ children }) => {
   }
   function updateAudioURL(newURL) {
     setAudioURL(newURL);
-    console.log("audioURL", audioURL);
+    //console.log("audioURL", audioURL);
   }
 
   function updateAudioBuffer(newBuffer) {

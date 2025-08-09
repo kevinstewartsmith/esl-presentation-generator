@@ -15,7 +15,7 @@ const ThinkPairShareProvider = ({ children }) => {
 
   //Adds lessonID to the URL
   function updateThinkPairShareLessonID(id) {
-    console.log("Update Lesson ID in Think-Pair-Share Context: " + id);
+    //console.log("Update Lesson ID in Think-Pair-Share Context: " + id);
     setLessonID(id);
   }
 
@@ -38,15 +38,15 @@ const ThinkPairShareProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("Think Phase updated:", thinkPhase);
+    //console.log("Think Phase updated:", thinkPhase);
 
-    console.log("Pair Phase updated:", pairPhase);
-    console.log("Share Phase updated:", sharePhase);
+    //console.log("Pair Phase updated:", pairPhase);
+    //console.log("Share Phase updated:", sharePhase);
 
     //costumize this to your needs
     async function postThinkPairShareData() {
-      console.log("Posting Think-Pair-Share data...");
-      console.log(thinkPhase);
+      //console.log("Posting Think-Pair-Share data...");
+      //console.log(thinkPhase);
 
       const stringifiedThinkPhase = JSON.stringify(thinkPhase);
 
@@ -56,7 +56,7 @@ const ThinkPairShareProvider = ({ children }) => {
           { method: "POST" }
         );
         const data = await response.json();
-        console.log("RESPONSE FROM POSTING TEXTBOOK DATA:", data);
+        //console.log("RESPONSE FROM POSTING TEXTBOOK DATA:", data);
       } catch (error) {
         console.log(error);
       }
@@ -70,7 +70,7 @@ const ThinkPairShareProvider = ({ children }) => {
   async function fetchThinkPhaseDataFromDB() {
     const stage = "Think - Pair - Share"; // Use the stage ID directly
     const encodedStageID = encodeURIComponent(stage);
-    console.log("Getting Think Data (think - pair - share) from Firestore");
+    //console.log("Getting Think Data (think - pair - share) from Firestore");
     try {
       const response = await fetch(
         `/api/firestore/think-pair-share/get-think-pair-share?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
@@ -79,11 +79,11 @@ const ThinkPairShareProvider = ({ children }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json(); // Parse the JSON response
-      console.log("Think Phase DATA from Firestore:", data.ThinkPhase);
+      //console.log("Think Phase DATA from Firestore:", data.ThinkPhase);
       //updateThinkPhase(data.ThinkPhase);
 
       const arrayData = Object.values(data.ThinkPhase);
-      console.log("Array Data:", arrayData);
+      //console.log("Array Data:", arrayData);
       setSentenceStems(arrayData);
       updateThinkPhase(arrayData);
       //setThinkPhase

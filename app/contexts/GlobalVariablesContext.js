@@ -25,7 +25,7 @@ const GlobalVariablesContextProvider = ({ children }) => {
   }
   function updatePathname(path) {
     setPathname(path);
-    console.log("Pathname: ", path);
+    //console.log("Pathname: ", path);
   }
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const GlobalVariablesContextProvider = ({ children }) => {
       ? pathname.startsWith(`/${loggedInUser}/lessons/`) ||
         pathname.startsWith(`/${loggedInUser}/create/`)
       : false;
-    console.log("isAllowedPath: ", isAllowedPath);
+    //console.log("isAllowedPath: ", isAllowedPath);
 
     if (!isAllowedPath) {
       setLessonTitle(null);
