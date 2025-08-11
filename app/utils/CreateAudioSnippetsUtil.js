@@ -39,3 +39,13 @@ function findPassageIndices(passage, wordObjectsArray) {
 
   return null;
 }
+
+export const addSnippetsFileNamesToQuestions = (
+  questionsAndAnswers,
+  snippetFileNames
+) => {
+  return questionsAndAnswers.map((qa, index) => ({
+    ...qa,
+    snippetFileNames: snippetFileNames[index] || [],
+  }));
+};

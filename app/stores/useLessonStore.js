@@ -81,6 +81,10 @@ export const useLessonStore = create(
     updateCompleteListeningStageData: (data) =>
       set({ completeListeningStageData: data }),
 
+    audioSnippetFilenameArray: [],
+    updateAudioSnippetFilenameArray: (array) =>
+      set({ audioSnippetFilenameArray: array }),
+
     //Update audio file name in completeListeningStageData
     // updateAudioFileName: (fileName) =>
     //   set((state) => ({

@@ -5,6 +5,7 @@ import {
   mergeItems,
   addPassagesToQuestions,
   findBatchPassageIndices,
+  addSnippetsFileNamesToQuestions,
 } from "@app/utils/CreateAudioSnippetsUtil";
 import {
   splitAudioFile,
@@ -41,6 +42,13 @@ const CreateAudioSnippets = () => {
   //Audio transcript from useLessonStore
   const s2TAudioTranscript = useLessonStore(
     (state) => state.s2TAudioTranscript
+  );
+
+  const audioSnippetFilenameArray = useLessonStore(
+    (state) => state.audioSnippetFilenameArray
+  );
+  const updateAudioSnippetFilenameArray = useLessonStore(
+    (state) => state.updateAudioSnippetFilenameArray
   );
 
   useEffect(() => {
@@ -148,23 +156,57 @@ const CreateAudioSnippets = () => {
       : setReadyForAudioClips(false);
   }, [readyForWordTimeData]);
 
-  useEffect(() => {
-    if (readyForAudioClips) {
-      console.log(
-        "AUDIO DB USE EFFECT: Current completeListeningStageData: ",
-        completeListeningStageData
-      );
-      console.log("readyForAudioClips value:", readyForAudioClips);
-      console.log(
-        "Questions and Answers length:",
-        completeListeningStageData.questionsAndAnswers.length
-      );
-      console.log(
-        "Questions and Answers for audio clips:",
-        completeListeningStageData.questionsAndAnswers
-      );
-    }
+  // useEffect(() => {
+  //   if (readyForAudioClips) {
+  //     console.log(
+  //       "AUDIO DB USE EFFECT: Current completeListeningStageData: ",
+  //       completeListeningStageData
+  //     );
+  //     console.log("readyForAudioClips value:", readyForAudioClips);
+  //     console.log(
+  //       "Questions and Answers length:",
+  //       completeListeningStageData.questionsAndAnswers.length
+  //     );
+  //     console.log(
+  //       "Questions and Answers for audio clips:",
+  //       completeListeningStageData.questionsAndAnswers
+  //     );
+  //   }
 
+  //   if (
+  //     !readyForAudioClips ||
+  //     completeListeningStageData.questionsAndAnswers.length === 0
+  //   ) {
+  //     console.log("Not ready for audio clips yet.");
+  //     return;
+  //   }
+  //   console.log(
+  //     "Questions and Answers for audio clips:",
+  //     completeListeningStageData.questionsAndAnswers
+  //   );
+  //   console.log(
+  //     "Audio file name for audio clips:",
+  //     completeListeningStageData.audioFileName
+  //   );
+
+  //   // console.log("Ready for audio clips:", readyForAudioClips);
+  //   // console.log(
+  //   //   "Complete Listening Stage Data(CREATE CLIP USEEFFECT):",
+  //   //   completeListeningStageData
+  //   // );
+  //   // console.log("Word Time Array:", wordTimeArray);
+  //   // console.log("Audio File Name:", audioFileName);
+  //   // console.log("Now creating audio clips");
+
+  //   const splitAudioFileArray = splitAudioFile(completeListeningStageData);
+  //   console.log(
+  //     "Split audio file array in CreateAudioSnippets:",
+  //     splitAudioFileArray
+  //   );
+
+  //   // //Update complete data with audio clip names
+  // }, [readyForAudioClips]);
+  useEffect(() => {
     if (
       !readyForAudioClips ||
       completeListeningStageData.questionsAndAnswers.length === 0
@@ -172,26 +214,32 @@ const CreateAudioSnippets = () => {
       console.log("Not ready for audio clips yet.");
       return;
     }
-    console.log(
-      "Questions and Answers for audio clips:",
-      completeListeningStageData.questionsAndAnswers
-    );
-    console.log(
-      "Audio file name for audio clips:",
-      completeListeningStageData.audioFileName
-    );
 
-    // console.log("Ready for audio clips:", readyForAudioClips);
-    // console.log(
-    //   "Complete Listening Stage Data(CREATE CLIP USEEFFECT):",
-    //   completeListeningStageData
-    // );
-    // console.log("Word Time Array:", wordTimeArray);
-    // console.log("Audio File Name:", audioFileName);
-    // console.log("Now creating audio clips");
+    const fetchSnippets = async () => {
+      const splitAudioFileArray = await splitAudioFile(
+        completeListeningStageData
+      );
+      console.log(
+        "Split audio file array in CreateAudioSnippets:",
+        splitAudioFileArray
+      );
+      updateAudioSnippetFilenameArray(splitAudioFileArray);
+      const updatedQuestionsAndAnswers = addSnippetsFileNamesToQuestions(
+        completeListeningStageData.questionsAndAnswers,
+        splitAudioFileArray
+      );
+      console.log(
+        "Updated questions and answers with snippets:",
+        updatedQuestionsAndAnswers
+      );
+      updateCompleteListeningStageData({
+        ...completeListeningStageData,
+        questionsAndAnswers: updatedQuestionsAndAnswers,
+      });
+      setReadyForAudioClips(true);
+    };
 
-    splitAudioFile(completeListeningStageData);
-    // //Update complete data with audio clip names
+    fetchSnippets();
   }, [readyForAudioClips]);
 
   // Sends ocr data to the Chatgpt API to create a JSON object with questions or answers

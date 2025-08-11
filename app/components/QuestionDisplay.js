@@ -21,6 +21,12 @@ function QuestionDisplay() {
     ? completeListeningStageData.questionsAndAnswers.map((item) => item.passage)
     : [];
 
+  const snippetFileNames = completeListeningStageData.questionsAndAnswers
+    ? completeListeningStageData.questionsAndAnswers.map(
+        (item) => item.snippetFileNames
+      )
+    : [];
+
   return (
     <>
       <h1 style={{ textAlign: "center" }}>
@@ -66,7 +72,10 @@ function QuestionDisplay() {
                       {/* <div style={{ backgroundColor: "transparent", width: "100px", height: "100%", display: "flex", alignItems:"center", justifyContent:"center" }}>
                         <PlayCircleFilledWhiteIcon style={{ width: "100%", height: "100%" }} />
                     </div> */}
-                      <SnippetPlayer index={index} />
+                      <SnippetPlayer
+                        index={index}
+                        snippetFileNames={snippetFileNames}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

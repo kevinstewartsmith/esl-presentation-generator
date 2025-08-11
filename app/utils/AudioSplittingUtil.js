@@ -31,24 +31,12 @@ export const splitAudioFile = async (completeListeningStageData) => {
   }
 
   const decodedAudioBuffer = await decodeAudioFile(audioBlob, audioContext);
-  await splitAudioFileIntoMultipleClips(
+  const snippets = await splitAudioFileIntoMultipleClips(
     decodedAudioBuffer,
     completeListeningStageData,
     audioContext
   );
-
-  // getFile("Thk2e_BE_L2_SB_Unit_5_p51_t05.mp3_snippet_1.wav").then((file) => {
-  //   if (file && file.blob instanceof Blob) {
-  //     const audioUrl = URL.createObjectURL(file.blob);
-  //     const audio = new Audio(audioUrl);
-  //     audio.play().catch((err) => {
-  //       console.error("Playback error:", err);
-  //     });
-  //     console.log(audio); // ✅ logs Audio object, not a Promise
-  //   } else {
-  //     console.error("Invalid or missing Blob:", file);
-  //   }
-  // });
+  return snippets;
 };
 
 async function splitAudioFileIntoMultipleClips(
@@ -87,7 +75,7 @@ async function splitAudioFileIntoMultipleClips(
         ? getSeconds(wordArray[startIndex].startTime)
         : NaN;
       const end = wordArray[endIndex]?.endTime
-        ? getSeconds(wordArray[endIndex].endTime)
+        ? getSeconds(wordArray[endIndex].endTime) + 0.5
         : NaN;
 
       console.log(`Start: ${start}, End: ${end} for question ${i}`);
@@ -109,7 +97,9 @@ async function splitAudioFileIntoMultipleClips(
       );
 
       if (snippetBlob) {
-        snippets.push(snippetBlob);
+        snippets.push(
+          `${completeListeningStageData.audioFileName}_snippet_${i}.wav`
+        );
         await saveFile(
           `${completeListeningStageData.audioFileName}_snippet_${i}.wav`,
           snippetBlob
@@ -124,6 +114,7 @@ async function splitAudioFileIntoMultipleClips(
   }
 
   console.log("Final snippets array:", snippets);
+  return snippets;
 }
 
 //Retrieve audio blob from IndexedDB
@@ -161,6 +152,7 @@ export function splitIntoClips(audioBlob, wordArray) {
 }
 
 function getSeconds(timeObj) {
+  //const extraTime = 500000000;
   const seconds =
     typeof timeObj.seconds === "string"
       ? parseInt(timeObj.seconds)
@@ -304,18 +296,6 @@ function audioBufferToWavBlob(buffer) {
   }
   return new Blob([arrayBuffer], { type: "audio/wav" });
 }
-
-// export async function playFromIndexedDB(key) {
-//   const entry = await getFile(key);
-//   if (!entry || !(entry.blob instanceof Blob)) {
-//     console.error("No valid Blob found for:", key, entry);
-//     return;
-//   }
-//   const url = URL.createObjectURL(entry.blob);
-//   const audio = new Audio(url);
-//   audio.play().catch((err) => console.error("Playback failed:", err));
-//   console.log("Playing:", key);
-// }
 
 export async function playFromIndexedDB(fileName) {
   listFiles().then(console.log);
