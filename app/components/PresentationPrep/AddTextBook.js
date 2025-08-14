@@ -58,13 +58,13 @@ function AddTextBook({ category, stageID }) {
   );
 
   //Reads the text from the image
-  async function handleReadText(file) {
+  async function handleReadText(base64File, file) {
     const worker = await createWorker();
     await worker.loadLanguage("eng");
     await worker.initialize("eng");
     const {
       data: { text },
-    } = await worker.recognize(file);
+    } = await worker.recognize(base64File);
     handleTextStateMemory(text, file);
     await worker.terminate();
   }
@@ -120,7 +120,7 @@ function AddTextBook({ category, stageID }) {
         acceptedFiles.forEach((file) => {
           const reader = new FileReader();
           reader.onload = () => {
-            handleReadText(reader.result);
+            handleReadText(reader.result, file);
           };
           reader.readAsDataURL(file);
 
@@ -157,7 +157,7 @@ function AddTextBook({ category, stageID }) {
     const shit = "shit";
     updateCompleteListeningStageData({
       ...completeListeningStageData,
-      ImageData: filePath,
+      [`${category}ImageData`]: filePath,
     });
     saveImageToIndexedDB(filePath, file);
   };
@@ -193,7 +193,6 @@ function AddTextBook({ category, stageID }) {
       case "ListeningTranscript":
         return <h1 style={{ color: "black" }}>{audioTranscript}</h1>;
       default:
-        //console.log("No category selected");
         return null;
     }
   };
@@ -274,7 +273,6 @@ function AddTextBook({ category, stageID }) {
           overflow: "auto",
         }}
       >
-        {/* <InputWithIcon label={"Page"} input={"page"} /> */}
         <TextBookInfoEntry
           category={category}
           className="w-half"
@@ -291,7 +289,7 @@ function AddTextBook({ category, stageID }) {
         <div style={{ borderWidth: 1 }}>
           {handleTextDisplay(category, textbook, questions, answers)}
         </div>
-        {/* <button style={buttonStyle}>Clean Questions</button> */}
+
         {handleButtonDisplay(category)}
       </div>
     </section>
