@@ -1,12 +1,14 @@
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
+import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
 import { useEffect, useRef, useContext } from "react";
 import { AudioTextContext } from "@app/contexts/AudioTextContext";
 import { combinedTranscript } from "@app/utils/transcript";
 import { createAudioSlice } from "@app/utils/AudioSnipper";
 import { playAudioFile, playAudioFileClip } from "@app/utils/AudioControls";
 import { playFromIndexedDB } from "@app/utils/AudioSplittingUtil";
-
+import { useState } from "react";
 function SnippetPlayer({ index, snippetFileNames }) {
+  const [playing, setPlaying] = useState(false);
   const {
     snippetData,
     wordTimeArray,
@@ -44,29 +46,29 @@ function SnippetPlayer({ index, snippetFileNames }) {
   //   console.log(indices); // Output: [{ start: 62, end: 82 }]
 
   //pretty sure i'm not using this
-  useEffect(() => {
-    // Create AudioContext only if it hasn't been created yet
-    if (!audioContextRef.current) {
-      window.AudioContext = window.AudioContext;
-      audioContextRef.current = new AudioContext();
-    }
-    async function fetchAudioFile(audioURL) {
-      try {
-        const response = await fetch(audioURL);
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = await audioContextRef.current.decodeAudioData(
-          arrayBuffer
-        );
-        updateAudioBuffer(buffer);
-      } catch (error) {
-        console.error("Error fetching or decoding audio file:", error);
-      }
-    }
-    fetchAudioFile(audioURL);
-  }, [
-    audioURL,
-    //snippetBufferArray
-  ]);
+  // useEffect(() => {
+  //   // Create AudioContext only if it hasn't been created yet
+  //   if (!audioContextRef.current) {
+  //     window.AudioContext = window.AudioContext;
+  //     audioContextRef.current = new AudioContext();
+  //   }
+  //   async function fetchAudioFile(audioURL) {
+  //     try {
+  //       const response = await fetch(audioURL);
+  //       const arrayBuffer = await response.arrayBuffer();
+  //       const buffer = await audioContextRef.current.decodeAudioData(
+  //         arrayBuffer
+  //       );
+  //       updateAudioBuffer(buffer);
+  //     } catch (error) {
+  //       console.error("Error fetching or decoding audio file:", error);
+  //     }
+  //   }
+  //   fetchAudioFile(audioURL);
+  // }, [
+  //   audioURL,
+  //   //snippetBufferArray
+  // ]);
 
   function playSnippetClicked() {
     console.log(typeof index);
@@ -97,6 +99,7 @@ function SnippetPlayer({ index, snippetFileNames }) {
     // const endTime = wordTimeArray[endIndex].endTime;
     // console.log(startTime);
     // playSnippet(selectedAudioFileName, startTime, endTime);
+    setPlaying(true);
     const snippetName = snippetFileNames[index];
     playFromIndexedDB(snippetName);
   }
@@ -175,7 +178,13 @@ function SnippetPlayer({ index, snippetFileNames }) {
       onClick={playSnippetClicked}
       value={index}
     >
-      <PlayCircleFilledWhiteIcon style={{ width: "100%", height: "100%" }} />
+      {snippetFileNames[index] == null ? (
+        <span style={{ color: "#888", fontSize: "1rem" }}>No Audio</span>
+      ) : playing ? (
+        <PauseCircleFilled style={{ width: "100%", height: "100%" }} />
+      ) : (
+        <PlayCircleFilledWhiteIcon style={{ width: "100%", height: "100%" }} />
+      )}
     </div>
   );
 }

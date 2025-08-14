@@ -1,90 +1,29 @@
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useState, useMemo, useContext, use } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-import { AudioTextContext } from "@app/contexts/AudioTextContext";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
+import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/UseLessonStore";
-//import { read } from "fs";
+import {
+  saveImageToIndexedDB,
+  dragNDropText,
+} from "@app/utils/AddTextBookUtil";
 
-// Styles
-const baseStyle = {
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "20px",
-  borderWidth: 2,
-  borderRadius: 2,
-  borderColor: "#eeeeee",
-  borderStyle: "dashed",
-  backgroundColor: "#f5f5f5",
-  color: "#bdbdbd",
-  //color: "green",
-  outline: "none",
-  transition: "border .24s ease-in-out",
-  height: "10vh",
-};
-
-const focusedStyle = {
-  borderColor: "#2196f3",
-};
-
-const acceptStyle = {
-  borderColor: "#00e676",
-};
-
-const rejectStyle = {
-  borderColor: "#ff1744",
-};
-
-const thumbsContainer = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  marginTop: 16,
-  backgroundColor: "white",
-};
-
-const thumb = {
-  display: "inline-flex",
-  borderRadius: 2,
-  border: "1px solid #eaeaea",
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: "border-box",
-};
-
-const thumbInner = {
-  display: "flex",
-  minWidth: 0,
-  overflow: "hidden",
-};
-
-const img = {
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-  objectFit: "contain", // Ensures that the image fits within its container while maintaining its aspect ratio
-};
+import {
+  baseStyle,
+  focusedStyle,
+  acceptStyle,
+  rejectStyle,
+  thumbsContainer,
+  thumb,
+  thumbInner,
+  img,
+} from "@app/utils/AddTextBookUtil_CSS";
 
 function AddTextBook({ category, stageID }) {
   console.log("The category is: ", category);
   //const [extractedText, setExtractedText] = useState("");
-  const {
-    textTranscript,
-    updateTextTranscript,
-    //questions,
-    //updateQuestions,
-    //answers,
-    //updateAnswers,
-    updateTextBoxInputs,
-  } = useContext(PresentationContext);
 
   const {
     textbook,
@@ -109,6 +48,15 @@ function AddTextBook({ category, stageID }) {
   const updateAudioTranscript = useLessonStore(
     (state) => state.updateAudioTranscript
   );
+  const userID = useLessonStore((state) => state.currentUserID);
+  const lessonId = useLessonStore((state) => state.currentLessonID);
+  const updateCompleteListeningStageData = useLessonStore(
+    (state) => state.updateCompleteListeningStageData
+  );
+  const completeListeningStageData = useLessonStore(
+    (state) => state.completeListeningStageData
+  );
+
   //Reads the text from the image
   async function handleReadText(file) {
     const worker = await createWorker();
@@ -117,28 +65,19 @@ function AddTextBook({ category, stageID }) {
     const {
       data: { text },
     } = await worker.recognize(file);
-    handleTextStateMemory(text);
+    handleTextStateMemory(text, file);
     await worker.terminate();
   }
 
-  function handleTextStateMemory(text) {
+  function handleTextStateMemory(text, file) {
     console.log("The category is SWITCH: ", category);
     switch (category) {
       case "BookText":
         //updateTextTranscript(text);
         updateTextbook(text);
-        // updateTextbook((prevState) => ({
-        //   ...prevState, // Spread the previous state
-        //   transcript: text, // Update the transcript
-        // }));
-
         return null;
       case "QuestionText":
         updateQuestions(text);
-        // updateQuestions((prevState) => ({
-        //   ...prevState, // Spread the previous state
-        //   transcript: text, // Update the transcript
-        // }));
         return null;
       case "AnswerText":
         updateAnswers(text);
@@ -146,6 +85,7 @@ function AddTextBook({ category, stageID }) {
         return null;
       case "ListeningQuestionText":
         updateAudioQuestions(text);
+        //saveTextBookData(userID, lessonId, stageID, category, file);
         return null;
       case "ListeningAnswersText":
         updateAudioAnswers(text);
@@ -183,25 +123,44 @@ function AddTextBook({ category, stageID }) {
             handleReadText(reader.result);
           };
           reader.readAsDataURL(file);
+
+          saveTextBookData(userID, lessonId, stageID, category, file);
         });
       },
     });
 
-  //Thumbnails
+  //Delete Image
+  const handleDeleteImage = (file) => {
+    console.log("Delete Image and data.");
+  };
+  //Textbook Image Thumbnails
   const thumbs = files.map((file) => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img
-          src={file.preview}
-          style={img}
-          // Revoke data uri after image is loaded
-          onLoad={() => {
-            URL.revokeObjectURL(file.preview);
-          }}
-        />
-      </div>
-    </div>
+    <TextbookImageThumb
+      key={file.name}
+      file={file}
+      onDelete={handleDeleteImage}
+    />
   ));
+
+  //Saves audio file name to lessonstore and sends audio file to Firestore
+  const saveTextBookData = async (
+    userID,
+    lessonId,
+    stageID,
+    category,
+    file
+  ) => {
+    const fileName = file.name;
+    const encodedStageID = encodeURIComponent(stageID);
+    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`; // Handle both path and name
+    // Save audio file name to lesson store
+    const shit = "shit";
+    updateCompleteListeningStageData({
+      ...completeListeningStageData,
+      ImageData: filePath,
+    });
+    saveImageToIndexedDB(filePath, file);
+  };
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
@@ -291,25 +250,6 @@ function AddTextBook({ category, stageID }) {
     console.log("The data is: ", data);
     updateTextbookTranscript(data);
   }
-
-  const dragNDropText = (category) => {
-    switch (category) {
-      case "BookText":
-        return "Book Text";
-      case "QuestionText":
-        return "QUESTION Text";
-      case "AnswerText":
-        return "ANSWER Text";
-      case "ListeningQuestionText":
-        return "Audio QUESTIONS";
-      case "ListeningAnswersText":
-        return "Audio ANSWERS";
-      case "ListeningTranscript":
-        return "Audio TRANSCRIPT";
-      default:
-        return "No category selected";
-    }
-  };
 
   return (
     <section
