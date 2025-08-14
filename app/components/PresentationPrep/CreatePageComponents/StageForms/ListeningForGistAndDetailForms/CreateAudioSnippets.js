@@ -51,13 +51,25 @@ const CreateAudioSnippets = () => {
     (state) => state.updateAudioSnippetFilenameArray
   );
 
+  //Takes questions OCR and sends to api to be parsed into objects. Then the objects are set in state. This is happening every time the component mounts
   useEffect(() => {
-    getAudioQuestionParts("question");
-    getAudioQuestionParts("answer");
+    console.log("First UseEffect Firing in CreateAudioSnippets.");
+    //Check if completeListeningStageData.questionsAndAnswers is null or empty
+    if (
+      !completeListeningStageData.questionsAndAnswers ||
+      !completeListeningStageData.questionsAndAnswers.length > 0
+    ) {
+      getAudioQuestionParts("question");
+      getAudioQuestionParts("answer");
+    }
   }, []);
 
   useEffect(() => {
-    if (audioQuestionObj.length > 0 && audioAnswerObj.length > 0) {
+    if (
+      audioQuestionObj.length > 0 &&
+      audioAnswerObj.length > 0 &&
+      !completeListeningStageData.questionsAndAnswers
+    ) {
       mergeQuestionsAndAnswers(audioQuestionObj, audioAnswerObj);
       setReadyForSnippets(true);
       console.log("Ready for snippets:", readyForSnippets);
@@ -137,15 +149,7 @@ const CreateAudioSnippets = () => {
       "Updated questions and answers with snippets and indices:",
       updatedQuestionsAndAnswers
     );
-    // updateCompleteListeningStageData({
-    //   ...completeListeningStageData,
-    //   questionsAndAnswers: updatedQuestionsAndAnswers,
-    // });
-    // console.log(
-    //   "Updated completeListeningStageData with snippets and indices" +
-    //     JSON.stringify(completeListeningStageData.questionsAndAnswers)
-    // );
-    // setReadyFoAudioClips(true);
+
     updateCompleteListeningStageData({
       ...completeListeningStageData,
       questionsAndAnswers: updatedQuestionsAndAnswers,
@@ -156,56 +160,6 @@ const CreateAudioSnippets = () => {
       : setReadyForAudioClips(false);
   }, [readyForWordTimeData]);
 
-  // useEffect(() => {
-  //   if (readyForAudioClips) {
-  //     console.log(
-  //       "AUDIO DB USE EFFECT: Current completeListeningStageData: ",
-  //       completeListeningStageData
-  //     );
-  //     console.log("readyForAudioClips value:", readyForAudioClips);
-  //     console.log(
-  //       "Questions and Answers length:",
-  //       completeListeningStageData.questionsAndAnswers.length
-  //     );
-  //     console.log(
-  //       "Questions and Answers for audio clips:",
-  //       completeListeningStageData.questionsAndAnswers
-  //     );
-  //   }
-
-  //   if (
-  //     !readyForAudioClips ||
-  //     completeListeningStageData.questionsAndAnswers.length === 0
-  //   ) {
-  //     console.log("Not ready for audio clips yet.");
-  //     return;
-  //   }
-  //   console.log(
-  //     "Questions and Answers for audio clips:",
-  //     completeListeningStageData.questionsAndAnswers
-  //   );
-  //   console.log(
-  //     "Audio file name for audio clips:",
-  //     completeListeningStageData.audioFileName
-  //   );
-
-  //   // console.log("Ready for audio clips:", readyForAudioClips);
-  //   // console.log(
-  //   //   "Complete Listening Stage Data(CREATE CLIP USEEFFECT):",
-  //   //   completeListeningStageData
-  //   // );
-  //   // console.log("Word Time Array:", wordTimeArray);
-  //   // console.log("Audio File Name:", audioFileName);
-  //   // console.log("Now creating audio clips");
-
-  //   const splitAudioFileArray = splitAudioFile(completeListeningStageData);
-  //   console.log(
-  //     "Split audio file array in CreateAudioSnippets:",
-  //     splitAudioFileArray
-  //   );
-
-  //   // //Update complete data with audio clip names
-  // }, [readyForAudioClips]);
   useEffect(() => {
     if (
       !readyForAudioClips ||
@@ -277,9 +231,8 @@ const CreateAudioSnippets = () => {
     console.log("Merged Questions and Answers:");
     console.log(merged);
 
-    //Check if completeListeningStageData has questionsAndAnswers
-    //if (!completeListeningStageData.questionsAndAnswers) {
     updateCompleteListeningStageData({
+      ...completeListeningStageData,
       questionsAndAnswers: merged,
       transcript: s2TAudioTranscript,
       wordArray: wordTimeArray,

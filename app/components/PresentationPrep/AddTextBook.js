@@ -23,7 +23,6 @@ import {
 
 function AddTextBook({ category, stageID }) {
   console.log("The category is: ", category);
-  //const [extractedText, setExtractedText] = useState("");
 
   const {
     textbook,
@@ -81,11 +80,9 @@ function AddTextBook({ category, stageID }) {
         return null;
       case "AnswerText":
         updateAnswers(text);
-
         return null;
       case "ListeningQuestionText":
         updateAudioQuestions(text);
-        //saveTextBookData(userID, lessonId, stageID, category, file);
         return null;
       case "ListeningAnswersText":
         updateAudioAnswers(text);
@@ -154,7 +151,6 @@ function AddTextBook({ category, stageID }) {
     const encodedStageID = encodeURIComponent(stageID);
     const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`; // Handle both path and name
     // Save audio file name to lesson store
-    const shit = "shit";
     updateCompleteListeningStageData({
       ...completeListeningStageData,
       [`${category}ImageData`]: filePath,
