@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { useLessonStore } from "@app/stores/UseLessonStore";
-
+import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
+import { postToApiSectionData } from "@app/utils/PostToApiUtil";
 //import { useLessonStore } from "@app/stores/UseLessonStore";
 //if (typeof window !== "undefined") window.useLessonStore = useLessonStore;
 
@@ -105,6 +106,19 @@ export default function ZustandSyncClient() {
     const unsubAudioTranscript = useLessonStore.subscribe(
       (state) => state.audioTranscript,
       (transcript) => {
+        const {
+          currentUserID,
+          currentLessonID,
+          // hasHydratedCompleteListeningStageData,
+        } = useLessonStore.getState();
+        const keyName = "audioTranscript";
+        postToApiSectionData(
+          currentUserID,
+          currentLessonID,
+          listeningForGistandDetailStage,
+          keyName,
+          transcript
+        );
         console.log("✍️Audio Transcript updated:", transcript);
       }
     );
@@ -113,6 +127,19 @@ export default function ZustandSyncClient() {
       (state) => state.audioQuestions,
       (questions) => {
         console.log("❓Audio Questions updated:", questions);
+        const {
+          currentUserID,
+          currentLessonID,
+          // hasHydratedCompleteListeningStageData,
+        } = useLessonStore.getState();
+        const keyName = "audioQuestions";
+        postToApiSectionData(
+          currentUserID,
+          currentLessonID,
+          listeningForGistandDetailStage,
+          keyName,
+          questions
+        );
       }
     );
     console.log("📡 Subscribed to audioQuestions changes");
@@ -120,59 +147,22 @@ export default function ZustandSyncClient() {
       (state) => state.audioAnswers,
       (answers) => {
         console.log("🗣️Audio Answers updated:", answers);
+        const {
+          currentUserID,
+          currentLessonID,
+          // hasHydratedCompleteListeningStageData,
+        } = useLessonStore.getState();
+        const keyName = "audioAnswers";
+        postToApiSectionData(
+          currentUserID,
+          currentLessonID,
+          listeningForGistandDetailStage,
+          keyName,
+          answers
+        );
       }
     );
     console.log("📡 Subscribed to audioAnswers changes");
-
-    // const unsubCompleteListeningStageData = useLessonStore.subscribe(
-    //   (state) => state.completeListeningStageData,
-    //   (data) => {
-    //     console.log("📜 Complete Listening Stage Data updated:", data);
-    //     const {
-    //       currentUserID,
-    //       currentLessonID,
-    //       //hasHydratedCompleteListeningStageData,
-    //     } = useLessonStore.getState();
-
-    //     // 🧯 Skip autosave until we've hydrated from Firestore
-    //     // if (!hasHydratedCompleteListeningStageData) {
-    //     //   console.log(
-    //     //     "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
-    //     //   );
-    //     //   return;
-    //     // }
-
-    //     clearTimeout(debounceTimer);
-    //     debounceTimer = setTimeout(async () => {
-    //       if (
-    //         // !Array.isArray(state) ||
-    //         !currentUserID ||
-    //         !currentLessonID
-    //       ) {
-    //         console.log("⛔ Missing values for autosave");
-    //         return;
-    //       }
-
-    //       const encodedStageID = encodeURIComponent(
-    //         "Listening for Gist and Detail"
-    //       );
-    //       const stringifiedCompleteListeningStageData = JSON.stringify(
-    //         state.completeListeningStageData
-    //       );
-
-    //       try {
-    //         const res = await fetch(
-    //           `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedCompleteListeningStageData}`,
-    //           { method: "POST" }
-    //         );
-    //         const data = await res.json();
-    //         console.log("✅ Autosaved:", data);
-    //       } catch (err) {
-    //         console.error("❌ Autosave failed", err);
-    //       }
-    //     }, 5000);
-    //   }
-    // );
 
     const unsubCompleteListeningStageData = useLessonStore.subscribe(
       (state) => state.completeListeningStageData,
@@ -205,14 +195,14 @@ export default function ZustandSyncClient() {
 
           try {
             const res = await fetch(
-              "/api/firestore/section-data/post-section-data",
+              "/api/firestore/complete-listening-stage-data/post-complete-listening-stage-data?",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   userID: currentUserID,
                   lessonID: currentLessonID,
-                  stageID: "Listening for Gist and Detail",
+                  stageID: listeningForGistandDetailStage,
                   data: data,
                 }),
               }

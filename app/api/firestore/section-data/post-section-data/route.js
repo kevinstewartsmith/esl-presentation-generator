@@ -2,18 +2,17 @@ import { db } from "@app/utils/firebaseAdmin";
 
 export const POST = async (request) => {
   try {
-    console.log("Posting Complete Listening Stage Data");
-
     // Parse JSON body
-    const { userID, lessonID, stageID, data } = await request.json();
+    const { userID, lessonID, stageID, keyName, data } = await request.json();
 
     // Log the data
     console.log("UserID:", userID);
     console.log("LessonID:", lessonID);
     console.log("StageID:", stageID);
+    console.log("KeyName:", keyName);
     console.log("Data:", data);
-
-    await postCompleteListeningStageData(userID, lessonID, stageID, data);
+    console.log(`Posting updated Key: ${keyName} -  Listening Stage Data`);
+    await postSectionData(userID, lessonID, stageID, keyName, data);
 
     return new Response(
       JSON.stringify({
@@ -33,7 +32,11 @@ export const POST = async (request) => {
   }
 };
 
-async function postCompleteListeningStageData(userID, lessonID, stageID, data) {
+async function postSectionData(userID, lessonID, stageID, keyName, data) {
+  //If data is === "" or undefined replace it with __EMPTY__
+  const cleanData =
+    data === "" || data === undefined || data === null ? "__EMPTY__" : data;
+
   // Your logic to post the data to Firestore
   const sectionRef = db
     .collection("users")
@@ -44,5 +47,5 @@ async function postCompleteListeningStageData(userID, lessonID, stageID, data) {
     .doc(stageID);
   // .doc(stageID).collection("completeListening");
   //await sectionRef.add(parsedCompleteListeningStageData);
-  await sectionRef.set({ completeListeningStageData: data }, { merge: true });
+  await sectionRef.set({ [`${keyName}`]: cleanData }, { merge: true });
 }

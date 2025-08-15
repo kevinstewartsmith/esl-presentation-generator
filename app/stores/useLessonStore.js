@@ -38,6 +38,18 @@ export const useLessonStore = create(
     // Think-Pair-Share Phase - End
 
     // Audio Stage - Start
+    audioQuestionsImageFilePath: "",
+    updateAudioQuestionsImageFilePath: (path) =>
+      set({ audioQuestionsImageFilePath: path }),
+
+    audioAnswersImageFilePath: "",
+    updateAudioAnswersImageFilePath: (path) =>
+      set({ audioAnswersImageFilePath: path }),
+
+    audioTranscriptImageFilePath: "",
+    updateAudioTranscriptImageFilePath: (path) =>
+      set({ audioTranscriptImageFilePath: path }),
+
     audioTranscript: "",
     updateAudioTranscript: (text) => set({ audioTranscript: text }),
 
