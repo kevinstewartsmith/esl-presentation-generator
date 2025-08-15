@@ -57,7 +57,7 @@ const CreateAudioSnippets = () => {
     //Check if completeListeningStageData.questionsAndAnswers is null or empty
     if (
       !completeListeningStageData.questionsAndAnswers ||
-      !completeListeningStageData.questionsAndAnswers.length > 0
+      completeListeningStageData.questionsAndAnswers.length === 0
     ) {
       getAudioQuestionParts("question");
       getAudioQuestionParts("answer");
@@ -68,7 +68,8 @@ const CreateAudioSnippets = () => {
     if (
       audioQuestionObj.length > 0 &&
       audioAnswerObj.length > 0 &&
-      !completeListeningStageData.questionsAndAnswers
+      (!completeListeningStageData.questionsAndAnswers ||
+        completeListeningStageData.questionsAndAnswers.length === 0)
     ) {
       mergeQuestionsAndAnswers(audioQuestionObj, audioAnswerObj);
       setReadyForSnippets(true);

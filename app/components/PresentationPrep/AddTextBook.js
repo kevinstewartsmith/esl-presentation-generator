@@ -5,6 +5,8 @@ import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndD
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/UseLessonStore";
+import { deleteFile } from "@app/utils/IndexedDBWrapper";
+import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import {
   saveImageToIndexedDB,
   dragNDropText,
@@ -56,6 +58,19 @@ function AddTextBook({ category, stageID }) {
     (state) => state.completeListeningStageData
   );
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const encodedStageID = encodeURIComponent(listeningForGistandDetailStage);
+      const res = await fetch(
+        `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}`
+      );
+      const json = await res.json();
+      useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
+    };
+
+    fetchData();
+  }, []);
+
   //Reads the text from the image
   async function handleReadText(base64File, file) {
     const worker = await createWorker();
@@ -68,7 +83,7 @@ function AddTextBook({ category, stageID }) {
     await worker.terminate();
   }
 
-  function handleTextStateMemory(text, file) {
+  function handleTextStateMemory(text) {
     console.log("The category is SWITCH: ", category);
     switch (category) {
       case "BookText":
@@ -127,8 +142,23 @@ function AddTextBook({ category, stageID }) {
     });
 
   //Delete Image
-  const handleDeleteImage = (file) => {
+  const handleDeleteImage = async (file) => {
     console.log("Delete Image and data.");
+    // 1. Remove from IndexedDB
+    const encodedStageID = encodeURIComponent(stageID);
+    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
+    await deleteFile(filePath);
+
+    // 2. Remove filepath from completeListeningStageData
+    updateCompleteListeningStageData({
+      ...completeListeningStageData,
+      [`${category}ImageData`]: undefined, // or null, or delete the key as needed
+    });
+    // 3. Remove from files state
+    handleTextStateMemory("");
+
+    // 4. Remove from files state (removes preview)
+    setFiles((prev) => prev.filter((f) => f.name !== file.name));
   };
   //Textbook Image Thumbnails
   const thumbs = files.map((file) => (

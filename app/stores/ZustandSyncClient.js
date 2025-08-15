@@ -124,10 +124,105 @@ export default function ZustandSyncClient() {
     );
     console.log("📡 Subscribed to audioAnswers changes");
 
+    // const unsubCompleteListeningStageData = useLessonStore.subscribe(
+    //   (state) => state.completeListeningStageData,
+    //   (data) => {
+    //     console.log("📜 Complete Listening Stage Data updated:", data);
+    //     const {
+    //       currentUserID,
+    //       currentLessonID,
+    //       //hasHydratedCompleteListeningStageData,
+    //     } = useLessonStore.getState();
+
+    //     // 🧯 Skip autosave until we've hydrated from Firestore
+    //     // if (!hasHydratedCompleteListeningStageData) {
+    //     //   console.log(
+    //     //     "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+    //     //   );
+    //     //   return;
+    //     // }
+
+    //     clearTimeout(debounceTimer);
+    //     debounceTimer = setTimeout(async () => {
+    //       if (
+    //         // !Array.isArray(state) ||
+    //         !currentUserID ||
+    //         !currentLessonID
+    //       ) {
+    //         console.log("⛔ Missing values for autosave");
+    //         return;
+    //       }
+
+    //       const encodedStageID = encodeURIComponent(
+    //         "Listening for Gist and Detail"
+    //       );
+    //       const stringifiedCompleteListeningStageData = JSON.stringify(
+    //         state.completeListeningStageData
+    //       );
+
+    //       try {
+    //         const res = await fetch(
+    //           `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedCompleteListeningStageData}`,
+    //           { method: "POST" }
+    //         );
+    //         const data = await res.json();
+    //         console.log("✅ Autosaved:", data);
+    //       } catch (err) {
+    //         console.error("❌ Autosave failed", err);
+    //       }
+    //     }, 5000);
+    //   }
+    // );
+
     const unsubCompleteListeningStageData = useLessonStore.subscribe(
       (state) => state.completeListeningStageData,
       (data) => {
         console.log("📜 Complete Listening Stage Data updated:", data);
+        const {
+          currentUserID,
+          currentLessonID,
+          // hasHydratedCompleteListeningStageData,
+        } = useLessonStore.getState();
+
+        // 🧯 Skip autosave until we've hydrated from Firestore
+        // if (!hasHydratedCompleteListeningStageData) {
+        //   console.log(
+        //     "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+        //   );
+        //   return;
+        // }
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          if (!currentUserID || !currentLessonID) {
+            console.log("⛔ Missing values for autosave");
+            return;
+          }
+
+          const encodedStageID = encodeURIComponent(
+            "Listening for Gist and Detail"
+          );
+
+          try {
+            const res = await fetch(
+              "/api/firestore/section-data/post-section-data",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  userID: currentUserID,
+                  lessonID: currentLessonID,
+                  stageID: "Listening for Gist and Detail",
+                  data: data,
+                }),
+              }
+            );
+            const result = await res.json();
+            console.log("✅ Autosaved:", result);
+          } catch (err) {
+            console.error("❌ Autosave failed", err);
+          }
+        }, 5000);
       }
     );
 

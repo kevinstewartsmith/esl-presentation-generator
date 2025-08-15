@@ -60,17 +60,5 @@ async function postThinkPairShareSection(
     .collection("ThinkPairShare")
     .doc("thinkPairShare");
 
-  //const sectionDoc = await sectionRef.get();
-
-  // Check if the section already exists
-  //   if (!sectionDoc.exists) {
-  //     // Add the new section with the name
-  //     await sectionRef.set({ name: sectionId }, { merge: true });
-  //     console.log("Section does not exist. Created new section.");
-  //   } else {
-  //     console.log("Section already exists.");
-  //   }
-
-  // Add the new vocabulary to the section
   await sectionRef.set({ ThinkPhase: thinkPairShare }, { merge: true });
 }
