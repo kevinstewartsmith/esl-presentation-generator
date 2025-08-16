@@ -32,7 +32,9 @@ export async function postToApiSectionData(
     if (successMessage) {
       console.log(successMessage, result);
     }
-    console.log("Posted section data successfully.");
+    console.log(
+      `Posted section: ${stageID} - ${keyName} - ${data} successfully.`
+    );
 
     return result;
   } catch (error) {

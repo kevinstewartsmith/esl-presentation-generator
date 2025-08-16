@@ -105,7 +105,12 @@ export default function ZustandSyncClient() {
     // Audio Stage - Start
     const unsubAudioTranscript = useLessonStore.subscribe(
       (state) => state.audioTranscript,
-      (transcript) => {
+      (transcript, prevTranscript) => {
+        // Only POST if data actually changed
+        if (JSON.stringify(transcript) === JSON.stringify(prevTranscript)) {
+          console.log("📜 No changes detected in audioTranscript");
+          return; // No real change, skip autosave
+        }
         const {
           currentUserID,
           currentLessonID,
@@ -115,7 +120,7 @@ export default function ZustandSyncClient() {
         //🧯 Skip autosave until we've hydrated from Firestore
         if (!hasHydratedCompleteListeningStageData) {
           console.log(
-            "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+            "⏭ Skipping autosave: hydration not complete - audioTranscript"
           );
           return;
         }
@@ -133,7 +138,12 @@ export default function ZustandSyncClient() {
     console.log("📡 Subscribed to audioTranscript changes");
     const unsubAudioQuestions = useLessonStore.subscribe(
       (state) => state.audioQuestions,
-      (questions) => {
+      (questions, prevQuestions) => {
+        // Only POST if data actually changed
+        if (JSON.stringify(questions) === JSON.stringify(prevQuestions)) {
+          console.log("📜 No changes detected in audioQuestions");
+          return; // No real change, skip autosave
+        }
         console.log("❓Audio Questions updated:", questions);
         const { currentUserID, currentLessonID, hasHydratedAudioQuestions } =
           useLessonStore.getState();
@@ -159,7 +169,12 @@ export default function ZustandSyncClient() {
     console.log("📡 Subscribed to audioQuestions changes");
     const unsubAudioAnswers = useLessonStore.subscribe(
       (state) => state.audioAnswers,
-      (answers) => {
+      (answers, prevAnswers) => {
+        // Only POST if data actually changed
+        if (JSON.stringify(answers) === JSON.stringify(prevAnswers)) {
+          console.log("📜 No changes detected in audioAnswers");
+          return; // No real change, skip autosave
+        }
         console.log("🗣️Audio Answers updated:", answers);
         const { currentUserID, currentLessonID, hasHydratedAudioAnswers } =
           useLessonStore.getState();
@@ -186,8 +201,14 @@ export default function ZustandSyncClient() {
 
     const unsubCompleteListeningStageData = useLessonStore.subscribe(
       (state) => state.completeListeningStageData,
-      (data) => {
-        console.log("📜 Complete Listening Stage Data updated:", data);
+      (data, prevData) => {
+        // Only POST if data actually changed
+        if (JSON.stringify(data) === JSON.stringify(prevData)) {
+          console.log(
+            "📜 No changes detected in Complete Listening Stage Data"
+          );
+          return; // No real change, skip autosave
+        }
         const {
           currentUserID,
           currentLessonID,
@@ -229,6 +250,7 @@ export default function ZustandSyncClient() {
             );
             const result = await res.json();
             console.log("✅ Autosaved:", result);
+            console.log("📜 Complete Listening Stage Data updated:", data);
           } catch (err) {
             console.error("❌ Autosave failed", err);
           }
