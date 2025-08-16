@@ -106,6 +106,8 @@ export default function ZustandSyncClient() {
     const unsubAudioTranscript = useLessonStore.subscribe(
       (state) => state.audioTranscript,
       (transcript, prevTranscript) => {
+        console.log("⁉️Audio Transcript changed:", transcript);
+
         // Only POST if data actually changed
         if (JSON.stringify(transcript) === JSON.stringify(prevTranscript)) {
           console.log("📜 No changes detected in audioTranscript");
@@ -139,6 +141,7 @@ export default function ZustandSyncClient() {
     const unsubAudioQuestions = useLessonStore.subscribe(
       (state) => state.audioQuestions,
       (questions, prevQuestions) => {
+        console.log("⁉️Audio Questions changed:", questions);
         // Only POST if data actually changed
         if (JSON.stringify(questions) === JSON.stringify(prevQuestions)) {
           console.log("📜 No changes detected in audioQuestions");
@@ -170,6 +173,8 @@ export default function ZustandSyncClient() {
     const unsubAudioAnswers = useLessonStore.subscribe(
       (state) => state.audioAnswers,
       (answers, prevAnswers) => {
+        console.log("⁉️Audio Answers changed:", answers);
+
         // Only POST if data actually changed
         if (JSON.stringify(answers) === JSON.stringify(prevAnswers)) {
           console.log("📜 No changes detected in audioAnswers");
@@ -202,6 +207,8 @@ export default function ZustandSyncClient() {
     const unsubCompleteListeningStageData = useLessonStore.subscribe(
       (state) => state.completeListeningStageData,
       (data, prevData) => {
+        console.log("⁉️Complete Listening Stage Data changed:", data);
+
         // Only POST if data actually changed
         if (JSON.stringify(data) === JSON.stringify(prevData)) {
           console.log(

@@ -7,6 +7,7 @@ import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookIma
 import { useLessonStore } from "@app/stores/UseLessonStore";
 import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
+import { base64ToBlob } from "@app/utils/base64ToBlob";
 import {
   saveImageToIndexedDB,
   dragNDropText,
@@ -57,19 +58,45 @@ function AddTextBook({ category, stageID }) {
   const completeListeningStageData = useLessonStore(
     (state) => state.completeListeningStageData
   );
+  const [files, setFiles] = useState([]);
+  // ...existing code...
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const encodedStageID = encodeURIComponent(listeningForGistandDetailStage);
-    //   const res = await fetch(
-    //     `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}`
-    //   );
-    //   const json = await res.json();
-    //   useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
-    // };
-    // fetchData();
-  }, []);
+    console.log(`SEARCHING FOR IMAGE: ${category}ImageData`);
 
+    const imagePath = completeListeningStageData?.[`${category}ImageData`];
+    console.log("Image Path: ", imagePath);
+    if (!imagePath) return;
+
+    getFile(imagePath).then((data) => {
+      if (typeof data === "string" && data.startsWith("data:image")) {
+        const blob = base64ToBlob(data);
+        setFiles([
+          {
+            name: imagePath,
+            preview: URL.createObjectURL(blob),
+          },
+        ]);
+      } else if (data && data instanceof Blob) {
+        setFiles([
+          {
+            name: imagePath,
+            preview: URL.createObjectURL(data),
+          },
+        ]);
+      } else {
+        setFiles([]);
+      }
+    });
+
+    // Cleanup previews on unmount
+    return () => {
+      setFiles((prev) => {
+        prev.forEach((file) => URL.revokeObjectURL(file.preview));
+        return [];
+      });
+    };
+  }, [category, completeListeningStageData]);
   //Reads the text from the image
   async function handleReadText(base64File, file) {
     const worker = await createWorker();
@@ -109,8 +136,6 @@ function AddTextBook({ category, stageID }) {
         return null;
     }
   }
-
-  const [files, setFiles] = useState([]);
 
   //Drag and Drop
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
