@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext, use } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
@@ -12,21 +12,15 @@ import {
   saveImageToIndexedDB,
   dragNDropText,
 } from "@app/utils/AddTextBookUtil";
-
 import {
   baseStyle,
   focusedStyle,
   acceptStyle,
   rejectStyle,
   thumbsContainer,
-  thumb,
-  thumbInner,
-  img,
 } from "@app/utils/AddTextBookUtil_CSS";
 
 function AddTextBook({ category, stageID }) {
-  console.log("The category is: ", category);
-
   const {
     textbook,
     questions,
@@ -37,7 +31,6 @@ function AddTextBook({ category, stageID }) {
     updateTextbookTranscript,
   } = useContext(ReadingForGistAndDetailContext);
 
-  //Audio Questions and Answers for useLessonStore
   const audioQuestions = useLessonStore((state) => state.audioQuestions);
   const updateAudioQuestions = useLessonStore(
     (state) => state.updateAudioQuestions
@@ -58,15 +51,12 @@ function AddTextBook({ category, stageID }) {
   const completeListeningStageData = useLessonStore(
     (state) => state.completeListeningStageData
   );
+
   const [files, setFiles] = useState([]);
-  // ...existing code...
 
+  // Robust preview logic: always sync preview with IndexedDB after save
   useEffect(() => {
-    if (files.length > 0) return;
-    console.log(`SEARCHING FOR IMAGE: ${category}ImageData`);
-
     const imagePath = completeListeningStageData?.[`${category}ImageData`];
-    console.log("Image Path: ", imagePath);
     if (!imagePath) return;
 
     getFile(imagePath).then((data) => {
@@ -90,7 +80,6 @@ function AddTextBook({ category, stageID }) {
       }
     });
 
-    // Cleanup previews on unmount
     return () => {
       setFiles((prev) => {
         prev.forEach((file) => URL.revokeObjectURL(file.preview));
@@ -98,7 +87,8 @@ function AddTextBook({ category, stageID }) {
       });
     };
   }, [category, completeListeningStageData]);
-  //Reads the text from the image
+
+  // OCR logic
   async function handleReadText(base64File, file) {
     const worker = await createWorker();
     await worker.loadLanguage("eng");
@@ -111,10 +101,8 @@ function AddTextBook({ category, stageID }) {
   }
 
   function handleTextStateMemory(text) {
-    console.log("The category is SWITCH: ", category);
     switch (category) {
       case "BookText":
-        //updateTextTranscript(text);
         updateTextbook(text);
         return null;
       case "QuestionText":
@@ -133,59 +121,81 @@ function AddTextBook({ category, stageID }) {
         updateAudioTranscript(text);
         return null;
       default:
-        console.log("No category selected");
         return null;
     }
   }
 
-  //Drag and Drop
+  // Save image to IndexedDB and update Zustand, then reload preview from IndexedDB
+  const saveTextBookData = async (
+    userID,
+    lessonId,
+    stageID,
+    category,
+    file
+  ) => {
+    const encodedStageID = encodeURIComponent(stageID);
+    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
+    updateCompleteListeningStageData({
+      ...completeListeningStageData,
+      [`${category}ImageData`]: filePath,
+    });
+    await saveImageToIndexedDB(filePath, file);
+
+    // After save, reload from IndexedDB for robust preview
+    const storedFile = await getFile(filePath);
+    if (storedFile && storedFile instanceof Blob) {
+      setFiles([
+        {
+          name: filePath,
+          preview: URL.createObjectURL(storedFile),
+        },
+      ]);
+    }
+  };
+
+  // Dropzone logic
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
-      accept: {
-        "image/*": [],
-      },
+      accept: { "image/*": [] },
       multiple: false,
       onDrop: (acceptedFiles) => {
-        setFiles(
-          acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          )
-        );
+        const file = acceptedFiles[0];
+        if (!file) return;
 
-        acceptedFiles.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            handleReadText(reader.result, file);
-          };
-          reader.readAsDataURL(file);
+        // Show preview immediately
+        setFiles([
+          {
+            name: file.name,
+            preview: URL.createObjectURL(file),
+          },
+        ]);
 
-          saveTextBookData(userID, lessonId, stageID, category, file);
-        });
+        // OCR and save
+        const reader = new FileReader();
+        reader.onload = () => {
+          handleReadText(reader.result, file);
+        };
+        reader.readAsDataURL(file);
+
+        saveTextBookData(userID, lessonId, stageID, category, file);
       },
     });
 
-  //Delete Image
+  // Delete image logic
   const handleDeleteImage = async (file) => {
-    console.log("Delete Image and data.");
-    // 1. Remove from IndexedDB
     const encodedStageID = encodeURIComponent(stageID);
     const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
     await deleteFile(filePath);
 
-    // 2. Remove filepath from completeListeningStageData
     updateCompleteListeningStageData({
       ...completeListeningStageData,
-      [`${category}ImageData`]: undefined, // or null, or delete the key as needed
+      [`${category}ImageData`]: undefined,
     });
-    // 3. Remove from files state
     handleTextStateMemory("");
-
-    // 4. Remove from files state (removes preview)
     setFiles((prev) => prev.filter((f) => f.name !== file.name));
   };
-  //Textbook Image Thumbnails
+
+  // Thumbnails
   const thumbs = files.map((file) => (
     <TextbookImageThumb
       key={file.name}
@@ -194,52 +204,7 @@ function AddTextBook({ category, stageID }) {
     />
   ));
 
-  //Saves audio file name to lessonstore and sends audio file to Firestore
-  const saveTextBookData = async (
-    userID,
-    lessonId,
-    stageID,
-    category,
-    file
-  ) => {
-    const fileName = file.name;
-    const encodedStageID = encodeURIComponent(stageID);
-    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`; // Handle both path and name
-    // Save audio file name to lesson store
-    updateCompleteListeningStageData({
-      ...completeListeningStageData,
-      [`${category}ImageData`]: filePath,
-    });
-    saveImageToIndexedDB(filePath, file);
-  };
-
-  //useEffect(() => {
-  // const imagePath = completeListeningStageData?.[`${category}ImageData`];
-  // if (!imagePath) return;
-
-  // getFile(imagePath).then((blob) => {
-  //   if (blob && blob instanceof Blob) {
-  //     setFiles([
-  //       {
-  //         name: imagePath, // or use a better name if you have it
-  //         preview: URL.createObjectURL(blob),
-  //       },
-  //     ]);
-  //   } else {
-  //     setFiles([]); // No preview if not found
-  //   }
-  // });
-
-  // Cleanup previews on unmount
-  //   return () => {
-  //     setFiles((prev) => {
-  //       prev.forEach((file) => URL.revokeObjectURL(file.preview));
-  //       return [];
-  //     });
-  //   };
-  // }, [category, completeListeningStageData]);
-
-  //Styles Memo
+  // Styles
   const style = useMemo(
     () => ({
       ...baseStyle,
@@ -250,6 +215,7 @@ function AddTextBook({ category, stageID }) {
     [isFocused, isDragAccept, isDragReject]
   );
 
+  // Text display
   const handleTextDisplay = (category, textbook, questions, answers) => {
     switch (category) {
       case "BookText":
@@ -269,6 +235,7 @@ function AddTextBook({ category, stageID }) {
     }
   };
 
+  // Button display
   const handleButtonDisplay = (category) => {
     switch (category) {
       case "BookText":
@@ -283,15 +250,12 @@ function AddTextBook({ category, stageID }) {
         return <button onClick={handleClick}>Clean Audio Answers</button>;
       case "ListeningTranscript":
         return <button onClick={handleClick}>Clean Audio Transcript</button>;
-
       default:
-        //console.log("No category selected");
         return null;
     }
   };
 
   async function handleClick() {
-    //console.log("HANDLECLICK The category is: ", category);
     const textContent = (category) => {
       switch (category) {
         case "BookText":
@@ -316,9 +280,6 @@ function AddTextBook({ category, stageID }) {
       `/api/clean-text-json?query=${text}&category=${category}`
     );
     const data = await response.json();
-
-    // updatetext so that key textEdits hold the value [...text, textEdits: data]
-    console.log("The data is: ", data);
     updateTextbookTranscript(data);
   }
 
@@ -361,7 +322,6 @@ function AddTextBook({ category, stageID }) {
         <div style={{ borderWidth: 1 }}>
           {handleTextDisplay(category, textbook, questions, answers)}
         </div>
-
         {handleButtonDisplay(category)}
       </div>
     </section>
