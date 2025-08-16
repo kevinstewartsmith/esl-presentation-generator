@@ -243,7 +243,7 @@ export default function ZustandSyncClient() {
 
           try {
             const res = await fetch(
-              "/api/firestore/complete-listening-stage-data/post-complete-listening-stage-data?",
+              "/api/firestore/complete-listening-stage-data/post-complete-listening-stage-data",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

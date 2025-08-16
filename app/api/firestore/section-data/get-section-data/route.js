@@ -1,5 +1,5 @@
 import { db } from "@app/utils/firebaseAdmin";
-
+import { replacePlaceholderWithEmpty } from "@app/utils/replacePlaceholderWithEmpty";
 export const GET = async (request) => {
   console.log("Trying to GET Section Data");
   try {
@@ -24,8 +24,9 @@ export const GET = async (request) => {
     }
 
     const data = doc.data();
+    const cleanData = replacePlaceholderWithEmpty(data);
 
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify(cleanData), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

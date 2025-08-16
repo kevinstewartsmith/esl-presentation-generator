@@ -9,6 +9,8 @@ export const POST = async (request) => {
 
     // Replace empty fields with placeholders
     const cleanedData = replaceEmptyWithPlaceholder(data);
+    console.log("CLEANED COMPLETE LISTENING DATA");
+    console.log(cleanedData);
 
     // Post the data to Firestore
     await postCompleteListeningStageData(

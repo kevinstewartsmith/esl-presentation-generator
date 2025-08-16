@@ -177,7 +177,7 @@ function AddTextBook({ category, stageID }) {
     // 2. Remove filepath from completeListeningStageData
     updateCompleteListeningStageData({
       ...completeListeningStageData,
-      [`${category}ImageData`]: undefined, // or null, or delete the key as needed
+      [`${category}ImageData`]: "", // or null, or delete the key as needed
     });
     // 3. Remove from files state
     handleTextStateMemory("");
