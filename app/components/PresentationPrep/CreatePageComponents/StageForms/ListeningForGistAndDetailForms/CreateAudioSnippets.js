@@ -32,7 +32,7 @@ const CreateAudioSnippets = () => {
   const completeListeningStageData = useLessonStore(
     (state) => state.completeListeningStageData
   );
-  const audioFileName = useLessonStore((state) => state.AudioFileName);
+  const audioFileName = useLessonStore((state) => state.audioFileName);
   const audioClipQuestionData = useLessonStore(
     (state) => state.audioClipQuestionData
   );

@@ -32,6 +32,8 @@ export async function postToApiSectionData(
     if (successMessage) {
       console.log(successMessage, result);
     }
+    console.log("Posted section data successfully.");
+
     return result;
   } catch (error) {
     console.error("Error posting to API:", error);

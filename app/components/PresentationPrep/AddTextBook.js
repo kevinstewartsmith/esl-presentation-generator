@@ -5,7 +5,7 @@ import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndD
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/UseLessonStore";
-import { deleteFile } from "@app/utils/IndexedDBWrapper";
+import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import {
   saveImageToIndexedDB,
@@ -59,16 +59,15 @@ function AddTextBook({ category, stageID }) {
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      const encodedStageID = encodeURIComponent(listeningForGistandDetailStage);
-      const res = await fetch(
-        `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}`
-      );
-      const json = await res.json();
-      useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
-    };
-
-    fetchData();
+    // const fetchData = async () => {
+    //   const encodedStageID = encodeURIComponent(listeningForGistandDetailStage);
+    //   const res = await fetch(
+    //     `/api/firestore/section-data/post-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}`
+    //   );
+    //   const json = await res.json();
+    //   useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
+    // };
+    // fetchData();
   }, []);
 
   //Reads the text from the image
@@ -188,10 +187,31 @@ function AddTextBook({ category, stageID }) {
     saveImageToIndexedDB(filePath, file);
   };
 
-  useEffect(() => {
-    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
-  }, []);
+  //useEffect(() => {
+  // const imagePath = completeListeningStageData?.[`${category}ImageData`];
+  // if (!imagePath) return;
+
+  // getFile(imagePath).then((blob) => {
+  //   if (blob && blob instanceof Blob) {
+  //     setFiles([
+  //       {
+  //         name: imagePath, // or use a better name if you have it
+  //         preview: URL.createObjectURL(blob),
+  //       },
+  //     ]);
+  //   } else {
+  //     setFiles([]); // No preview if not found
+  //   }
+  // });
+
+  // Cleanup previews on unmount
+  //   return () => {
+  //     setFiles((prev) => {
+  //       prev.forEach((file) => URL.revokeObjectURL(file.preview));
+  //       return [];
+  //     });
+  //   };
+  // }, [category, completeListeningStageData]);
 
   //Styles Memo
   const style = useMemo(

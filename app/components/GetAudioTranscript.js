@@ -63,7 +63,7 @@ const GetAudioTranscript = () => {
   return (
     <div>
       <button onClick={getTranscript}>Get Transcript</button>
-      <p>{s2TAudioTranscript ? <p>{s2TAudioTranscript}</p> : null}</p>
+      <p>{s2TAudioTranscript ? s2TAudioTranscript : null}</p>
       {/* <p>{wordTimeArray ? <p>{JSON.stringify(wordTimeArray)}</p> : null}</p> */}
     </div>
   );

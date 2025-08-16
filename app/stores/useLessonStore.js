@@ -38,6 +38,21 @@ export const useLessonStore = create(
     // Think-Pair-Share Phase - End
 
     // Audio Stage - Start
+
+    //has hydrated methods for fetching data
+    hasHydratedCompleteListeningStageData: false,
+    setHasHydratedCompleteListeningStageData: (value) =>
+      set({ hasHydratedCompleteListeningStageData: value }),
+
+    hasHydratedAudioQuestions: false,
+    setHasHydratedAudioQuestions: (value) =>
+      set({ hasHydratedAudioQuestions: value }),
+
+    hasHydratedAudioAnswers: false,
+    setHasHydratedAudioAnswers: (value) =>
+      set({ hasHydratedAudioAnswers: value }),
+    //end hydrated methods
+
     audioQuestionsImageFilePath: "",
     updateAudioQuestionsImageFilePath: (path) =>
       set({ audioQuestionsImageFilePath: path }),
@@ -62,8 +77,8 @@ export const useLessonStore = create(
     s2TAudioTranscript: "",
     updateS2TAudioTranscript: (text) => set({ s2TAudioTranscript: text }),
 
-    AudioFileName: "",
-    updateAudioFileName: (fileName) => set({ AudioFileName: fileName }),
+    audioFileName: "",
+    updateAudioFileName: (fileName) => set({ audioFileName: fileName }),
 
     wordTimeArray: [],
     updateWordTimeArray: (array) => set({ wordTimeArray: array }),

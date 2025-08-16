@@ -109,8 +109,16 @@ export default function ZustandSyncClient() {
         const {
           currentUserID,
           currentLessonID,
-          // hasHydratedCompleteListeningStageData,
+          hasHydratedCompleteListeningStageData,
         } = useLessonStore.getState();
+
+        //🧯 Skip autosave until we've hydrated from Firestore
+        if (!hasHydratedCompleteListeningStageData) {
+          console.log(
+            "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+          );
+          return;
+        }
         const keyName = "audioTranscript";
         postToApiSectionData(
           currentUserID,
@@ -127,11 +135,17 @@ export default function ZustandSyncClient() {
       (state) => state.audioQuestions,
       (questions) => {
         console.log("❓Audio Questions updated:", questions);
-        const {
-          currentUserID,
-          currentLessonID,
-          // hasHydratedCompleteListeningStageData,
-        } = useLessonStore.getState();
+        const { currentUserID, currentLessonID, hasHydratedAudioQuestions } =
+          useLessonStore.getState();
+
+        // //🧯 Skip autosave until we've hydrated from Firestore
+        if (!hasHydratedAudioQuestions) {
+          console.log(
+            "⏭ Skipping autosave: hydration not complete - audioQuestions"
+          );
+          return;
+        }
+
         const keyName = "audioQuestions";
         postToApiSectionData(
           currentUserID,
@@ -147,11 +161,17 @@ export default function ZustandSyncClient() {
       (state) => state.audioAnswers,
       (answers) => {
         console.log("🗣️Audio Answers updated:", answers);
-        const {
-          currentUserID,
-          currentLessonID,
-          // hasHydratedCompleteListeningStageData,
-        } = useLessonStore.getState();
+        const { currentUserID, currentLessonID, hasHydratedAudioAnswers } =
+          useLessonStore.getState();
+
+        // //🧯 Skip autosave until we've hydrated from Firestore
+        if (!hasHydratedAudioAnswers) {
+          console.log(
+            "⏭ Skipping autosave: hydration not complete - audioAnswers"
+          );
+          return;
+        }
+
         const keyName = "audioAnswers";
         postToApiSectionData(
           currentUserID,
@@ -171,16 +191,16 @@ export default function ZustandSyncClient() {
         const {
           currentUserID,
           currentLessonID,
-          // hasHydratedCompleteListeningStageData,
+          hasHydratedCompleteListeningStageData,
         } = useLessonStore.getState();
 
-        // 🧯 Skip autosave until we've hydrated from Firestore
-        // if (!hasHydratedCompleteListeningStageData) {
-        //   console.log(
-        //     "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
-        //   );
-        //   return;
-        // }
+        //🧯 Skip autosave until we've hydrated from Firestore
+        if (!hasHydratedCompleteListeningStageData) {
+          console.log(
+            "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+          );
+          return;
+        }
 
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(async () => {
@@ -217,7 +237,7 @@ export default function ZustandSyncClient() {
     );
 
     const unsubAudioFileName = useLessonStore.subscribe(
-      (state) => state.AudioFileName,
+      (state) => state.audioFileName,
       (fileName) => {
         console.log("🔈 Audio File Name updated:", fileName);
       }
@@ -236,6 +256,7 @@ export default function ZustandSyncClient() {
       unsubAudioQuestions();
       unsubAudioAnswers();
       unsubCompleteListeningStageData();
+      unsubAudioFileName();
 
       console.log("📴 All subscriptions unsubscribed");
     };
