@@ -6,7 +6,8 @@ import AudioTable from "@app/components/AudioTable";
 import { Button } from "@mui/material";
 import Transcript from "@app/components/Transcript";
 import GetAudioTranscript from "@app/components/GetAudioTranscript";
-
+import AudioUploadCard from "@app/components/PresentationPrep/AudioUploadCard";
+import AudioUploader from "@app/components/PresentationPrep/AudioUploader";
 const ListeningUploadandTranscribeAudio = () => {
   const audioTextContext = useContext(AudioTextContext);
 
@@ -28,6 +29,9 @@ const ListeningUploadandTranscribeAudio = () => {
         </Grid>
         <Grid item xs={6}>
           <GetAudioTranscript />
+        </Grid>
+        <Grid item xs={6}>
+          <AudioUploader />
         </Grid>
       </Grid>
     </>

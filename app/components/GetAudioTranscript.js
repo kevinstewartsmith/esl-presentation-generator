@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AudioTextContext } from "../contexts/AudioTextContext";
 import { useLessonStore } from "@app/stores/UseLessonStore";
-
+import { getFile } from "@app/utils/IndexedDBWrapper";
 const GetAudioTranscript = () => {
   const {
     updateTranscript,
@@ -22,13 +22,22 @@ const GetAudioTranscript = () => {
   const s2TAudioTranscript = useLessonStore(
     (state) => state.s2TAudioTranscript
   );
+  const completeListeningStageData = useLessonStore(
+    (state) => state.completeListeningStageData
+  );
 
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
 
   async function getTranscript() {
-    const response = await fetch(
-      `/api/google-api-s2t?name=${selectedAudioFileName}`
-    );
+    const audioFileName = completeListeningStageData.audioFileName;
+    const audioFileBlob = await getFile(audioFileName);
+    const formData = new FormData();
+    formData.append("audio", audioFileBlob, audioFileName);
+    const response = await fetch(`/api/transcribe-audio-file`, {
+      method: "POST",
+      body: formData,
+    });
+    // Uncomment the line below to test with a static response
     //const response = await fetch(`/api/test`);
 
     if (!response.ok) {
