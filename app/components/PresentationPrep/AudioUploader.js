@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import DeleteIcon from "@mui/icons-material/Close";
@@ -17,6 +17,9 @@ import { Input } from "./AudioUploaderUI/input";
 import { saveFile } from "@app/utils/IndexedDBWrapper";
 import { useLessonStore } from "@app/stores/UseLessonStore";
 import FileCard from "./AudioUploaderUI/filecard";
+import { addFilePath } from "@app/utils/FilePathNameUtil";
+import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
+import { takeAwayFilePath } from "@app/utils/FilePathNameUtil";
 const dummyArchive = [
   {
     id: 1,
@@ -70,7 +73,8 @@ export default function AudioUploader() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [archiveFiles] = useState(dummyArchive);
-  const [archiveSelected, setArchiveSelected] = useState([]);
+  const [archiveSelected, setArchiveSelected] = useState([]); // (You can remove this if not used elsewhere)
+  const [selectedArchiveId, setSelectedArchiveId] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Categories");
   const [isDragActive, setIsDragActive] = useState(false);
@@ -86,6 +90,68 @@ export default function AudioUploader() {
   const handleBrowseClick = () => {
     inputRef.current.click();
   };
+  const currentUserID = useLessonStore((state) => state.currentUserID);
+  const currentLessonID = useLessonStore((state) => state.currentLessonID);
+  const updateAudioBucketContents = useLessonStore(
+    (state) => state.updateAudioBucketContents
+  );
+  const audioBucketContents = useLessonStore(
+    (state) => state.audioBucketContents
+  );
+
+  async function getBucketContents() {
+    const response = await fetch("/api/get-audio-bucket-info");
+    const data = await response.json();
+    console.log("Bucket data in audio uploader: ", data);
+
+    console.log(data);
+    //updateBucketContents(data);
+    updateAudioBucketContents(data);
+  }
+
+  useEffect(() => {
+    if (!audioBucketContents || audioBucketContents.length === 0) {
+      // async function getBucketContents() {
+      //   const response = await fetch("/api/get-audio-bucket-info");
+      //   const data = await response.json();
+      //   console.log("Bucket data in audio uploader: ", data);
+
+      //   console.log(data);
+      //   //updateBucketContents(data);
+      //   updateAudioBucketContents(data);
+      // }
+      getBucketContents();
+    }
+  }, []);
+
+  // Helper to upload file to  API route
+  async function uploadToBucket(file, onProgress) {
+    const formData = new FormData();
+    const filePath = addFilePath(
+      file.name,
+      currentUserID,
+      currentLessonID,
+      listeningForGistandDetailStage
+    );
+    formData.append("audio", file, file.name);
+    formData.append("filePath", filePath);
+
+    // Optional: add fileName or other metadata if your API expects it
+    // formData.append("fileName", file.name);
+
+    const response = await fetch(
+      "/api/firestore/gc-audio-bucket/upload-to-audio-bucket",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+    return await response.json();
+  }
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files).filter((f) =>
@@ -101,15 +167,25 @@ export default function AudioUploader() {
       });
       // Simulate upload progress
       setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 20;
-        setUploadProgress((prev) => ({
-          ...prev,
-          [file.name]: Math.min(100, Math.floor(progress)),
-        }));
-        if (progress >= 100) clearInterval(interval);
-      }, 300);
+      // let progress = 0;
+      // const interval = setInterval(() => {
+      //   progress += Math.random() * 20;
+      //   setUploadProgress((prev) => ({
+      //     ...prev,
+      //     [file.name]: Math.min(100, Math.floor(progress)),
+      //   }));
+      //   if (progress >= 100) clearInterval(interval);
+      // }, 300);
+      try {
+        await uploadToBucket(file);
+
+        setUploadProgress((prev) => ({ ...prev, [file]: 100 }));
+        await getBucketContents();
+        //updateAudioBucketContents([...audioBucketContents, file.name]);
+      } catch (err) {
+        setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
+        alert("Upload failed: " + err.message);
+      }
     }
   };
 
@@ -122,20 +198,20 @@ export default function AudioUploader() {
     });
   };
 
-  const handleArchiveSelect = (id) => {
-    setArchiveSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+  const handleArchiveSelect = (fileName) => {
+    setSelectedArchiveId((prev) => (prev === fileName ? null : fileName));
   };
 
-  const filteredArchive = archiveFiles.filter(
+  const filteredArchive = audioBucketContents.filter(
     (file) =>
-      (filter === "All Categories" || file.category === filter) &&
-      file.name.toLowerCase().includes(search.toLowerCase())
+      filter === "All Categories" ||
+      (file === filter && file.toLowerCase().includes(search.toLowerCase()))
   );
 
   // Add these handlers for drag-and-drop
   const handleDrop = async (e) => {
+    console.log("File dropped into audio uploader");
+
     e.preventDefault();
     setIsDragActive(false);
     const files = Array.from(e.dataTransfer.files).filter((f) =>
@@ -143,23 +219,37 @@ export default function AudioUploader() {
     );
     if (files.length > 0) {
       const file = files[0];
+      console.log("Dropped file: ", file);
+      console.log("file name: ", file.name);
+
       setSelectedFiles([file]);
-      await saveFile(file.name, file); // <-- FIXED
+      //await saveFile(file, file); // <-- FIXED
+      //await saveFile({ name: file.name, blob: file });
       updateCompleteListeningStageData({
         ...completeListeningStageData,
         audioFileName: file.name,
       });
       // Simulate upload progress
-      setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 20;
-        setUploadProgress((prev) => ({
-          ...prev,
-          [file.name]: Math.min(100, Math.floor(progress)),
-        }));
-        if (progress >= 100) clearInterval(interval);
-      }, 300);
+      setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
+      // let progress = 0;
+      // const interval = setInterval(() => {
+      //   progress += Math.random() * 20;
+      //   setUploadProgress((prev) => ({
+      //     ...prev,
+      //     [file.name]: Math.min(100, Math.floor(progress)),
+      //   }));
+      //   if (progress >= 100) clearInterval(interval);
+      // }, 300);
+
+      // Upload to bucket
+      try {
+        await uploadToBucket(file);
+        setUploadProgress((prev) => ({ ...prev, [file]: 100 }));
+        await getBucketContents();
+      } catch (err) {
+        setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
+        alert("Upload failed: " + err.message);
+      }
     }
   };
 
@@ -259,7 +349,7 @@ export default function AudioUploader() {
                 : "Choose audio files to upload"}
             </div>
             <div style={{ color: "#717182", fontSize: 14, marginBottom: 22 }}>
-              Supports MP3, WAV, FLAC, and other audio formats
+              Supports MP3 audio formats
             </div>
             <input
               ref={inputRef}
@@ -297,7 +387,7 @@ export default function AudioUploader() {
               </div>
               {selectedFiles.map((file) => (
                 <Card
-                  key={file.name}
+                  key={file}
                   style={{
                     padding: "1rem",
                     marginBottom: 10,
@@ -306,7 +396,7 @@ export default function AudioUploader() {
                 >
                   <FileCard
                     file={file}
-                    uploadProgress={uploadProgress[file.name] || 0}
+                    uploadProgress={uploadProgress[file] || 0}
                     onRemove={handleRemoveFile}
                   />
                 </Card>
@@ -355,7 +445,7 @@ export default function AudioUploader() {
               <span
                 style={{ marginLeft: "auto", color: "#717182", fontSize: 14 }}
               >
-                {archiveFiles.length} files
+                {audioBucketContents.length} files
               </span>
             </div>
             <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -380,9 +470,10 @@ export default function AudioUploader() {
               </Button>
             </div>
             <div style={{ maxHeight: 260, overflowY: "auto" }}>
-              {filteredArchive.map((file) => (
+              {audioBucketContents.map((file) => (
                 <Card
-                  key={file.id}
+                  key={file}
+                  onClick={() => handleArchiveSelect(file)}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -390,58 +481,62 @@ export default function AudioUploader() {
                     padding: "0.8rem",
                     marginBottom: 10,
                     borderRadius: 10,
-                    background: archiveSelected.includes(file.id)
-                      ? "#e9ebef"
-                      : "#fff",
-                    border: archiveSelected.includes(file.id)
-                      ? "1.5px solid #1976d2"
-                      : "1.5px solid #ececf0",
+                    background: selectedArchiveId === file ? "#e9ebef" : "#fff",
+                    border:
+                      selectedArchiveId === file
+                        ? "1.5px solid #1976d2"
+                        : "1.5px solid #ececf0",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleArchiveSelect(file.id)}
                 >
                   <input
                     type="checkbox"
-                    checked={archiveSelected.includes(file.id)}
-                    onChange={() => handleArchiveSelect(file.id)}
+                    checked={selectedArchiveId === file}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleArchiveSelect(file);
+                    }}
                     style={{ accentColor: "#1976d2", marginRight: 8 }}
                   />
                   <AudiotrackIcon style={{ fontSize: 24, color: "#717182" }} />
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 500 }}>{file.name}</div>
-                    <div
-                      style={{
-                        color: "#717182",
-                        fontSize: 13,
-                        display: "flex",
-                        gap: 12,
-                      }}
-                    >
-                      <span>{file.size}</span>
-                      <span>{file.duration}</span>
-                      <span>{file.date}</span>
+                    <div style={{ fontWeight: 500 }}>
+                      {takeAwayFilePath(file)}
                     </div>
+                    {/* If you want to display more info, you'll need to parse it from the string or fetch metadata */}
                   </div>
-                  <Badge
-                    style={{
-                      background: "#ececf0",
-                      color: "#222",
-                      fontWeight: 500,
-                      marginRight: 8,
-                    }}
-                  >
-                    {file.category}
-                  </Badge>
-                  <Button
-                    variant="text"
-                    style={{ minWidth: 32, minHeight: 32, borderRadius: "50%" }}
-                  >
-                    <PlayArrowIcon />
-                  </Button>
+                  {/* ...other UI elements... */}
                 </Card>
               ))}
             </div>
           </Card>
+          {selectedArchiveId && (
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontWeight: 500, marginBottom: 8 }}>
+                Selected File
+              </div>
+              <Card key={selectedArchiveId}>
+                <AudiotrackIcon style={{ fontSize: 28, color: "#717182" }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 500 }}>{selectedArchiveId}</div>
+                  <div style={{ color: "#717182", fontSize: 13 }}>
+                    {selectedArchiveId}
+                  </div>
+                </div>
+                <Button
+                  variant="text"
+                  onClick={() => setSelectedArchiveId(null)}
+                  style={{
+                    minWidth: 32,
+                    minHeight: 32,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <DeleteIcon />
+                </Button>
+              </Card>
+            </div>
+          )}
           {archiveSelected.length > 0 && (
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontWeight: 500, marginBottom: 8 }}>
@@ -451,11 +546,11 @@ export default function AudioUploader() {
                   {archiveSelected.length > 1 ? "s" : ""}
                 </span>
               </div>
-              {archiveFiles
-                .filter((file) => archiveSelected.includes(file.id))
+              {audioBucketContents
+                .filter((file) => selectedArchiveId === file)
                 .map((file) => (
                   <Card
-                    key={file.id}
+                    key={file}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -469,14 +564,14 @@ export default function AudioUploader() {
                       style={{ fontSize: 28, color: "#717182" }}
                     />
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 500 }}>{file.name}</div>
+                      <div style={{ fontWeight: 500 }}>{file}</div>
                       <div style={{ color: "#717182", fontSize: 13 }}>
-                        {file.size}
+                        {file}
                       </div>
                     </div>
                     <Button
                       variant="text"
-                      onClick={() => handleArchiveSelect(file.id)}
+                      onClick={() => handleArchiveSelect(`file-${index}`)}
                       style={{
                         minWidth: 32,
                         minHeight: 32,
