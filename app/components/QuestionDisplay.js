@@ -2,15 +2,15 @@ import React from "react";
 import { Grid, Item } from "@mui/material";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import SnippetPlayer from "./SnippetPlayer";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 function QuestionDisplay() {
   const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData
+    (state) => state.completeListeningStageData,
   );
   const questions = completeListeningStageData.questionsAndAnswers
     ? completeListeningStageData.questionsAndAnswers.map(
-        (item) => item.question
+        (item) => item.question,
       )
     : [];
   const answers = completeListeningStageData.questionsAndAnswers
@@ -23,7 +23,7 @@ function QuestionDisplay() {
 
   const snippetFileNames = completeListeningStageData.questionsAndAnswers
     ? completeListeningStageData.questionsAndAnswers.map(
-        (item) => item.snippetFileNames
+        (item) => item.snippetFileNames,
       )
     : [];
 

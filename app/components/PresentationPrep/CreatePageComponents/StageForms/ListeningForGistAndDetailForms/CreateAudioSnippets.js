@@ -1,6 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import {
   mergeItems,
   addPassagesToQuestions,
@@ -20,35 +20,35 @@ const CreateAudioSnippets = () => {
   const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
   const updateWordTimeArray = useLessonStore(
-    (state) => state.updateWordTimeArray
+    (state) => state.updateWordTimeArray,
   );
   const audioQuestions = useLessonStore((state) => state.audioQuestions);
   const audioAnswers = useLessonStore((state) => state.audioAnswers);
   const [audioQuestionObj, setAudioQuestionObj] = useState([]);
   const [audioAnswerObj, setAudioAnswerObj] = useState([]);
   const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData
+    (state) => state.updateCompleteListeningStageData,
   );
   const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData
+    (state) => state.completeListeningStageData,
   );
   const audioFileName = useLessonStore((state) => state.audioFileName);
   const audioClipQuestionData = useLessonStore(
-    (state) => state.audioClipQuestionData
+    (state) => state.audioClipQuestionData,
   );
   const updateAudioClipQuestionData = useLessonStore(
-    (state) => state.updateAudioClipQuestionData
+    (state) => state.updateAudioClipQuestionData,
   );
   //Audio transcript from useLessonStore
   const s2TAudioTranscript = useLessonStore(
-    (state) => state.s2TAudioTranscript
+    (state) => state.s2TAudioTranscript,
   );
 
   const audioSnippetFilenameArray = useLessonStore(
-    (state) => state.audioSnippetFilenameArray
+    (state) => state.audioSnippetFilenameArray,
   );
   const updateAudioSnippetFilenameArray = useLessonStore(
-    (state) => state.updateAudioSnippetFilenameArray
+    (state) => state.updateAudioSnippetFilenameArray,
   );
 
   //Takes questions OCR and sends to api to be parsed into objects. Then the objects are set in state. This is happening every time the component mounts
@@ -89,8 +89,8 @@ const CreateAudioSnippets = () => {
       // Example API call
       fetch(
         `/api/get-audio-snippets-codes?questionsandanswers=${JSON.stringify(
-          completeListeningStageData.questionsAndAnswers
-        )}&transcript=${completeListeningStageData.transcript}`
+          completeListeningStageData.questionsAndAnswers,
+        )}&transcript=${completeListeningStageData.transcript}`,
       )
         .then((response) => {
           console.log("Raw Response from snippet API:", response);
@@ -105,11 +105,11 @@ const CreateAudioSnippets = () => {
 
           const updatedQAWithPassages = addPassagesToQuestions(
             completeListeningStageData.questionsAndAnswers,
-            data
+            data,
           );
           console.log(
             "Updated questions and answers with passages:",
-            updatedQAWithPassages
+            updatedQAWithPassages,
           );
 
           updateCompleteListeningStageData({
@@ -128,7 +128,7 @@ const CreateAudioSnippets = () => {
   useEffect(() => {
     const indices = findBatchPassageIndices(
       completeListeningStageData.questionsAndAnswers.map((qa) => qa.passage),
-      wordTimeArray
+      wordTimeArray,
     );
     console.log("Indices for passages:", indices);
     //use the indices and log an array of parts of the wordTimeArray for each set of indices
@@ -148,7 +148,7 @@ const CreateAudioSnippets = () => {
       }));
     console.log(
       "Updated questions and answers with snippets and indices:",
-      updatedQuestionsAndAnswers
+      updatedQuestionsAndAnswers,
     );
 
     updateCompleteListeningStageData({
@@ -172,20 +172,20 @@ const CreateAudioSnippets = () => {
 
     const fetchSnippets = async () => {
       const splitAudioFileArray = await splitAudioFile(
-        completeListeningStageData
+        completeListeningStageData,
       );
       console.log(
         "Split audio file array in CreateAudioSnippets:",
-        splitAudioFileArray
+        splitAudioFileArray,
       );
       updateAudioSnippetFilenameArray(splitAudioFileArray);
       const updatedQuestionsAndAnswers = addSnippetsFileNamesToQuestions(
         completeListeningStageData.questionsAndAnswers,
-        splitAudioFileArray
+        splitAudioFileArray,
       );
       console.log(
         "Updated questions and answers with snippets:",
-        updatedQuestionsAndAnswers
+        updatedQuestionsAndAnswers,
       );
       updateCompleteListeningStageData({
         ...completeListeningStageData,
@@ -202,11 +202,11 @@ const CreateAudioSnippets = () => {
     let response;
     if (type === "question") {
       response = await fetch(
-        `/api/make-question-json?query=${audioQuestions}&type=${type}`
+        `/api/make-question-json?query=${audioQuestions}&type=${type}`,
       );
     } else if (type === "answer") {
       response = await fetch(
-        `/api/make-question-json?query=${audioAnswers}&type=${type}`
+        `/api/make-question-json?query=${audioAnswers}&type=${type}`,
       );
     }
 

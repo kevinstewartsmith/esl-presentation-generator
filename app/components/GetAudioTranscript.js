@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AudioTextContext } from "../contexts/AudioTextContext";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import { getFile } from "@app/utils/IndexedDBWrapper";
 const GetAudioTranscript = () => {
   const {
@@ -13,17 +13,17 @@ const GetAudioTranscript = () => {
   } = useContext(AudioTextContext);
 
   const updateS2TAudioTranscript = useLessonStore(
-    (state) => state.updateS2TAudioTranscript
+    (state) => state.updateS2TAudioTranscript,
   );
 
   const updateWordTimeArray = useLessonStore(
-    (state) => state.updateWordTimeArray
+    (state) => state.updateWordTimeArray,
   );
   const s2TAudioTranscript = useLessonStore(
-    (state) => state.s2TAudioTranscript
+    (state) => state.s2TAudioTranscript,
   );
   const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData
+    (state) => state.completeListeningStageData,
   );
 
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
@@ -77,7 +77,7 @@ const GetAudioTranscript = () => {
     console.log("Getting transcript for file: " + audioFileName);
 
     const response = await fetch(
-      `/api/google-api-s2t?name=${selectedAudioFileName}`
+      `/api/google-api-s2t?name=${selectedAudioFileName}`,
     );
     //const response = await fetch(`/api/test`);
 

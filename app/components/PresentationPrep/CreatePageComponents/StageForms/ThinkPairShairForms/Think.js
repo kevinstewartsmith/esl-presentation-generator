@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Grid } from "@mui/material";
 import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import DebugZustandButton from "@app/stores/DebugZustandButton";
 
 export default function Think() {
@@ -44,7 +44,7 @@ export default function Think() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `/api/firestore/think-pair-share/get-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=Think%20-%20Pair%20-%20Share`
+        `/api/firestore/think-pair-share/get-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=Think%20-%20Pair%20-%20Share`,
       );
       const json = await res.json();
       useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
@@ -61,7 +61,7 @@ export default function Think() {
       const sentenceStemParams = JSON.stringify(formData);
 
       const response = await fetch(
-        `/api/get-sentence-stems-chatgpt?sentenceStemParams=${sentenceStemParams}&cefr_level=a2`
+        `/api/get-sentence-stems-chatgpt?sentenceStemParams=${sentenceStemParams}&cefr_level=a2`,
       );
 
       if (!response.ok) {
@@ -97,7 +97,7 @@ export default function Think() {
       updateThinkPhase(parsedData);
       console.log(
         "👁 thinkPhase in component after update:",
-        useLessonStore.getState().thinkPhase
+        useLessonStore.getState().thinkPhase,
       );
 
       console.log("Updated thinkPhase:", thinkPhase);

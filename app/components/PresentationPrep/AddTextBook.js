@@ -4,7 +4,7 @@ import { createWorker } from "tesseract.js";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
@@ -40,23 +40,23 @@ function AddTextBook({ category, stageID }) {
   //Audio Questions and Answers for useLessonStore
   const audioQuestions = useLessonStore((state) => state.audioQuestions);
   const updateAudioQuestions = useLessonStore(
-    (state) => state.updateAudioQuestions
+    (state) => state.updateAudioQuestions,
   );
   const audioAnswers = useLessonStore((state) => state.audioAnswers);
   const updateAudioAnswers = useLessonStore(
-    (state) => state.updateAudioAnswers
+    (state) => state.updateAudioAnswers,
   );
   const audioTranscript = useLessonStore((state) => state.audioTranscript);
   const updateAudioTranscript = useLessonStore(
-    (state) => state.updateAudioTranscript
+    (state) => state.updateAudioTranscript,
   );
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonId = useLessonStore((state) => state.currentLessonID);
   const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData
+    (state) => state.updateCompleteListeningStageData,
   );
   const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData
+    (state) => state.completeListeningStageData,
   );
   const [files, setFiles] = useState([]);
   // ...existing code...
@@ -150,8 +150,8 @@ function AddTextBook({ category, stageID }) {
           acceptedFiles.map((file) =>
             Object.assign(file, {
               preview: URL.createObjectURL(file),
-            })
-          )
+            }),
+          ),
         );
 
         acceptedFiles.forEach((file) => {
@@ -200,7 +200,7 @@ function AddTextBook({ category, stageID }) {
     lessonId,
     stageID,
     category,
-    file
+    file,
   ) => {
     const fileName = file.name;
     const encodedStageID = encodeURIComponent(stageID);
@@ -247,7 +247,7 @@ function AddTextBook({ category, stageID }) {
       ...(isDragAccept ? acceptStyle : {}),
       ...(isDragReject ? rejectStyle : {}),
     }),
-    [isFocused, isDragAccept, isDragReject]
+    [isFocused, isDragAccept, isDragReject],
   );
 
   const handleTextDisplay = (category, textbook, questions, answers) => {
@@ -313,7 +313,7 @@ function AddTextBook({ category, stageID }) {
     const text = textContent(category);
 
     const response = await fetch(
-      `/api/clean-text-json?query=${text}&category=${category}`
+      `/api/clean-text-json?query=${text}&category=${category}`,
     );
     const data = await response.json();
 

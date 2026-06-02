@@ -15,7 +15,7 @@ import { Card } from "./AudioUploaderUI/card";
 import { Badge } from "./AudioUploaderUI/badge";
 import { Input } from "./AudioUploaderUI/input";
 import { saveFile } from "@app/utils/IndexedDBWrapper";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import FileCard from "./AudioUploaderUI/filecard";
 import { addFilePath } from "@app/utils/FilePathNameUtil";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
@@ -79,10 +79,10 @@ export default function AudioUploader() {
   const [filter, setFilter] = useState("All Categories");
   const [isDragActive, setIsDragActive] = useState(false);
   const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData
+    (state) => state.updateCompleteListeningStageData,
   );
   const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData
+    (state) => state.completeListeningStageData,
   );
 
   const inputRef = useRef();
@@ -93,10 +93,10 @@ export default function AudioUploader() {
   const currentUserID = useLessonStore((state) => state.currentUserID);
   const currentLessonID = useLessonStore((state) => state.currentLessonID);
   const updateAudioBucketContents = useLessonStore(
-    (state) => state.updateAudioBucketContents
+    (state) => state.updateAudioBucketContents,
   );
   const audioBucketContents = useLessonStore(
-    (state) => state.audioBucketContents
+    (state) => state.audioBucketContents,
   );
 
   async function getBucketContents() {
@@ -131,7 +131,7 @@ export default function AudioUploader() {
       file.name,
       currentUserID,
       currentLessonID,
-      listeningForGistandDetailStage
+      listeningForGistandDetailStage,
     );
     formData.append("audio", file, file.name);
     formData.append("filePath", filePath);
@@ -144,7 +144,7 @@ export default function AudioUploader() {
       {
         method: "POST",
         body: formData,
-      }
+      },
     );
 
     if (!response.ok) {
@@ -155,7 +155,7 @@ export default function AudioUploader() {
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files).filter((f) =>
-      f.type.startsWith("audio/")
+      f.type.startsWith("audio/"),
     );
     if (files.length > 0) {
       const file = files[0];
@@ -205,7 +205,7 @@ export default function AudioUploader() {
   const filteredArchive = audioBucketContents.filter(
     (file) =>
       filter === "All Categories" ||
-      (file === filter && file.toLowerCase().includes(search.toLowerCase()))
+      (file === filter && file.toLowerCase().includes(search.toLowerCase())),
   );
 
   // Add these handlers for drag-and-drop
@@ -215,7 +215,7 @@ export default function AudioUploader() {
     e.preventDefault();
     setIsDragActive(false);
     const files = Array.from(e.dataTransfer.files).filter((f) =>
-      f.type.startsWith("audio/")
+      f.type.startsWith("audio/"),
     );
     if (files.length > 0) {
       const file = files[0];
@@ -462,7 +462,7 @@ export default function AudioUploader() {
                 style={{ minWidth: 140, fontWeight: 500 }}
                 onClick={() =>
                   setFilter(
-                    filter === "All Categories" ? "Music" : "All Categories"
+                    filter === "All Categories" ? "Music" : "All Categories",
                   )
                 }
               >

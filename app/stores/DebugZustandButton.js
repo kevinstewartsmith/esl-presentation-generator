@@ -1,6 +1,6 @@
 // components/ZustandDebugButton.js
 "use client";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 export default function ZustandDebugButton() {
   const dumpState = () => {

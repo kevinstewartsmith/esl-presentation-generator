@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import { postToApiSectionData } from "@app/utils/PostToApiUtil";
-//import { useLessonStore } from "@app/stores/UseLessonStore";
+//import { useLessonStore } from "@app/stores/useLessonStore";
 //if (typeof window !== "undefined") window.useLessonStore = useLessonStore;
 
 export default function ZustandSyncClient() {
@@ -23,14 +23,14 @@ export default function ZustandSyncClient() {
       (state) => state.currentUserID,
       (id) => {
         console.log("✅ Updated currentUserID", id);
-      }
+      },
     );
     console.log("📡 Subscribed to currentUserID");
     const unsubLessonID = useLessonStore.subscribe(
       (state) => state.currentLessonID,
       (id) => {
         console.log("✅ currentLessonID changed:", id);
-      }
+      },
     );
     console.log("📡 Subscribed to currentLessonID");
 
@@ -65,7 +65,7 @@ export default function ZustandSyncClient() {
           try {
             const res = await fetch(
               `/api/firestore/think-pair-share/post-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
-              { method: "POST" }
+              { method: "POST" },
             );
             const data = await res.json();
             console.log("✅ Autosaved:", data);
@@ -73,7 +73,7 @@ export default function ZustandSyncClient() {
             console.error("❌ Autosave failed", err);
           }
         }, 5000);
-      }
+      },
     );
     console.log("📡 Subscribed to thinkPhase changes");
 
@@ -86,7 +86,7 @@ export default function ZustandSyncClient() {
           currentUserID: state.currentUserID,
           currentLessonID: state.currentLessonID,
         });
-      }
+      },
     );
 
     const unsubAll = useLessonStore.subscribe(
@@ -96,10 +96,10 @@ export default function ZustandSyncClient() {
           new: state,
           prev: prevState,
           changed: Object.keys(state).filter(
-            (key) => state[key] !== prevState[key]
+            (key) => state[key] !== prevState[key],
           ),
         });
-      }
+      },
     );
 
     // Audio Stage - Start
@@ -122,7 +122,7 @@ export default function ZustandSyncClient() {
         //🧯 Skip autosave until we've hydrated from Firestore
         if (!hasHydratedCompleteListeningStageData) {
           console.log(
-            "⏭ Skipping autosave: hydration not complete - audioTranscript"
+            "⏭ Skipping autosave: hydration not complete - audioTranscript",
           );
           return;
         }
@@ -132,10 +132,10 @@ export default function ZustandSyncClient() {
           currentLessonID,
           listeningForGistandDetailStage,
           keyName,
-          transcript
+          transcript,
         );
         console.log("✍️Audio Transcript updated:", transcript);
-      }
+      },
     );
     console.log("📡 Subscribed to audioTranscript changes");
     const unsubAudioQuestions = useLessonStore.subscribe(
@@ -154,7 +154,7 @@ export default function ZustandSyncClient() {
         // //🧯 Skip autosave until we've hydrated from Firestore
         if (!hasHydratedAudioQuestions) {
           console.log(
-            "⏭ Skipping autosave: hydration not complete - audioQuestions"
+            "⏭ Skipping autosave: hydration not complete - audioQuestions",
           );
           return;
         }
@@ -165,9 +165,9 @@ export default function ZustandSyncClient() {
           currentLessonID,
           listeningForGistandDetailStage,
           keyName,
-          questions
+          questions,
         );
-      }
+      },
     );
     console.log("📡 Subscribed to audioQuestions changes");
     const unsubAudioAnswers = useLessonStore.subscribe(
@@ -187,7 +187,7 @@ export default function ZustandSyncClient() {
         // //🧯 Skip autosave until we've hydrated from Firestore
         if (!hasHydratedAudioAnswers) {
           console.log(
-            "⏭ Skipping autosave: hydration not complete - audioAnswers"
+            "⏭ Skipping autosave: hydration not complete - audioAnswers",
           );
           return;
         }
@@ -198,9 +198,9 @@ export default function ZustandSyncClient() {
           currentLessonID,
           listeningForGistandDetailStage,
           keyName,
-          answers
+          answers,
         );
-      }
+      },
     );
     console.log("📡 Subscribed to audioAnswers changes");
 
@@ -212,7 +212,7 @@ export default function ZustandSyncClient() {
         // Only POST if data actually changed
         if (JSON.stringify(data) === JSON.stringify(prevData)) {
           console.log(
-            "📜 No changes detected in Complete Listening Stage Data"
+            "📜 No changes detected in Complete Listening Stage Data",
           );
           return; // No real change, skip autosave
         }
@@ -225,7 +225,7 @@ export default function ZustandSyncClient() {
         //🧯 Skip autosave until we've hydrated from Firestore
         if (!hasHydratedCompleteListeningStageData) {
           console.log(
-            "⏭ Skipping autosave: hydration not complete - completeListeningStageData"
+            "⏭ Skipping autosave: hydration not complete - completeListeningStageData",
           );
           return;
         }
@@ -238,7 +238,7 @@ export default function ZustandSyncClient() {
           }
 
           const encodedStageID = encodeURIComponent(
-            "Listening for Gist and Detail"
+            "Listening for Gist and Detail",
           );
 
           try {
@@ -253,7 +253,7 @@ export default function ZustandSyncClient() {
                   stageID: listeningForGistandDetailStage,
                   data: data,
                 }),
-              }
+              },
             );
             const result = await res.json();
             console.log("✅ Autosaved:", result);
@@ -262,14 +262,14 @@ export default function ZustandSyncClient() {
             console.error("❌ Autosave failed", err);
           }
         }, 5000);
-      }
+      },
     );
 
     const unsubAudioFileName = useLessonStore.subscribe(
       (state) => state.audioFileName,
       (fileName) => {
         console.log("🔈 Audio File Name updated:", fileName);
-      }
+      },
     );
     console.log("📡 Subscribed to AudioFileName changes");
 

@@ -4,7 +4,7 @@ import ListeningUploadandTranscribeAudio from "./ListeningUploadandTranscribeAud
 import ListeningQuestionUploader from "./ListeningQuestionUploader";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import CreeateAudioSnippets from "./CreateAudioSnippets";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { all } from "@node_modules/axios";
 
@@ -13,16 +13,16 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const lessonID = useLessonStore((state) => state.currentLessonID);
   //update audio questions
   const updateAudioQuestions = useLessonStore(
-    (state) => state.updateAudioQuestions
+    (state) => state.updateAudioQuestions,
   );
   const updateAudioAnswers = useLessonStore(
-    (state) => state.updateAudioAnswers
+    (state) => state.updateAudioAnswers,
   );
   const updateAudioTranscript = useLessonStore(
-    (state) => state.updateAudioTranscript
+    (state) => state.updateAudioTranscript,
   );
   const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData
+    (state) => state.updateCompleteListeningStageData,
   );
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -43,14 +43,14 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
     const fetchListeningData = async () => {
       const allListeningData = await getCompleteListeningStageDataFromDB(
         userID,
-        lessonID
+        lessonID,
       );
       // You can now use allListeningData here
       updateAudioQuestions(allListeningData?.audioQuestions || "");
       updateAudioAnswers(allListeningData?.audioAnswers || "");
       updateAudioTranscript(allListeningData?.audioTranscript || "");
       updateCompleteListeningStageData(
-        allListeningData?.completeListeningStageData || {}
+        allListeningData?.completeListeningStageData || {},
       );
       useLessonStore.getState().setHasHydratedCompleteListeningStageData(true);
       useLessonStore.getState().setHasHydratedAudioQuestions(true);

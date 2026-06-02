@@ -13,7 +13,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
@@ -22,7 +22,7 @@ const LessonPageComponent = ({ params }) => {
 
   console.log("Router: ", pathname);
   const { updateLessonID, lessonID } = useContext(
-    ReadingForGistAndDetailContext
+    ReadingForGistAndDetailContext,
   );
   const { updateThinkPairShareLessonID } = useContext(ThinkPairShareContext);
   const { updateLessonIDForAudioData } = useContext(AudioTextContext);
@@ -63,7 +63,7 @@ const LessonPageComponent = ({ params }) => {
         const response = await loadLessons(
           userID,
           "getOneLesson",
-          paramsLessonID
+          paramsLessonID,
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -82,7 +82,7 @@ const LessonPageComponent = ({ params }) => {
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`,
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);

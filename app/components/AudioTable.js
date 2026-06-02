@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import { playAudioFile } from "@app/utils/AudioControls";
 import { Grid } from "@mui/material";
 import { saveFile, deleteFile } from "@app/utils/IndexedDBWrapper";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 function AudioTable(props) {
   const { updateAudioFileName } = useLessonStore();
@@ -59,7 +59,7 @@ function AudioTable(props) {
         deleteFile(selectedAudioFileName)
           .then(() => {
             console.log(
-              `File ${selectedAudioFileName} deleted from IndexedDB.`
+              `File ${selectedAudioFileName} deleted from IndexedDB.`,
             );
           })
           .catch((error) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useContext } from "react";
 import "reveal.js/dist/reveal.css";
 //import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const ThinkPairSharePresSection = () => {
   import("@styles/reveal-hedonic.css");

@@ -9,7 +9,7 @@ import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
-import { useLessonStore } from "@app/stores/UseLessonStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 //import ZustandSyncClient from "@app/stores/ZustandSyncClient"; // Import ZustandSyncClient
 
 const PageComponent = ({ params }) => {
@@ -20,12 +20,10 @@ const PageComponent = ({ params }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lessons, setLessons] = useState([]);
-  //const resolvedParams = use(params);
-  //const userID = resolvedParams.userID;
-  const userID = params.userID;
+  const resolvedParams = use(params);
+  const userID = resolvedParams.userID;
   //update userid in lesson store
   const { setCurrentUserID } = useLessonStore();
-  //setCurrentUserID(params.userID);
 
   useEffect(() => {
     setCurrentUserID(userID);
