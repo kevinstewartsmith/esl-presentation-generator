@@ -31,7 +31,7 @@ const defaultAnnouncements = {
   onDragOver(id, overId) {
     if (overId) {
       console.log(
-        `Draggable item ${id} was moved over droppable area ${overId}.`
+        `Draggable item ${id} was moved over droppable area ${overId}.`,
       );
       return;
     }
@@ -41,7 +41,7 @@ const defaultAnnouncements = {
   onDragEnd(id, overId) {
     if (overId) {
       console.log(
-        `Draggable item ${id} was dropped over droppable area ${overId}`
+        `Draggable item ${id} was dropped over droppable area ${overId}`,
       );
       return;
     }
@@ -59,22 +59,44 @@ export default function StageSorter({ lessonID }) {
   const { loggedInUser } = useContext(GlobalVariablesContext);
   //const { stages } = useContext(PresentationContext);
 
+  // useEffect(() => {
+  //   console.log("Items: ");
+  //   //change back to items if there is an error
+  //   console.log(items);
+  //   async function postStagesToDB() {
+  //     try {
+  //       const stages = JSON.stringify(items);
+  //       const response = await fetch(
+  //         `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           //body: JSON.stringify(items),
+  //         }
+  //       );
+  //       console.log(response);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   postStagesToDB();
+  // }, [items, lessonID]);
+
   useEffect(() => {
-    console.log("Items: ");
-    //change back to items if there is an error
-    console.log(items);
+    const root = items?.root ?? [];
+    const container1 = items?.container1 ?? [];
+
+    // Don't auto-save the empty/initial state — that's what overwrote real data.
+    if (root.length === 0 && container1.length === 0) return;
+
     async function postStagesToDB() {
       try {
         const stages = JSON.stringify(items);
         const response = await fetch(
           `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            //body: JSON.stringify(items),
-          }
+          { method: "POST", headers: { "Content-Type": "application/json" } },
         );
         console.log(response);
       } catch (error) {
@@ -90,7 +112,7 @@ export default function StageSorter({ lessonID }) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   return (
@@ -212,7 +234,7 @@ export default function StageSorter({ lessonID }) {
         [overContainer]: arrayMove(
           items[overContainer],
           activeIndex,
-          overIndex
+          overIndex,
         ),
       }));
     }

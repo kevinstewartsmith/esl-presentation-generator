@@ -35,8 +35,9 @@ const LessonPageComponent = ({ params }) => {
   } = useContext(PresentationContext);
   //updateLessonID(params.lessonID);
 
-  //const resolvedParams = React.use(params);
-  const { userID, lessonID: paramsLessonID } = params;
+  const resolvedParams = use(params);
+  const { userID, lessonID: paramsLessonID } = resolvedParams;
+
   //const userID = resolvedParams.userID;
   //const paramsLessonID = resolvedParams.lessonID;
   //const lessonID = params.lessonID;

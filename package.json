@@ -29,7 +29,7 @@
     "lamejs": "^1.2.1",
     "mp3-parser": "^0.3.0",
     "multer": "^2.0.2",
-    "next": "^15.4.1",
+    "next": "^15.4.6",
     "next-connect": "^1.0.0",
     "normalize-path": "^3.0.0",
     "pptxgenjs": "^3.12.0",

@@ -7,26 +7,66 @@ export const POST = async (request) => {
     const userID = url.searchParams.get("userID");
     const lessonID = url.searchParams.get("lessonID");
     const stages = url.searchParams.get("stages");
-    const parsedStages = JSON.parse(stages);
+
+    if (!userID || !lessonID || !stages) {
+      return new Response(
+        JSON.stringify({ error: "Missing userID, lessonID, or stages" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    let parsedStages;
+    try {
+      parsedStages = JSON.parse(stages);
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid stages JSON" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const includedStages = parsedStages.root;
     const unincludedStages = parsedStages.container1;
 
-    includedStages.forEach((stage) => {
-      postSectionsToLesson(userID, lessonID, stage);
-    });
+    if (!Array.isArray(includedStages) || !Array.isArray(unincludedStages)) {
+      return new Response(
+        JSON.stringify({
+          error: "stages must contain root and container1 arrays",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-    postStageOrderToLesson(userID, lessonID, includedStages);
-    postUnincludedStageOrderToLesson(userID, lessonID, unincludedStages);
+    // SAFETY: never overwrite a lesson with totally empty stages.
+    if (includedStages.length === 0 && unincludedStages.length === 0) {
+      console.warn(
+        `Refusing to write empty stages to lesson ${lessonID} (safety guard).`,
+      );
+      return new Response(
+        JSON.stringify({ skipped: true, reason: "empty stages not written" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    await Promise.all(
+      includedStages.map((stage) =>
+        postSectionsToLesson(userID, lessonID, stage),
+      ),
+    );
+
+    await postStageOrderToLesson(userID, lessonID, includedStages);
+    await postUnincludedStageOrderToLesson(userID, lessonID, unincludedStages);
 
     return new Response("Lesson Stages posted successfully.", {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error(error);
-    return error;
+    return new Response(JSON.stringify({ error: String(error) }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -37,59 +77,43 @@ async function postSectionsToLesson(userId, lessonId, sectionId) {
     .collection("lessons")
     .doc(lessonId)
     .collection("Sections")
-    .doc(sectionId); // Use sectionId as the document ID
+    .doc(sectionId);
 
   const sectionDoc = await sectionRef.get();
 
-  // Check if the section already exists
   if (!sectionDoc.exists) {
-    // Add the new section with the name
     await sectionRef.set({ name: sectionId });
-    console.log(
-      `Section ${sectionId} with name "${sectionId}" added to lesson ${lessonId}.`
-    );
+    console.log(`Section ${sectionId} added to lesson ${lessonId}.`);
   } else {
     console.log(`Section ${sectionId} already exists in lesson ${lessonId}.`);
   }
 }
 
 async function postStageOrderToLesson(userId, lessonId, stageOrder) {
-  const stageOrderRef = db
+  const ref = db
     .collection("users")
     .doc(userId)
     .collection("lessons")
     .doc(lessonId);
-  // .collection("Sections")
-  // .doc("stageOrder");
   console.log("POSTING STAGE ORDER");
-
-  await stageOrderRef.set({ stageOrder: stageOrder }, { merge: true });
-  console.log(`Stage Order ${stageOrder} added to lesson ${lessonId}.`);
-
-  //return stageOrder;
+  await ref.set({ stageOrder: stageOrder }, { merge: true });
+  console.log(`Stage Order added to lesson ${lessonId}.`);
 }
 
 async function postUnincludedStageOrderToLesson(
   userId,
   lessonId,
-  unincludedStageOrder
+  unincludedStageOrder,
 ) {
-  const stageOrderRef = db
+  const ref = db
     .collection("users")
     .doc(userId)
     .collection("lessons")
     .doc(lessonId);
-  // .collection("Sections")
-  // .doc("stageOrder");
   console.log("POSTING UNINCLUDED STAGE ORDER");
-
-  await stageOrderRef.set(
+  await ref.set(
     { unincludedStageOrder: unincludedStageOrder },
-    { merge: true }
+    { merge: true },
   );
-  console.log(
-    `Unincluded Stage Order ${unincludedStageOrder} added to lesson ${lessonId}.`
-  );
-
-  //return stageOrder;
+  console.log(`Unincluded Stage Order added to lesson ${lessonId}.`);
 }

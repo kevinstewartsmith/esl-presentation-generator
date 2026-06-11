@@ -5,7 +5,7 @@ import React, { useState, useContext, useEffect, use } from "react";
 // Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
-  { ssr: false }
+  { ssr: false },
 );
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -66,7 +66,8 @@ const CreatePageComponent = ({ params }) => {
   // const resolvedParams = React.use(params);
   // const userID = resolvedParams.userID;
   //const { userID, lessonID: paramsLessonID } = params;
-  const { userID, stageID } = params;
+  const resolvedParams = use(params);
+  const { userID, stageID } = resolvedParams;
 
   const [sectionNumber, setSectionNumber] = useState(0);
   const [sectionLength, setSectionLength] = useState(0);
@@ -102,7 +103,7 @@ const CreatePageComponent = ({ params }) => {
 
     async function fetchData() {
       const res = await fetch(
-        `/api/firestore/get-lessons?userID=${userID}&lessonID=${lessonID}&method=getOneLesson`
+        `/api/firestore/get-lessons?userID=${userID}&lessonID=${lessonID}&method=getOneLesson`,
       );
       const data = await res.json();
       console.log("LESSON DATA CREATE");
@@ -120,7 +121,7 @@ const CreatePageComponent = ({ params }) => {
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`,
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);
