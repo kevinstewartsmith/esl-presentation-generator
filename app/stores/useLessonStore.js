@@ -18,25 +18,6 @@ export const useLessonStore = create(
     setCurrentUserID: (id) => set({ currentUserID: id }),
     setCurrentLessonID: (id) => set({ currentLessonID: id }),
 
-    // Think-Pair-Share Phase - Start
-    thinkPhase: [],
-
-    updateThinkPhase: (newPhase) => {
-      console.log("🧠 Updating thinkPhase - Old ref:", get().thinkPhase);
-      set({ thinkPhase: [...newPhase] });
-      console.log("✅ New ref:", get().thinkPhase);
-    },
-
-    setHydratedThinkPhase: (data) => {
-      set({
-        thinkPhase: data,
-        hasHydratedThinkPhase: true,
-      });
-    },
-
-    clearThinkPhase: () => set({ thinkPhase: [] }),
-    // Think-Pair-Share Phase - End
-
     // Audio Stage - Start
 
     //has hydrated methods for fetching data
@@ -117,5 +98,5 @@ export const useLessonStore = create(
       set({ audioBucketContents: contents }),
 
     // Audio Stage - End
-  }))
+  })),
 );

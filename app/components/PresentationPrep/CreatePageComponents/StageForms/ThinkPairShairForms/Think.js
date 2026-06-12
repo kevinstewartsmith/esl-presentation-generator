@@ -1,18 +1,22 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import { Grid } from "@mui/material";
-import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { useThinkPairShareStore } from "@app/stores/useThinkPairShareStore";
+
 import DebugZustandButton from "@app/stores/DebugZustandButton";
 
 export default function Think() {
   //const { thinkPhase, updateThinkPhase } = useContext(ThinkPairShareContext);
   // const { updateThinkPhase, thinkPhase, currentUserID, currentLessonID } =
   //   useLessonStore();
-  const updateThinkPhase = useLessonStore((state) => state.updateThinkPhase);
-  const thinkPhase = useLessonStore((state) => state.thinkPhase);
+  const updateThinkPhase = useThinkPairShareStore(
+    (state) => state.updateThinkPhase,
+  );
+  const thinkPhase = useThinkPairShareStore((state) => state.thinkPhase);
   const currentUserID = useLessonStore((state) => state.currentUserID);
   const currentLessonID = useLessonStore((state) => state.currentLessonID);
+
   const [formData, setFormData] = useState({
     theme: "",
     number: "",
@@ -47,7 +51,9 @@ export default function Think() {
         `/api/firestore/think-pair-share/get-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=Think%20-%20Pair%20-%20Share`,
       );
       const json = await res.json();
-      useLessonStore.getState().setHydratedThinkPhase(json?.ThinkPhase || []);
+      useThinkPairShareStore
+        .getState()
+        .setHydratedThinkPhase(json?.ThinkPhase || []);
     };
 
     fetchData();

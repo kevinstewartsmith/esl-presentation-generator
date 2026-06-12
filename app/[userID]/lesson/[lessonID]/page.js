@@ -6,7 +6,6 @@ import { DashboardContext } from "@app/contexts/DashboardContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
-import { ThinkPairShareContext } from "@app/contexts/ThinkPairShareContext";
 import { AudioTextContext } from "@app/contexts/AudioTextContext";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
@@ -24,7 +23,7 @@ const LessonPageComponent = ({ params }) => {
   const { updateLessonID, lessonID } = useContext(
     ReadingForGistAndDetailContext,
   );
-  const { updateThinkPairShareLessonID } = useContext(ThinkPairShareContext);
+
   const { updateLessonIDForAudioData } = useContext(AudioTextContext);
 
   const {
@@ -48,7 +47,7 @@ const LessonPageComponent = ({ params }) => {
 
   updateLessonID(paramsLessonID);
   updateLessonIDForAudioData(paramsLessonID);
-  updateThinkPairShareLessonID(paramsLessonID);
+  // updateThinkPairShareLessonID(paramsLessonID);
 
   //setCurrentLessonID(paramsLessonID);
 
