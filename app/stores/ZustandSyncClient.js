@@ -36,72 +36,6 @@ export default function ZustandSyncClient() {
 
     let debounceTimer;
 
-    const unsubThinkPhase = useLessonStore.subscribe(
-      (state) => state.thinkPhase,
-      (thinkPhase) => {
-        const { currentUserID, currentLessonID, hasHydratedThinkPhase } =
-          useLessonStore.getState();
-
-        // 🧯 Skip autosave until we've hydrated from Firestore
-        if (!hasHydratedThinkPhase) {
-          console.log("⏭ Skipping autosave: hydration not complete");
-          return;
-        }
-
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(async () => {
-          if (
-            !Array.isArray(thinkPhase) ||
-            !currentUserID ||
-            !currentLessonID
-          ) {
-            console.log("⛔ Missing values for autosave");
-            return;
-          }
-
-          const encodedStageID = encodeURIComponent("Think - Pair - Share");
-          const stringifiedThinkPhase = JSON.stringify(thinkPhase);
-
-          try {
-            const res = await fetch(
-              `/api/firestore/think-pair-share/post-think-pair-share?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}&data=${stringifiedThinkPhase}&phase=think`,
-              { method: "POST" },
-            );
-            const data = await res.json();
-            console.log("✅ Autosaved:", data);
-          } catch (err) {
-            console.error("❌ Autosave failed", err);
-          }
-        }, 5000);
-      },
-    );
-    console.log("📡 Subscribed to thinkPhase changes");
-
-    // Test subscriber - fires on ANY state change
-    const unsubTest = useLessonStore.subscribe(
-      (state) => state, // Watch entire state
-      (state) => {
-        console.log("🔔 ANY state change:", {
-          thinkPhase: state.thinkPhase,
-          currentUserID: state.currentUserID,
-          currentLessonID: state.currentLessonID,
-        });
-      },
-    );
-
-    const unsubAll = useLessonStore.subscribe(
-      (state) => state,
-      (state, prevState) => {
-        console.log("🌐 Global state diff:", {
-          new: state,
-          prev: prevState,
-          changed: Object.keys(state).filter(
-            (key) => state[key] !== prevState[key],
-          ),
-        });
-      },
-    );
-
     // Audio Stage - Start
     const unsubAudioTranscript = useLessonStore.subscribe(
       (state) => state.audioTranscript,
@@ -277,9 +211,9 @@ export default function ZustandSyncClient() {
       clearTimeout(debounceTimer);
       unsubUserID();
       unsubLessonID();
-      unsubThinkPhase();
-      unsubTest();
-      unsubAll();
+      //unsubThinkPhase();
+      //unsubTest();
+      //unsubAll();
 
       unsubAudioTranscript();
       unsubAudioQuestions();
