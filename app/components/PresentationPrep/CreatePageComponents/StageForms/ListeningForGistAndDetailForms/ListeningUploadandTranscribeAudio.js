@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import AudioTable from "@app/components/AudioTable";
+//import AudioTable from "@app/components/AudioTable";
 import { Button } from "@mui/material";
-import Transcript from "@app/components/Transcript";
+
 import GetAudioTranscript from "@app/components/GetAudioTranscript";
 import AudioUploadCard from "@app/components/PresentationPrep/AudioUploadCard";
 import AudioUploader from "@app/components/PresentationPrep/AudioUploader";
@@ -19,10 +19,10 @@ const ListeningUploadandTranscribeAudio = () => {
         direction="row"
       >
         {/* <Grid item>ListeningUploadandTranscribeAudio Component</Grid> */}
-        <Grid item xs={6}>
+        {/* <Grid item xs={6}>
           {" "}
           <AudioTable />{" "}
-        </Grid>
+        </Grid> */}
         <Grid item xs={6}>
           <GetAudioTranscript />
         </Grid>
