@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AudioTextContext } from "../contexts/AudioTextContext";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getFile } from "@app/utils/IndexedDBWrapper";
 const GetAudioTranscript = () => {
@@ -7,10 +8,14 @@ const GetAudioTranscript = () => {
     updateTranscript,
     transcript,
     updateS2tData,
-    selectedAudioFileName,
+
     //wordTimeArray,
     //updateWordTimeArray,
   } = useContext(AudioTextContext);
+
+  const selectedAudioFileName = useAudioTextStore(
+    (state) => state.selectedAudioFileName,
+  );
 
   const updateS2TAudioTranscript = useLessonStore(
     (state) => state.updateS2TAudioTranscript,
@@ -28,54 +33,8 @@ const GetAudioTranscript = () => {
 
   const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
 
-  // async function getTranscript() {
-  //   const audioFileName = completeListeningStageData.audioFileName;
-  //   const audioFileBlob = await getFile(audioFileName);
-  //   //   const formData = new FormData();
-  //   //   formData.append("audio", audioFileBlob, audioFileName);
-  //   //   const response = await fetch(`/api/transcribe-audio-file`, {
-  //   //     method: "POST",
-  //   //     body: formData,
-  //   //   });
-  //   //   // Uncomment the line below to test with a static response
-  //   //   //const response = await fetch(`/api/test`);
-  //   //  if (!response.ok) {
-  //   //     throw new Error("Network response was not ok");
-  //   //   }
-
-  //   //   const data = await response.json();
-  //   //upload start
-  //   const fd = new FormData();
-  //   fd.append("file", audioFileBlob, audioFileName);
-  //   const res = await fetch("`/api/transcribe-audio-file`", {
-  //     method: "POST",
-  //     body: fd,
-  //   });
-  //   const data = await res.json();
-  //   if (!res.ok) console.log("Upload failed: " + (data?.error || res.status));
-  //   return console.log("Upload failed: " + (data?.error || res.status));
-  //   console.log("Upload success:", data);
-  //   //upload end
-
-  //   updateS2tData(data);
-  //   createTimeArray(data);
-  //   // Update Zustand store with the S2T audio transcript
-  //   updateS2TAudioTranscript(data);
-
-  //   const combinedTranscript = data
-  //     .map((element) => {
-  //       return element.alternatives[0].transcript;
-  //     })
-  //     .join(" ");
-  //   console.log(combinedTranscript);
-
-  //   updateTranscript(combinedTranscript);
-  //   updateS2TAudioTranscript(combinedTranscript);
-  // }
   async function getTranscript() {
-    const audioFileName = completeListeningStageData.audioFileName;
-    console.log("Getting transcript for file: " + audioFileName);
-
+    console.log("STORE selectedAudioFileName:", selectedAudioFileName);
     const response = await fetch(
       `/api/google-api-s2t?name=${selectedAudioFileName}`,
     );

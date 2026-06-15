@@ -12,8 +12,10 @@ const Transcript = () => {
   } = useContext(AudioTextContext);
 
   async function getTranscript() {
+    console.log("Firing get TRANSCRIPT from TRANSCRIPT.");
+
     const response = await fetch(
-      `/api/google-api-s2t?name=${selectedAudioFileName}`
+      `/api/google-api-s2t?name=${selectedAudioFileName}`,
     );
     //const response = await fetch(`/api/test`);
 
