@@ -15,11 +15,13 @@ import { Card } from "./AudioUploaderUI/card";
 import { Badge } from "./AudioUploaderUI/badge";
 import { Input } from "./AudioUploaderUI/input";
 import { saveFile } from "@app/utils/IndexedDBWrapper";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import FileCard from "./AudioUploaderUI/filecard";
 import { addFilePath } from "@app/utils/FilePathNameUtil";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import { takeAwayFilePath } from "@app/utils/FilePathNameUtil";
+
 const dummyArchive = [
   {
     id: 1,
@@ -78,9 +80,17 @@ export default function AudioUploader() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Categories");
   const [isDragActive, setIsDragActive] = useState(false);
+  const selectedAudioFileName = useAudioTextStore(
+    (state) => state.selectedAudioFileName,
+  );
+
   const updateCompleteListeningStageData = useLessonStore(
     (state) => state.updateCompleteListeningStageData,
   );
+  const updateSelectedAudioFileName = useAudioTextStore(
+    (state) => state.updateSelectedAudioFileName,
+  );
+
   const completeListeningStageData = useLessonStore(
     (state) => state.completeListeningStageData,
   );
@@ -160,6 +170,7 @@ export default function AudioUploader() {
     if (files.length > 0) {
       const file = files[0];
       setSelectedFiles([file]);
+      updateSelectedAudioFileName(file.name);
       await saveFile(file.name, file); // <-- FIXED
       updateCompleteListeningStageData({
         ...completeListeningStageData,
@@ -199,7 +210,7 @@ export default function AudioUploader() {
   };
 
   const handleArchiveSelect = (fileName) => {
-    setSelectedArchiveId((prev) => (prev === fileName ? null : fileName));
+    updateSelectedAudioFileName(fileName);
   };
 
   const filteredArchive = audioBucketContents.filter(
@@ -223,6 +234,7 @@ export default function AudioUploader() {
       console.log("file name: ", file.name);
 
       setSelectedFiles([file]);
+      updateSelectedAudioFileName(file.name);
       //await saveFile(file, file); // <-- FIXED
       //await saveFile({ name: file.name, blob: file });
       updateCompleteListeningStageData({
@@ -481,9 +493,10 @@ export default function AudioUploader() {
                     padding: "0.8rem",
                     marginBottom: 10,
                     borderRadius: 10,
-                    background: selectedArchiveId === file ? "#e9ebef" : "#fff",
+                    background:
+                      selectedAudioFileName === file ? "#e9ebef" : "#fff",
                     border:
-                      selectedArchiveId === file
+                      selectedAudioFileName === file
                         ? "1.5px solid #1976d2"
                         : "1.5px solid #ececf0",
                     cursor: "pointer",
@@ -491,12 +504,13 @@ export default function AudioUploader() {
                 >
                   <input
                     type="checkbox"
-                    checked={selectedArchiveId === file}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      handleArchiveSelect(file);
+                    checked={selectedAudioFileName === file}
+                    readOnly
+                    style={{
+                      accentColor: "#1976d2",
+                      marginRight: 8,
+                      pointerEvents: "none",
                     }}
-                    style={{ accentColor: "#1976d2", marginRight: 8 }}
                   />
                   <AudiotrackIcon style={{ fontSize: 24, color: "#717182" }} />
                   <div style={{ flex: 1 }}>

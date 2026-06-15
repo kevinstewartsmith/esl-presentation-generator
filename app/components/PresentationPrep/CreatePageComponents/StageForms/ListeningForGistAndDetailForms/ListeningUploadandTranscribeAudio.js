@@ -1,16 +1,12 @@
-import React, { useContext } from "react";
-import { AudioTextContext } from "@app/contexts/AudioTextContext";
+import React from "react";
 import { Grid } from "@mui/material";
 import AudioTable from "@app/components/AudioTable";
-
 import { Button } from "@mui/material";
 import Transcript from "@app/components/Transcript";
 import GetAudioTranscript from "@app/components/GetAudioTranscript";
 import AudioUploadCard from "@app/components/PresentationPrep/AudioUploadCard";
 import AudioUploader from "@app/components/PresentationPrep/AudioUploader";
 const ListeningUploadandTranscribeAudio = () => {
-  const audioTextContext = useContext(AudioTextContext);
-
   return (
     <>
       {/* <h1>ListeningUploadandTranscribeAudio Component </h1> */}
