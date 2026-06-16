@@ -29,6 +29,13 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
     (state) => state.setHydratedSelectedAudioFileName,
   );
 
+  const setHydratedS2tTranscript = useAudioTextStore(
+    (state) => state.setHydratedS2tTranscript,
+  );
+  const setHydratedWordTimeArray = useAudioTextStore(
+    (state) => state.setHydratedWordTimeArray,
+  );
+
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
     <ListeningUploadandTranscribeAudio />,
@@ -51,6 +58,8 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
         lessonID,
       );
       // You can now use allListeningData here
+      setHydratedS2tTranscript(allListeningData?.s2tTranscript || "");
+      setHydratedWordTimeArray(allListeningData?.wordTimeArray || []);
       updateAudioQuestions(allListeningData?.audioQuestions || "");
       updateAudioAnswers(allListeningData?.audioAnswers || "");
       updateAudioTranscript(allListeningData?.audioTranscript || "");
