@@ -1,6 +1,10 @@
 "use client";
 // audioContext.js
 import { createContext, useState, useEffect } from "react";
+async function safeJson(response) {
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+}
 
 const AudioTextContext = createContext();
 
@@ -47,7 +51,7 @@ const AudioTextProvider = ({ children }) => {
       try {
         const response = await fetch(
           `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonIDAudioContext}&stageID=${encodedStageID}&data=${stringifiedQuestions}&textType=AudioQuestionText`,
-          { method: "POST" }
+          { method: "POST" },
         );
         const data = await response.json();
         //console.log("RESPONSE FROM POSTING QUESTION TEXT DATA:", data);
@@ -78,7 +82,7 @@ const AudioTextProvider = ({ children }) => {
       try {
         const response = await fetch(
           `/api/firestore/post-texts?userID=${userID}&lessonID=${lessonIDAudioContext}&stageID=${encodedStageID}&data=${stringifiedTranscript}&textType=AudioTranscript`,
-          { method: "POST" }
+          { method: "POST" },
         );
         const data = await response.json();
         console.log("RESPONSE FROM POSTING TRANSCRIPT DATA:", data);
@@ -91,25 +95,25 @@ const AudioTextProvider = ({ children }) => {
   //end post audio transcript to the database
 
   async function fetchAudioQuestionDataFromDB(userID, lessonID, stageID) {
+    if (!userID || !lessonID) return;
     const stage = "Listening for Gist and Detail";
     const encodedStageID = encodeURIComponent(stage);
-    //console.log("Getting Textbook Data from Firestore");
+    const url =
+      "/api/firestore/get-textbook-data?userID=" +
+      userID +
+      "&lessonID=" +
+      lessonID +
+      "&stageID=" +
+      encodedStageID;
     try {
-      const response = await fetch(
-        `/api/firestore/get-textbook-data?userID=${userID}&lessonID=${lessonID}&stageID=${encodedStageID}`
-      );
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json(); // Parse the JSON response
-      //console.log("Textbook DATA from Firestore:", data);
-      //data.texts.transcript ? setTextbook(data.texts.transcript) : null;
-      data.audioQuestions ? setAudioQuestions(data.audioQuestions) : null;
-      // data.questions.transcript
-      //   ? setQuestions(data.questions.transcript)
-      //   : null;
-      data.transcript ? setTranscript(data.transcript) : null;
-      data.answers ? setAnswers(data.answers) : null;
+      const data = await safeJson(response);
+      if (data?.audioQuestions) setAudioQuestions(data.audioQuestions);
+      if (data?.transcript) setTranscript(data.transcript);
+      if (data?.answers) setAnswers(data.answers);
     } catch (error) {
       console.error(error);
     }

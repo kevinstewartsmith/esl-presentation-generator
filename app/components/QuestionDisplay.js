@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Grid, Item } from "@mui/material";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";

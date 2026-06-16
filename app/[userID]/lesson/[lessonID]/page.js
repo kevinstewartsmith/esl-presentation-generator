@@ -45,8 +45,6 @@ const LessonPageComponent = ({ params }) => {
   const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
     useContext(GlobalVariablesContext);
 
-  updateLessonID(paramsLessonID);
-  updateLessonIDForAudioData(paramsLessonID);
   // updateThinkPairShareLessonID(paramsLessonID);
 
   //setCurrentLessonID(paramsLessonID);
@@ -54,6 +52,8 @@ const LessonPageComponent = ({ params }) => {
   //update currentLessonID in lesson store with useEffect
   useEffect(() => {
     setCurrentLessonID(paramsLessonID);
+    updateLessonID(paramsLessonID);
+    updateLessonIDForAudioData(paramsLessonID);
   }, [paramsLessonID]);
 
   useEffect(() => {

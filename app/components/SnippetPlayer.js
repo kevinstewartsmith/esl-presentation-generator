@@ -1,3 +1,4 @@
+"use client";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
 import { useEffect, useRef, useContext } from "react";
