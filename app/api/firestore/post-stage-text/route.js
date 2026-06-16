@@ -9,6 +9,8 @@ const FIELD_MAP = {
   AudioQuestionText: "audioQuestions",
   AudioTranscript: "transcript",
   AudioFileName: "audioFileName",
+  S2tTranscript: "s2tTranscript",
+  WordTimeArray: "wordTimeArray",
 };
 
 export const POST = async (request) => {
