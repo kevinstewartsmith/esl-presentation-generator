@@ -6,7 +6,6 @@ import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import CreeateAudioSnippets from "./CreateAudioSnippets";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
-import { all } from "@node_modules/axios";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {

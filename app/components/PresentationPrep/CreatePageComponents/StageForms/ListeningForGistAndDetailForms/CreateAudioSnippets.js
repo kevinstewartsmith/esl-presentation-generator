@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import {
   mergeItems,
   addPassagesToQuestions,
@@ -18,10 +19,8 @@ const CreateAudioSnippets = () => {
   const [readyForAudioClips, setReadyForAudioClips] = useState(false);
   const [readyForSnippets, setReadyForSnippets] = useState(false);
   const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
-  const wordTimeArray = useLessonStore((state) => state.wordTimeArray);
-  const updateWordTimeArray = useLessonStore(
-    (state) => state.updateWordTimeArray,
-  );
+  const wordTimeArray = useAudioTextStore((state) => state.wordTimeArray);
+
   const audioQuestions = useLessonStore((state) => state.audioQuestions);
   const audioAnswers = useLessonStore((state) => state.audioAnswers);
   const [audioQuestionObj, setAudioQuestionObj] = useState([]);
@@ -39,10 +38,8 @@ const CreateAudioSnippets = () => {
   const updateAudioClipQuestionData = useLessonStore(
     (state) => state.updateAudioClipQuestionData,
   );
-  //Audio transcript from useLessonStore
-  const s2TAudioTranscript = useLessonStore(
-    (state) => state.s2TAudioTranscript,
-  );
+
+  const s2tTranscript = useAudioTextStore((state) => state.s2tTranscript);
 
   const audioSnippetFilenameArray = useLessonStore(
     (state) => state.audioSnippetFilenameArray,
@@ -50,6 +47,11 @@ const CreateAudioSnippets = () => {
   const updateAudioSnippetFilenameArray = useLessonStore(
     (state) => state.updateAudioSnippetFilenameArray,
   );
+
+  console.log("🎯 CreateAudioSnippets — store values on render:");
+  console.log("   s2tTranscript:", s2tTranscript);
+  console.log("   wordTimeArray length:", wordTimeArray?.length);
+  console.log("   audioFileName (old useLessonStore):", audioFileName);
 
   //Takes questions OCR and sends to api to be parsed into objects. Then the objects are set in state. This is happening every time the component mounts
   useEffect(() => {
@@ -81,7 +83,7 @@ const CreateAudioSnippets = () => {
   useEffect(() => {
     if (
       readyForSnippets &&
-      completeListeningStageData.transcript &&
+      s2tTranscript &&
       completeListeningStageData.questionsAndAnswers.length > 0
     ) {
       // Call your snippet API here
@@ -90,7 +92,7 @@ const CreateAudioSnippets = () => {
       fetch(
         `/api/get-audio-snippets-codes?questionsandanswers=${JSON.stringify(
           completeListeningStageData.questionsAndAnswers,
-        )}&transcript=${completeListeningStageData.transcript}`,
+        )}&transcript=${s2tTranscript}`,
       )
         .then((response) => {
           console.log("Raw Response from snippet API:", response);
@@ -235,7 +237,7 @@ const CreateAudioSnippets = () => {
     updateCompleteListeningStageData({
       ...completeListeningStageData,
       questionsAndAnswers: merged,
-      transcript: s2TAudioTranscript,
+      transcript: s2tTranscript,
       wordArray: wordTimeArray,
       audioFileName: audioFileName,
     });
