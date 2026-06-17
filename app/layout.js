@@ -1,7 +1,5 @@
 import { Inter } from "next/font/google";
 import "@styles/globals.css";
-import { AudioTextProvider } from "./contexts/AudioTextContext";
-import { PresentationContextProvider } from "./contexts/PresentationContext";
 import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
 import { ReadingForGistAndDetailContextProvider } from "./contexts/ReadingForGistAndDetailContext";
 import Nav from "./components/Nav";
@@ -22,19 +20,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ZustandSyncWrapper />
-
         <ReadingForGistAndDetailContextProvider>
-          {/* <DashboardContextProvider> */}
-          <AudioTextProvider>
-            {/* <PresentationContextProvider> */}
-            <GlobalVariablesContextProvider>
-              {/* <body className={inter.className}> */}
-              <Nav>{children}</Nav>
-              {/* </body> */}
-            </GlobalVariablesContextProvider>
-            {/* </PresentationContextProvider> */}
-          </AudioTextProvider>
-          {/* </DashboardContextProvider> */}
+          <GlobalVariablesContextProvider>
+            <Nav>{children}</Nav>
+          </GlobalVariablesContextProvider>
         </ReadingForGistAndDetailContextProvider>
       </body>
     </html>

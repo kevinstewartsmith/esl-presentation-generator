@@ -23,9 +23,6 @@ import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreateP
 import { Anton } from "next/font/google";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
-import { AudioTextProvider } from "@app/contexts/AudioTextContext";
-import { AudioTextContext } from "@app/contexts/AudioTextContext";
-import { unstable_gridTabIndexColumnHeaderFilterSelector } from "@node_modules/@mui/x-data-grid";
 
 //import Anton font from next font
 const anton = Anton({
@@ -53,9 +50,6 @@ const CreatePageComponent = ({ params }) => {
     fetchTextbookDataFromDB,
     fetchIncludedDataFromFirestore,
   } = useContext(ReadingForGistAndDetailContext);
-
-  const { lessonIDAudioContext, fetchAudioQuestionDataFromDB } =
-    useContext(AudioTextContext);
 
   const pathname = usePathname();
 
@@ -99,7 +93,6 @@ const CreatePageComponent = ({ params }) => {
     //updateLessonID(params.lessonID);
     console.log("CREATE PAGE USE EFFECT TRIGGERED");
     console.log("LESSON ID: " + lessonID);
-    console.log("LESSON ID AUDIO CONTEXT: " + lessonIDAudioContext);
 
     async function fetchData() {
       const res = await fetch(
@@ -116,7 +109,7 @@ const CreatePageComponent = ({ params }) => {
     getAllDiscussionDataFromFirestore(userID, lessonID, params.stageID);
     fetchTextbookDataFromDB(userID, lessonID, params.stageID);
     fetchIncludedDataFromFirestore(userID, lessonID, params.stageID);
-    fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
+    //fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
 
     async function getLessonStages() {
       try {
