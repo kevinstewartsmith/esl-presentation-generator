@@ -1,8 +1,8 @@
 "use client";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
-import { useEffect, useRef, useContext } from "react";
-import { AudioTextContext } from "@app/contexts/AudioTextContext";
+import { useEffect, useRef } from "react";
+
 import { combinedTranscript } from "@app/utils/transcript";
 import { createAudioSlice } from "@app/utils/AudioSnipper";
 import { playAudioFile, playAudioFileClip } from "@app/utils/AudioControls";
@@ -10,13 +10,7 @@ import { playFromIndexedDB } from "@app/utils/AudioSplittingUtil";
 import { useState } from "react";
 function SnippetPlayer({ index, snippetFileNames }) {
   const [playing, setPlaying] = useState(false);
-  const {
-    snippetData,
-    wordTimeArray,
-    transcript,
-    fullAudioBuffer,
-    selectedAudioFileName,
-  } = useContext(AudioTextContext);
+
   const audioURL = "/api/audio";
   const audioContextRef = useRef(null);
 

@@ -62,42 +62,32 @@ function AddTextBook({ category, stageID }) {
   // ...existing code...
 
   useEffect(() => {
-    if (files.length > 0) return;
-    console.log(`SEARCHING FOR IMAGE: ${category}ImageData`);
-
     const imagePath = completeListeningStageData?.[`${category}ImageData`];
-    console.log("Image Path: ", imagePath);
     if (!imagePath) return;
+    if (files.length > 0) return;
+
+    let createdPreview = null;
 
     getFile(imagePath).then((data) => {
+      let preview = null;
       if (typeof data === "string" && data.startsWith("data:image")) {
-        const blob = base64ToBlob(data);
-        setFiles([
-          {
-            name: imagePath,
-            preview: URL.createObjectURL(blob),
-          },
-        ]);
+        preview = URL.createObjectURL(base64ToBlob(data));
       } else if (data && data instanceof Blob) {
-        setFiles([
-          {
-            name: imagePath,
-            preview: URL.createObjectURL(data),
-          },
-        ]);
+        preview = URL.createObjectURL(data);
+      }
+      if (preview) {
+        createdPreview = preview;
+        setFiles([{ name: imagePath, preview }]);
       } else {
         setFiles([]);
       }
     });
 
-    // Cleanup previews on unmount
     return () => {
-      setFiles((prev) => {
-        prev.forEach((file) => URL.revokeObjectURL(file.preview));
-        return [];
-      });
+      if (createdPreview) URL.revokeObjectURL(createdPreview);
     };
-  }, [category, completeListeningStageData]);
+  }, [category, completeListeningStageData?.[`${category}ImageData`]]);
+
   //Reads the text from the image
   async function handleReadText(base64File, file) {
     const worker = await createWorker();
