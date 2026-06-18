@@ -24,13 +24,6 @@ export const useLessonStore = create(
     setHasHydratedCompleteListeningStageData: (value) =>
       set({ hasHydratedCompleteListeningStageData: value }),
 
-    hasHydratedAudioQuestions: false,
-    setHasHydratedAudioQuestions: (value) =>
-      set({ hasHydratedAudioQuestions: value }),
-
-    hasHydratedAudioAnswers: false,
-    setHasHydratedAudioAnswers: (value) =>
-      set({ hasHydratedAudioAnswers: value }),
     //end hydrated methods
 
     audioQuestionsImageFilePath: "",
@@ -44,12 +37,6 @@ export const useLessonStore = create(
     audioTranscriptImageFilePath: "",
     updateAudioTranscriptImageFilePath: (path) =>
       set({ audioTranscriptImageFilePath: path }),
-
-    audioQuestions: [],
-    updateAudioQuestions: (questions) => set({ audioQuestions: questions }),
-
-    audioAnswers: [],
-    updateAudioAnswers: (answers) => set({ audioAnswers: answers }),
 
     s2TAudioTranscript: "",
     updateS2TAudioTranscript: (text) => set({ s2TAudioTranscript: text }),

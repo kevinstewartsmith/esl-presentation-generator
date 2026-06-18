@@ -39,15 +39,16 @@ function AddTextBook({ category, stageID }) {
     updateTextbookTranscript,
   } = useContext(ReadingForGistAndDetailContext);
 
-  //Audio Questions and Answers for useLessonStore
-  const audioQuestions = useLessonStore((state) => state.audioQuestions);
-  const updateAudioQuestions = useLessonStore(
+  //Audio Questions and Answers for useAudioTextStore
+  const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
+  const updateAudioQuestions = useAudioTextStore(
     (state) => state.updateAudioQuestions,
   );
-  const audioAnswers = useLessonStore((state) => state.audioAnswers);
-  const updateAudioAnswers = useLessonStore(
+  const audioAnswers = useAudioTextStore((state) => state.audioAnswers);
+  const updateAudioAnswers = useAudioTextStore(
     (state) => state.updateAudioAnswers,
   );
+
   const audioTranscript = useAudioTextStore((state) => state.ocrTranscript);
   const updateAudioTranscript = useAudioTextStore(
     (state) => state.updateOcrTranscript,

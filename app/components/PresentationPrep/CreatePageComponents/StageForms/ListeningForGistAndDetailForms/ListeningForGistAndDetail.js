@@ -12,15 +12,12 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonID = useLessonStore((state) => state.currentLessonID);
   //update audio questions
-  const updateAudioQuestions = useLessonStore(
-    (state) => state.updateAudioQuestions,
+  const setHydratedAudioQuestions = useAudioTextStore(
+    (state) => state.setHydratedAudioQuestions,
   );
-  const updateAudioAnswers = useLessonStore(
-    (state) => state.updateAudioAnswers,
+  const setHydratedAudioAnswers = useAudioTextStore(
+    (state) => state.setHydratedAudioAnswers,
   );
-  // const updateAudioTranscript = useLessonStore(
-  //   (state) => state.updateAudioTranscript,
-  // );
 
   const setHydratedOcrTranscript = useAudioTextStore(
     (state) => state.setHydratedOcrTranscript,
@@ -64,8 +61,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       // You can now use allListeningData here
       setHydratedS2tTranscript(allListeningData?.s2tTranscript || "");
       setHydratedWordTimeArray(allListeningData?.wordTimeArray || []);
-      updateAudioQuestions(allListeningData?.audioQuestions || "");
-      updateAudioAnswers(allListeningData?.audioAnswers || "");
+      setHydratedAudioQuestions(allListeningData?.audioQuestions || []);
+      setHydratedAudioAnswers(allListeningData?.audioAnswers || []);
+
       //updateAudioTranscript(allListeningData?.audioTranscript || "");
       setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
 
@@ -74,8 +72,6 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       );
       setHydratedSelectedAudioFileName(allListeningData?.audioFileName || "");
       useLessonStore.getState().setHasHydratedCompleteListeningStageData(true);
-      useLessonStore.getState().setHasHydratedAudioQuestions(true);
-      useLessonStore.getState().setHasHydratedAudioAnswers(true);
     };
     fetchListeningData();
   }, [userID, lessonID]);

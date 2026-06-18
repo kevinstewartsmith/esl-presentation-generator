@@ -20,8 +20,9 @@ const CreateAudioSnippets = () => {
   const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
   const wordTimeArray = useAudioTextStore((state) => state.wordTimeArray);
 
-  const audioQuestions = useLessonStore((state) => state.audioQuestions);
-  const audioAnswers = useLessonStore((state) => state.audioAnswers);
+  const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
+  const audioAnswers = useAudioTextStore((state) => state.audioAnswers);
+
   const [audioQuestionObj, setAudioQuestionObj] = useState([]);
   const [audioAnswerObj, setAudioAnswerObj] = useState([]);
   const updateCompleteListeningStageData = useLessonStore(

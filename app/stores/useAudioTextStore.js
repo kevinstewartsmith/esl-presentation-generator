@@ -14,6 +14,19 @@ export const useAudioTextStore = create(
     justHydratedTranscript: false,
     ocrTranscript: "",
     justHydratedOcr: false,
+    audioQuestions: [],
+    audioAnswers: [],
+    justHydratedQA: false,
+
+    updateAudioQuestions: (q) =>
+      set({ audioQuestions: q ?? [], justHydratedQA: false }),
+    updateAudioAnswers: (a) =>
+      set({ audioAnswers: a ?? [], justHydratedQA: false }),
+
+    setHydratedAudioQuestions: (q) =>
+      set({ audioQuestions: q ?? [], justHydratedQA: true }),
+    setHydratedAudioAnswers: (a) =>
+      set({ audioAnswers: a ?? [], justHydratedQA: true }),
 
     updateOcrTranscript: (text) =>
       set({ ocrTranscript: text ?? "", justHydratedOcr: false }),
@@ -117,6 +130,64 @@ const saveOcrTranscript = debounce(async (text) => {
     console.error(error);
   }
 }, 1500);
+
+const saveAudioQuestions = debounce(async (q) => {
+  const { currentUserID, currentLessonID } = useLessonStore.getState();
+  if (!currentUserID || !currentLessonID) return;
+  try {
+    await fetch("/api/firestore/post-stage-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userID: currentUserID,
+        lessonID: currentLessonID,
+        stageID: STAGE_ID,
+        textType: "AudioQuestions",
+        data: q,
+      }),
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}, 1500);
+
+const saveAudioAnswers = debounce(async (a) => {
+  const { currentUserID, currentLessonID } = useLessonStore.getState();
+  if (!currentUserID || !currentLessonID) return;
+  try {
+    await fetch("/api/firestore/post-stage-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userID: currentUserID,
+        lessonID: currentLessonID,
+        stageID: STAGE_ID,
+        textType: "AudioAnswers",
+        data: a,
+      }),
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}, 1500);
+
+useAudioTextStore.subscribe(
+  (s) => s.audioQuestions,
+  (q) => {
+    if (useAudioTextStore.getState().justHydratedQA) return;
+    if (!q || q.length === 0) return;
+    saveAudioQuestions(q);
+  },
+);
+
+useAudioTextStore.subscribe(
+  (s) => s.audioAnswers,
+  (a) => {
+    if (useAudioTextStore.getState().justHydratedQA) return;
+    if (!a || a.length === 0) return;
+    saveAudioAnswers(a);
+  },
+);
 
 useAudioTextStore.subscribe(
   (state) => state.ocrTranscript,
