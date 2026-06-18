@@ -17,6 +17,16 @@ export const useAudioTextStore = create(
     audioQuestions: [],
     audioAnswers: [],
     justHydratedQA: false,
+    comprehensionItems: [],
+    justHydratedComprehension: false,
+
+    updateComprehensionItems: (items) =>
+      set({
+        comprehensionItems: items ?? [],
+        justHydratedComprehension: false,
+      }),
+    setHydratedComprehensionItems: (items) =>
+      set({ comprehensionItems: items ?? [], justHydratedComprehension: true }),
 
     updateAudioQuestions: (q) =>
       set({ audioQuestions: q ?? [], justHydratedQA: false }),
@@ -170,6 +180,35 @@ const saveAudioAnswers = debounce(async (a) => {
     console.error(e);
   }
 }, 1500);
+
+const saveComprehensionItems = debounce(async (items) => {
+  const { currentUserID, currentLessonID } = useLessonStore.getState();
+  if (!currentUserID || !currentLessonID) return;
+  try {
+    await fetch("/api/firestore/post-stage-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userID: currentUserID,
+        lessonID: currentLessonID,
+        stageID: STAGE_ID,
+        textType: "ComprehensionItems",
+        data: items,
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}, 1500);
+
+useAudioTextStore.subscribe(
+  (state) => state.comprehensionItems,
+  (items) => {
+    if (useAudioTextStore.getState().justHydratedComprehension) return;
+    if (!items || items.length === 0) return;
+    saveComprehensionItems(items);
+  },
+);
 
 useAudioTextStore.subscribe(
   (s) => s.audioQuestions,

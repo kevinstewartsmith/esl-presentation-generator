@@ -1,6 +1,5 @@
 import React, { use, useEffect, useState } from "react";
 import QuestionDisplay from "@app/components/QuestionDisplay";
-import { useLessonStore } from "@app/stores/useLessonStore";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import {
   mergeItems,
@@ -18,44 +17,27 @@ const CreateAudioSnippets = () => {
   const [readyForAudioClips, setReadyForAudioClips] = useState(false);
   const [readyForSnippets, setReadyForSnippets] = useState(false);
   const [readyForWordTimeData, setReadyForWordTimeData] = useState(false);
-  const wordTimeArray = useAudioTextStore((state) => state.wordTimeArray);
 
+  const wordTimeArray = useAudioTextStore((state) => state.wordTimeArray);
   const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
   const audioAnswers = useAudioTextStore((state) => state.audioAnswers);
-
-  const [audioQuestionObj, setAudioQuestionObj] = useState([]);
-  const [audioAnswerObj, setAudioAnswerObj] = useState([]);
-  const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData,
-  );
-  const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData,
-  );
-
+  const s2tTranscript = useAudioTextStore((state) => state.s2tTranscript);
   const audioFileName = useAudioTextStore(
     (state) => state.selectedAudioFileName,
   );
 
-  const audioClipQuestionData = useLessonStore(
-    (state) => state.audioClipQuestionData,
+  const comprehensionItems = useAudioTextStore(
+    (state) => state.comprehensionItems,
   );
-  const updateAudioClipQuestionData = useLessonStore(
-    (state) => state.updateAudioClipQuestionData,
-  );
-
-  const s2tTranscript = useAudioTextStore((state) => state.s2tTranscript);
-
-  const audioSnippetFilenameArray = useLessonStore(
-    (state) => state.audioSnippetFilenameArray,
-  );
-  const updateAudioSnippetFilenameArray = useLessonStore(
-    (state) => state.updateAudioSnippetFilenameArray,
+  const updateComprehensionItems = useAudioTextStore(
+    (state) => state.updateComprehensionItems,
   );
 
-  // Guard helper: is the questionsAndAnswers array ready to use?
-  const qaReady =
-    completeListeningStageData?.questionsAndAnswers &&
-    completeListeningStageData.questionsAndAnswers.length > 0;
+  const [audioQuestionObj, setAudioQuestionObj] = useState([]);
+  const [audioAnswerObj, setAudioAnswerObj] = useState([]);
+
+  // Guard helper: is the comprehensionItems array ready to use?
+  const qaReady = comprehensionItems && comprehensionItems.length > 0;
 
   useEffect(() => {
     if (!qaReady) {
@@ -77,7 +59,7 @@ const CreateAudioSnippets = () => {
     if (!s2tTranscript) return;
     if (!qaReady) return;
 
-    const qa = JSON.stringify(completeListeningStageData.questionsAndAnswers);
+    const qa = JSON.stringify(comprehensionItems);
     const url =
       "/api/get-audio-snippets-codes?questionsandanswers=" +
       qa +
@@ -87,14 +69,8 @@ const CreateAudioSnippets = () => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        const updatedQAWithPassages = addPassagesToQuestions(
-          completeListeningStageData.questionsAndAnswers,
-          data,
-        );
-        updateCompleteListeningStageData({
-          ...completeListeningStageData,
-          questionsAndAnswers: updatedQAWithPassages,
-        });
+        const updated = addPassagesToQuestions(comprehensionItems, data);
+        updateComprehensionItems(updated);
         setReadyForWordTimeData(true);
       })
       .catch((error) => {
@@ -109,7 +85,7 @@ const CreateAudioSnippets = () => {
     if (!wordTimeArray || wordTimeArray.length === 0) return;
 
     const indices = findBatchPassageIndices(
-      completeListeningStageData.questionsAndAnswers.map((qa) => qa.passage),
+      comprehensionItems.map((qa) => qa.passage),
       wordTimeArray,
     );
 
@@ -120,19 +96,15 @@ const CreateAudioSnippets = () => {
       return [];
     });
 
-    const updatedQuestionsAndAnswers =
-      completeListeningStageData.questionsAndAnswers.map((qa, i) => ({
-        ...qa,
-        snippet: snippets[i] || [],
-        indices: indices[i] || null,
-      }));
+    const updated = comprehensionItems.map((qa, i) => ({
+      ...qa,
+      snippet: snippets[i] || [],
+      indices: indices[i] || null,
+    }));
 
-    updateCompleteListeningStageData({
-      ...completeListeningStageData,
-      questionsAndAnswers: updatedQuestionsAndAnswers,
-    });
+    updateComprehensionItems(updated);
 
-    updatedQuestionsAndAnswers.length > 0
+    updated.length > 0
       ? setReadyForAudioClips(true)
       : setReadyForAudioClips(false);
   }, [readyForWordTimeData]);
@@ -146,17 +118,13 @@ const CreateAudioSnippets = () => {
       const splitAudioFileArray = await splitAudioFile(
         audioFileName,
         wordTimeArray,
-        completeListeningStageData.questionsAndAnswers,
+        comprehensionItems,
       );
-      updateAudioSnippetFilenameArray(splitAudioFileArray);
-      const updatedQuestionsAndAnswers = addSnippetsFileNamesToQuestions(
-        completeListeningStageData.questionsAndAnswers,
+      const updated = addSnippetsFileNamesToQuestions(
+        comprehensionItems,
         splitAudioFileArray,
       );
-      updateCompleteListeningStageData({
-        ...completeListeningStageData,
-        questionsAndAnswers: updatedQuestionsAndAnswers,
-      });
+      updateComprehensionItems(updated);
       setReadyForAudioClips(true);
     };
 
@@ -189,13 +157,7 @@ const CreateAudioSnippets = () => {
 
   function mergeQuestionsAndAnswers(questions, answers) {
     const merged = mergeItems(questions, answers);
-    updateCompleteListeningStageData({
-      ...completeListeningStageData,
-      questionsAndAnswers: merged,
-      transcript: s2tTranscript,
-      wordArray: wordTimeArray,
-      audioFileName: audioFileName,
-    });
+    updateComprehensionItems(merged);
   }
 
   return <QuestionDisplay />;

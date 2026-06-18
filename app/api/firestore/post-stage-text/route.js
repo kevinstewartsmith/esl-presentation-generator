@@ -14,6 +14,7 @@ const FIELD_MAP = {
   OcrTranscript: "audioTranscript",
   AudioQuestions: "audioQuestions",
   AudioAnswers: "audioAnswers",
+  ComprehensionItems: "comprehensionItems",
 };
 
 export const POST = async (request) => {
