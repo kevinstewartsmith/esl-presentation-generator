@@ -41,9 +41,6 @@ export const useLessonStore = create(
     s2TAudioTranscript: "",
     updateS2TAudioTranscript: (text) => set({ s2TAudioTranscript: text }),
 
-    audioFileName: "",
-    updateAudioFileName: (fileName) => set({ audioFileName: fileName }),
-
     wordTimeArray: [],
     updateWordTimeArray: (array) => set({ wordTimeArray: array }),
 

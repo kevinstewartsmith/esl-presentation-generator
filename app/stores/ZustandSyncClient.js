@@ -97,14 +97,6 @@ export default function ZustandSyncClient() {
       },
     );
 
-    const unsubAudioFileName = useLessonStore.subscribe(
-      (state) => state.audioFileName,
-      (fileName) => {
-        console.log("🔈 Audio File Name updated:", fileName);
-      },
-    );
-    console.log("📡 Subscribed to AudioFileName changes");
-
     return () => {
       clearTimeout(debounceTimer);
       unsubUserID();
