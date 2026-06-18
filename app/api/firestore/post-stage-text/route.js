@@ -11,6 +11,7 @@ const FIELD_MAP = {
   AudioFileName: "audioFileName",
   S2tTranscript: "s2tTranscript",
   WordTimeArray: "wordTimeArray",
+  OcrTranscript: "audioTranscript",
 };
 
 export const POST = async (request) => {

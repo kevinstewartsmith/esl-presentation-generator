@@ -18,9 +18,14 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const updateAudioAnswers = useLessonStore(
     (state) => state.updateAudioAnswers,
   );
-  const updateAudioTranscript = useLessonStore(
-    (state) => state.updateAudioTranscript,
+  // const updateAudioTranscript = useLessonStore(
+  //   (state) => state.updateAudioTranscript,
+  // );
+
+  const setHydratedOcrTranscript = useAudioTextStore(
+    (state) => state.setHydratedOcrTranscript,
   );
+
   const updateCompleteListeningStageData = useLessonStore(
     (state) => state.updateCompleteListeningStageData,
   );
@@ -61,7 +66,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       setHydratedWordTimeArray(allListeningData?.wordTimeArray || []);
       updateAudioQuestions(allListeningData?.audioQuestions || "");
       updateAudioAnswers(allListeningData?.audioAnswers || "");
-      updateAudioTranscript(allListeningData?.audioTranscript || "");
+      //updateAudioTranscript(allListeningData?.audioTranscript || "");
+      setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
+
       updateCompleteListeningStageData(
         allListeningData?.completeListeningStageData || {},
       );

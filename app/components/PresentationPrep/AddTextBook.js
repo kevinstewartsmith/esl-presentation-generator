@@ -8,6 +8,8 @@ import { useLessonStore } from "@app/stores/useLessonStore";
 import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+
 import {
   saveImageToIndexedDB,
   dragNDropText,
@@ -46,10 +48,11 @@ function AddTextBook({ category, stageID }) {
   const updateAudioAnswers = useLessonStore(
     (state) => state.updateAudioAnswers,
   );
-  const audioTranscript = useLessonStore((state) => state.audioTranscript);
-  const updateAudioTranscript = useLessonStore(
-    (state) => state.updateAudioTranscript,
+  const audioTranscript = useAudioTextStore((state) => state.ocrTranscript);
+  const updateAudioTranscript = useAudioTextStore(
+    (state) => state.updateOcrTranscript,
   );
+
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonId = useLessonStore((state) => state.currentLessonID);
   const updateCompleteListeningStageData = useLessonStore(

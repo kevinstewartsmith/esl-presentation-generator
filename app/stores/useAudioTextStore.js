@@ -12,6 +12,13 @@ export const useAudioTextStore = create(
     s2tTranscript: "",
     wordTimeArray: [],
     justHydratedTranscript: false,
+    ocrTranscript: "",
+    justHydratedOcr: false,
+
+    updateOcrTranscript: (text) =>
+      set({ ocrTranscript: text ?? "", justHydratedOcr: false }),
+    setHydratedOcrTranscript: (text) =>
+      set({ ocrTranscript: text ?? "", justHydratedOcr: true }),
 
     updateSelectedAudioFileName: (fileName) =>
       set({ selectedAudioFileName: fileName ?? "", justHydrated: false }),
@@ -90,6 +97,35 @@ const saveWordTimeArray = debounce(async (arr) => {
     console.error(e);
   }
 }, 1500);
+
+const saveOcrTranscript = debounce(async (text) => {
+  const { currentUserID, currentLessonID } = useLessonStore.getState();
+  if (!currentUserID || !currentLessonID) return;
+  try {
+    await fetch("/api/firestore/post-stage-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userID: currentUserID,
+        lessonID: currentLessonID,
+        stageID: STAGE_ID,
+        textType: "OcrTranscript",
+        data: text,
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}, 1500);
+
+useAudioTextStore.subscribe(
+  (state) => state.ocrTranscript,
+  (text) => {
+    if (useAudioTextStore.getState().justHydratedOcr) return;
+    if (!text) return;
+    saveOcrTranscript(text);
+  },
+);
 
 useAudioTextStore.subscribe(
   (state) => state.selectedAudioFileName,

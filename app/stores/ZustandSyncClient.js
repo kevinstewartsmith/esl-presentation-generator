@@ -36,42 +36,6 @@ export default function ZustandSyncClient() {
 
     let debounceTimer;
 
-    // Audio Stage - Start
-    const unsubAudioTranscript = useLessonStore.subscribe(
-      (state) => state.audioTranscript,
-      (transcript, prevTranscript) => {
-        console.log("⁉️Audio Transcript changed:", transcript);
-
-        // Only POST if data actually changed
-        if (JSON.stringify(transcript) === JSON.stringify(prevTranscript)) {
-          console.log("📜 No changes detected in audioTranscript");
-          return; // No real change, skip autosave
-        }
-        const {
-          currentUserID,
-          currentLessonID,
-          hasHydratedCompleteListeningStageData,
-        } = useLessonStore.getState();
-
-        //🧯 Skip autosave until we've hydrated from Firestore
-        if (!hasHydratedCompleteListeningStageData) {
-          console.log(
-            "⏭ Skipping autosave: hydration not complete - audioTranscript",
-          );
-          return;
-        }
-        const keyName = "audioTranscript";
-        postToApiSectionData(
-          currentUserID,
-          currentLessonID,
-          listeningForGistandDetailStage,
-          keyName,
-          transcript,
-        );
-        console.log("✍️Audio Transcript updated:", transcript);
-      },
-    );
-    console.log("📡 Subscribed to audioTranscript changes");
     const unsubAudioQuestions = useLessonStore.subscribe(
       (state) => state.audioQuestions,
       (questions, prevQuestions) => {
@@ -215,7 +179,6 @@ export default function ZustandSyncClient() {
       //unsubTest();
       //unsubAll();
 
-      unsubAudioTranscript();
       unsubAudioQuestions();
       unsubAudioAnswers();
       unsubCompleteListeningStageData();

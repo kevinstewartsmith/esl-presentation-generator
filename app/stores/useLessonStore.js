@@ -45,9 +45,6 @@ export const useLessonStore = create(
     updateAudioTranscriptImageFilePath: (path) =>
       set({ audioTranscriptImageFilePath: path }),
 
-    audioTranscript: "",
-    updateAudioTranscript: (text) => set({ audioTranscript: text }),
-
     audioQuestions: [],
     updateAudioQuestions: (questions) => set({ audioQuestions: questions }),
 
