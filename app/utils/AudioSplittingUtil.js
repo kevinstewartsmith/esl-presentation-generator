@@ -1,30 +1,26 @@
 import { getFile, listFiles, saveFile } from "@app/utils/IndexedDBWrapper";
 
-export const splitAudioFile = async (completeListeningStageData) => {
-  console.log(
-    "Splitting audio file...",
-    completeListeningStageData.audioFileName,
-  );
+export const splitAudioFile = async (
+  audioFileName,
+  wordArray,
+  questionsAndAnswers,
+) => {
+  console.log("Splitting audio file...", audioFileName);
   console.log(
     "Complete Listening Stage Data Questions and Answers in the CLIP UTIL:",
-    completeListeningStageData.questionsAndAnswers,
+    questionsAndAnswers,
   );
   const audioContext = new AudioContext();
   const keys = await listFiles(); // or your version of listing
   console.log("Keys in DB:", keys);
 
-  console.log("Looking for:", completeListeningStageData.audioFileName);
+  console.log("Looking for:", audioFileName);
   console.log("Available keys:", keys);
   // Check if audio file name and keys[0] match
-  console.log(
-    "Keys[0] === audioFileName:",
-    keys[0] === completeListeningStageData.audioFileName,
-  );
+  console.log("Keys[0] === audioFileName:", keys[0] === audioFileName);
 
   // Retrieve the binarized audio file from IndexedDB
-  const audioBlob = await getAudioBlob(
-    completeListeningStageData.audioFileName,
-  );
+  const audioBlob = await getAudioBlob(audioFileName);
   if (!audioBlob) {
     console.error("Audio file not found.");
     return [];
@@ -33,7 +29,9 @@ export const splitAudioFile = async (completeListeningStageData) => {
   const decodedAudioBuffer = await decodeAudioFile(audioBlob, audioContext);
   const snippets = await splitAudioFileIntoMultipleClips(
     decodedAudioBuffer,
-    completeListeningStageData,
+    audioFileName,
+    wordArray,
+    questionsAndAnswers,
     audioContext,
   );
   return snippets;
@@ -41,13 +39,13 @@ export const splitAudioFile = async (completeListeningStageData) => {
 
 async function splitAudioFileIntoMultipleClips(
   audioBuffer,
-  completeListeningStageData,
+  audioFileName,
+  wordArray,
+  questionsAndAnswers,
   audioContext,
 ) {
-  const questionsAndAnswers = completeListeningStageData.questionsAndAnswers;
   const snippets = [];
   const indices = questionsAndAnswers.map((qa) => qa.indices || "no indices");
-  const wordArray = completeListeningStageData.wordArray;
 
   console.log("Indices for snippets:", indices);
 
@@ -97,13 +95,8 @@ async function splitAudioFileIntoMultipleClips(
       );
 
       if (snippetBlob) {
-        snippets.push(
-          `${completeListeningStageData.audioFileName}_snippet_${i}.wav`,
-        );
-        await saveFile(
-          `${completeListeningStageData.audioFileName}_snippet_${i}.wav`,
-          snippetBlob,
-        );
+        snippets.push(`${audioFileName}_snippet_${i}.wav`);
+        await saveFile(`${audioFileName}_snippet_${i}.wav`, snippetBlob);
       } else {
         snippets.push("No Audio");
       }

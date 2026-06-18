@@ -144,7 +144,9 @@ const CreateAudioSnippets = () => {
 
     const fetchSnippets = async () => {
       const splitAudioFileArray = await splitAudioFile(
-        completeListeningStageData,
+        audioFileName,
+        wordTimeArray,
+        completeListeningStageData.questionsAndAnswers,
       );
       updateAudioSnippetFilenameArray(splitAudioFileArray);
       const updatedQuestionsAndAnswers = addSnippetsFileNamesToQuestions(
