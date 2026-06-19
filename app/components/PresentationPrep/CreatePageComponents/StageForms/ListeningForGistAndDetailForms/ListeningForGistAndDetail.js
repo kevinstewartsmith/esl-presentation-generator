@@ -40,6 +40,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const setHydratedWordTimeArray = useAudioTextStore(
     (state) => state.setHydratedWordTimeArray,
   );
+  const setHasAttemptedAudioHydration = useAudioTextStore(
+    (state) => state.setHasAttemptedAudioHydration,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -58,6 +61,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
 
   useEffect(() => {
     const fetchListeningData = async () => {
+      setHasAttemptedAudioHydration(false);
       const allListeningData = await getCompleteListeningStageDataFromDB(
         userID,
         lessonID,
@@ -81,6 +85,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       );
       setHydratedSelectedAudioFileName(allListeningData?.audioFileName || "");
       useLessonStore.getState().setHasHydratedCompleteListeningStageData(true);
+      setHasAttemptedAudioHydration(true);
     };
     fetchListeningData();
   }, [userID, lessonID]);

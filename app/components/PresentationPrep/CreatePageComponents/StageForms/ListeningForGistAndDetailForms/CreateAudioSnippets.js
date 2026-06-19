@@ -22,6 +22,10 @@ const CreateAudioSnippets = () => {
   const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
   const audioAnswers = useAudioTextStore((state) => state.audioAnswers);
   const s2tTranscript = useAudioTextStore((state) => state.s2tTranscript);
+  const hasAttemptedAudioHydration = useAudioTextStore(
+    (state) => state.hasAttemptedAudioHydration,
+  );
+
   const audioFileName = useAudioTextStore(
     (state) => state.selectedAudioFileName,
   );
@@ -40,11 +44,12 @@ const CreateAudioSnippets = () => {
   const qaReady = comprehensionItems && comprehensionItems.length > 0;
 
   useEffect(() => {
+    if (!hasAttemptedAudioHydration) return;
     if (!qaReady) {
       getAudioQuestionParts("question");
       getAudioQuestionParts("answer");
     }
-  }, []);
+  }, [hasAttemptedAudioHydration]);
 
   useEffect(() => {
     if (audioQuestionObj.length > 0 && audioAnswerObj.length > 0 && !qaReady) {

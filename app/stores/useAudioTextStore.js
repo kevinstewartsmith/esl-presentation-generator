@@ -20,6 +20,10 @@ export const useAudioTextStore = create(
     comprehensionItems: [],
     justHydratedComprehension: false,
 
+    hasAttemptedAudioHydration: false,
+    setHasAttemptedAudioHydration: (value) =>
+      set({ hasAttemptedAudioHydration: value }),
+
     updateComprehensionItems: (items) =>
       set({
         comprehensionItems: items ?? [],
