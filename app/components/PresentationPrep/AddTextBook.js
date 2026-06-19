@@ -67,12 +67,20 @@ function AddTextBook({ category, stageID }) {
 
   useEffect(() => {
     const imagePath = completeListeningStageData?.[`${category}ImageData`];
-    if (!imagePath) return;
-    if (files.length > 0) return;
 
+    // Clear any previous lesson's preview immediately, before the async fetch,
+    // so the old image doesn't flash while the new one loads.
+    setFiles([]);
+
+    if (!imagePath) {
+      return;
+    }
+
+    let cancelled = false;
     let createdPreview = null;
 
     getFile(imagePath).then((data) => {
+      if (cancelled) return;
       let preview = null;
       if (typeof data === "string" && data.startsWith("data:image")) {
         preview = URL.createObjectURL(base64ToBlob(data));
@@ -88,6 +96,7 @@ function AddTextBook({ category, stageID }) {
     });
 
     return () => {
+      cancelled = true;
       if (createdPreview) URL.revokeObjectURL(createdPreview);
     };
   }, [category, completeListeningStageData?.[`${category}ImageData`]]);
