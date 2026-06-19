@@ -3,29 +3,23 @@ import React from "react";
 import { Grid, Item } from "@mui/material";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import SnippetPlayer from "./SnippetPlayer";
-import { useLessonStore } from "@app/stores/useLessonStore";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 
 function QuestionDisplay() {
-  const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData,
+  const comprehensionItems = useAudioTextStore(
+    (state) => state.comprehensionItems,
   );
-  const questions = completeListeningStageData.questionsAndAnswers
-    ? completeListeningStageData.questionsAndAnswers.map(
-        (item) => item.question,
-      )
+  const questions = comprehensionItems
+    ? comprehensionItems.map((item) => item.question)
     : [];
-  const answers = completeListeningStageData.questionsAndAnswers
-    ? completeListeningStageData.questionsAndAnswers.map((item) => item.answer)
+  const answers = comprehensionItems
+    ? comprehensionItems.map((item) => item.answer)
     : [];
-
-  const passages = completeListeningStageData.questionsAndAnswers
-    ? completeListeningStageData.questionsAndAnswers.map((item) => item.passage)
+  const passages = comprehensionItems
+    ? comprehensionItems.map((item) => item.passage)
     : [];
-
-  const snippetFileNames = completeListeningStageData.questionsAndAnswers
-    ? completeListeningStageData.questionsAndAnswers.map(
-        (item) => item.snippetFileNames,
-      )
+  const snippetFileNames = comprehensionItems
+    ? comprehensionItems.map((item) => item.snippetFileNames)
     : [];
 
   return (

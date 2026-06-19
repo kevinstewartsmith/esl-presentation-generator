@@ -23,6 +23,10 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
     (state) => state.setHydratedOcrTranscript,
   );
 
+  const setHydratedComprehensionItems = useAudioTextStore(
+    (state) => state.setHydratedComprehensionItems,
+  );
+
   const updateCompleteListeningStageData = useLessonStore(
     (state) => state.updateCompleteListeningStageData,
   );
@@ -66,6 +70,11 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
 
       //updateAudioTranscript(allListeningData?.audioTranscript || "");
       setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
+      setHydratedComprehensionItems(
+        allListeningData?.comprehensionItems ||
+          allListeningData?.completeListeningStageData?.questionsAndAnswers ||
+          [],
+      );
 
       updateCompleteListeningStageData(
         allListeningData?.completeListeningStageData || {},
