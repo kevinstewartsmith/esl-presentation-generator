@@ -12,9 +12,12 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonID = useLessonStore((state) => state.currentLessonID);
   //update audio questions
+  const resetAudioStore = useAudioTextStore((state) => state.resetAudioStore);
+
   const setHydratedAudioQuestions = useAudioTextStore(
     (state) => state.setHydratedAudioQuestions,
   );
+
   const setHydratedAudioAnswers = useAudioTextStore(
     (state) => state.setHydratedAudioAnswers,
   );
@@ -30,6 +33,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const updateCompleteListeningStageData = useLessonStore(
     (state) => state.updateCompleteListeningStageData,
   );
+
   const setHydratedSelectedAudioFileName = useAudioTextStore(
     (state) => state.setHydratedSelectedAudioFileName,
   );
@@ -61,7 +65,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
 
   useEffect(() => {
     const fetchListeningData = async () => {
-      setHasAttemptedAudioHydration(false);
+      resetAudioStore();
       const allListeningData = await getCompleteListeningStageDataFromDB(
         userID,
         lessonID,

@@ -5,22 +5,29 @@ import { useLessonStore } from "@app/stores/useLessonStore";
 
 const STAGE_ID = "Listening for Gist and Detail";
 
+const initialAudioState = {
+  selectedAudioFileName: "",
+  s2tTranscript: "",
+  wordTimeArray: [],
+  ocrTranscript: "",
+  audioQuestions: [],
+  audioAnswers: [],
+  comprehensionItems: [],
+
+  justHydrated: false,
+  justHydratedTranscript: false,
+  justHydratedOcr: false,
+  justHydratedQA: false,
+  justHydratedComprehension: false,
+  hasAttemptedAudioHydration: false,
+};
+
 export const useAudioTextStore = create(
   subscribeWithSelector((set) => ({
-    selectedAudioFileName: "",
-    justHydrated: false,
-    s2tTranscript: "",
-    wordTimeArray: [],
-    justHydratedTranscript: false,
-    ocrTranscript: "",
-    justHydratedOcr: false,
-    audioQuestions: [],
-    audioAnswers: [],
-    justHydratedQA: false,
-    comprehensionItems: [],
-    justHydratedComprehension: false,
+    ...initialAudioState,
 
-    hasAttemptedAudioHydration: false,
+    resetAudioStore: () => set({ ...initialAudioState }),
+
     setHasAttemptedAudioHydration: (value) =>
       set({ hasAttemptedAudioHydration: value }),
 
