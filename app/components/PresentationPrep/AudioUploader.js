@@ -84,15 +84,8 @@ export default function AudioUploader() {
     (state) => state.selectedAudioFileName,
   );
 
-  const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData,
-  );
   const updateSelectedAudioFileName = useAudioTextStore(
     (state) => state.updateSelectedAudioFileName,
-  );
-
-  const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData,
   );
 
   const inputRef = useRef();
@@ -172,10 +165,7 @@ export default function AudioUploader() {
       setSelectedFiles([file]);
       updateSelectedAudioFileName(file.name);
       await saveFile(file.name, file); // <-- FIXED
-      updateCompleteListeningStageData({
-        ...completeListeningStageData,
-        audioFileName: file.name,
-      });
+
       // Simulate upload progress
       setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
       // let progress = 0;
@@ -237,10 +227,7 @@ export default function AudioUploader() {
       updateSelectedAudioFileName(file.name);
       //await saveFile(file, file); // <-- FIXED
       //await saveFile({ name: file.name, blob: file });
-      updateCompleteListeningStageData({
-        ...completeListeningStageData,
-        audioFileName: file.name,
-      });
+
       // Simulate upload progress
       setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
       // let progress = 0;
