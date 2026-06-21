@@ -79,11 +79,8 @@ function AddTextBook({ category, stageID }) {
       ? imagePathsByCategory?.[category]
       : completeListeningStageData?.[`${category}ImageData`];
 
-    // Clear any previous lesson's preview immediately, before the async fetch,
-    // so the old image doesn't flash while the new one loads.
-    setFiles([]);
-
     if (!imagePath) {
+      setFiles([]);
       return;
     }
 
@@ -101,8 +98,6 @@ function AddTextBook({ category, stageID }) {
       if (preview) {
         createdPreview = preview;
         setFiles([{ name: imagePath, preview }]);
-      } else {
-        setFiles([]);
       }
     });
 
