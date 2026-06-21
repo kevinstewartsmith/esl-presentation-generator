@@ -15,6 +15,7 @@ const FIELD_MAP = {
   AudioQuestions: "audioQuestions",
   AudioAnswers: "audioAnswers",
   ComprehensionItems: "comprehensionItems",
+  ImagePaths: "imagePathsByCategory",
 };
 
 export const POST = async (request) => {

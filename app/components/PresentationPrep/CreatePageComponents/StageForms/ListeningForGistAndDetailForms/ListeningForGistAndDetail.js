@@ -7,6 +7,17 @@ import CreeateAudioSnippets from "./CreateAudioSnippets";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+function buildImagePathsFromBlob(blob) {
+  if (!blob) return null;
+  const result = {};
+  for (const key of Object.keys(blob)) {
+    if (key.endsWith("ImageData") && blob[key]) {
+      const category = key.replace("ImageData", "");
+      result[category] = blob[key];
+    }
+  }
+  return Object.keys(result).length > 0 ? result : null;
+}
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
@@ -47,6 +58,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const setHasAttemptedAudioHydration = useAudioTextStore(
     (state) => state.setHasAttemptedAudioHydration,
   );
+  const setHydratedImagePaths = useAudioTextStore(
+    (state) => state.setHydratedImagePaths,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -70,19 +84,23 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
         userID,
         lessonID,
       );
-      // You can now use allListeningData here
+      console.log("HYDRATION DATA:", allListeningData); //
       setHydratedS2tTranscript(allListeningData?.s2tTranscript || "");
       setHydratedWordTimeArray(allListeningData?.wordTimeArray || []);
       setHydratedAudioQuestions(allListeningData?.audioQuestions || []);
       setHydratedAudioAnswers(allListeningData?.audioAnswers || []);
-
-      //updateAudioTranscript(allListeningData?.audioTranscript || "");
       setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
       setHydratedComprehensionItems(
         allListeningData?.comprehensionItems ||
           allListeningData?.completeListeningStageData?.questionsAndAnswers ||
           [],
       );
+
+      const savedImagePaths =
+        allListeningData?.imagePathsByCategory ||
+        buildImagePathsFromBlob(allListeningData?.completeListeningStageData) ||
+        {};
+      setHydratedImagePaths(savedImagePaths);
 
       updateCompleteListeningStageData(
         allListeningData?.completeListeningStageData || {},

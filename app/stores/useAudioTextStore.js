@@ -13,6 +13,7 @@ const initialAudioState = {
   audioQuestions: [],
   audioAnswers: [],
   comprehensionItems: [],
+  imagePathsByCategory: {},
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -43,6 +44,15 @@ export const useAudioTextStore = create(
       set({ audioQuestions: q ?? [], justHydratedQA: false }),
     updateAudioAnswers: (a) =>
       set({ audioAnswers: a ?? [], justHydratedQA: false }),
+    updateImagePathForCategory: (category, path) =>
+      set((state) => ({
+        imagePathsByCategory: {
+          ...state.imagePathsByCategory,
+          [category]: path ?? "",
+        },
+      })),
+    setHydratedImagePaths: (obj) =>
+      set({ imagePathsByCategory: obj ?? {}, justHydratedImagePaths: true }),
 
     setHydratedAudioQuestions: (q) =>
       set({ audioQuestions: q ?? [], justHydratedQA: true }),
@@ -211,6 +221,35 @@ const saveComprehensionItems = debounce(async (items) => {
     console.error(error);
   }
 }, 1500);
+
+const saveImagePaths = debounce(async (obj) => {
+  const { currentUserID, currentLessonID } = useLessonStore.getState();
+  if (!currentUserID || !currentLessonID) return;
+  try {
+    await fetch("/api/firestore/post-stage-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userID: currentUserID,
+        lessonID: currentLessonID,
+        stageID: STAGE_ID,
+        textType: "ImagePaths",
+        data: obj,
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}, 1500);
+
+useAudioTextStore.subscribe(
+  (state) => state.imagePathsByCategory,
+  (obj) => {
+    if (useAudioTextStore.getState().justHydratedImagePaths) return;
+    if (!obj || Object.keys(obj).length === 0) return;
+    saveImagePaths(obj);
+  },
+);
 
 useAudioTextStore.subscribe(
   (state) => state.comprehensionItems,

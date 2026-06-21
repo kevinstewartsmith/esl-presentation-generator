@@ -54,6 +54,15 @@ function AddTextBook({ category, stageID }) {
     (state) => state.updateOcrTranscript,
   );
 
+  const imagePathsByCategory = useAudioTextStore(
+    (state) => state.imagePathsByCategory,
+  );
+  const updateImagePathForCategory = useAudioTextStore(
+    (state) => state.updateImagePathForCategory,
+  );
+
+  const isListeningCategory = category.startsWith("Listening");
+
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonId = useLessonStore((state) => state.currentLessonID);
   const updateCompleteListeningStageData = useLessonStore(
@@ -66,7 +75,9 @@ function AddTextBook({ category, stageID }) {
   // ...existing code...
 
   useEffect(() => {
-    const imagePath = completeListeningStageData?.[`${category}ImageData`];
+    const imagePath = isListeningCategory
+      ? imagePathsByCategory?.[category]
+      : completeListeningStageData?.[`${category}ImageData`];
 
     // Clear any previous lesson's preview immediately, before the async fetch,
     // so the old image doesn't flash while the new one loads.
@@ -99,7 +110,12 @@ function AddTextBook({ category, stageID }) {
       cancelled = true;
       if (createdPreview) URL.revokeObjectURL(createdPreview);
     };
-  }, [category, completeListeningStageData?.[`${category}ImageData`]]);
+  }, [
+    category,
+    isListeningCategory
+      ? imagePathsByCategory?.[category]
+      : completeListeningStageData?.[`${category}ImageData`],
+  ]);
 
   //Reads the text from the image
   async function handleReadText(base64File, file) {
@@ -177,11 +193,16 @@ function AddTextBook({ category, stageID }) {
     const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
     await deleteFile(filePath);
 
-    // 2. Remove filepath from completeListeningStageData
-    updateCompleteListeningStageData({
-      ...completeListeningStageData,
-      [`${category}ImageData`]: "", // or null, or delete the key as needed
-    });
+    // 2. Remove filepath from stoe
+    if (isListeningCategory) {
+      updateImagePathForCategory(category, "");
+    } else {
+      updateCompleteListeningStageData({
+        ...completeListeningStageData,
+        [`${category}ImageData`]: "",
+      });
+    }
+
     // 3. Remove from files state
     handleTextStateMemory("");
 
@@ -209,10 +230,14 @@ function AddTextBook({ category, stageID }) {
     const encodedStageID = encodeURIComponent(stageID);
     const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`; // Handle both path and name
     // Save audio file name to lesson store
-    updateCompleteListeningStageData({
-      ...completeListeningStageData,
-      [`${category}ImageData`]: filePath,
-    });
+    if (isListeningCategory) {
+      updateImagePathForCategory(category, filePath);
+    } else {
+      updateCompleteListeningStageData({
+        ...completeListeningStageData,
+        [`${category}ImageData`]: filePath,
+      });
+    }
     saveImageToIndexedDB(filePath, file);
   };
 
