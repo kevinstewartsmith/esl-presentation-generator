@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo, useContext, use } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/useLessonStore";
@@ -9,6 +8,7 @@ import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 import {
   saveImageToIndexedDB,
@@ -29,15 +29,15 @@ import {
 function AddTextBook({ category, stageID }) {
   console.log("The category is: ", category);
 
-  const {
-    textbook,
-    questions,
-    answers,
-    updateTextbook,
-    updateQuestions,
-    updateAnswers,
-    updateTextbookTranscript,
-  } = useContext(ReadingForGistAndDetailContext);
+  const textbook = useReadingStore((state) => state.textbook);
+  const questions = useReadingStore((state) => state.questions);
+  const answers = useReadingStore((state) => state.answers);
+  const updateTextbook = useReadingStore((state) => state.updateTextbook);
+  const updateQuestions = useReadingStore((state) => state.updateQuestions);
+  const updateAnswers = useReadingStore((state) => state.updateAnswers);
+  const updateTextbookTranscript = useReadingStore(
+    (state) => state.updateTextbookTranscript,
+  );
 
   //Audio Questions and Answers for useAudioTextStore
   const audioQuestions = useAudioTextStore((state) => state.audioQuestions);

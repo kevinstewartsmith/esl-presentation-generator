@@ -1,18 +1,34 @@
 import { listeningForGistandDetailStage } from "./SectionIDs";
+import { readingForGistandDetailStage } from "./SectionIDs";
 
-export const getCompleteListeningStageDataFromDB = async (
-  currentUserID,
-  currentLessonID
-) => {
-  const encodedStageID = encodeURIComponent(listeningForGistandDetailStage);
-  const response = await fetch(
-    `/api/firestore/section-data/get-section-data?userID=${currentUserID}&lessonID=${currentLessonID}&stageID=${encodedStageID}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch complete listening stage data");
+// Shared helper: build URL, fetch, safe-parse, return null on any failure.
+async function fetchStageData(endpoint, params) {
+  const query = new URLSearchParams(params).toString();
+  const url = `/api/firestore/${endpoint}?${query}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
-  const data = await response.json();
-  console.log("Listening Data:", data);
-  return data;
-};
+}
+
+export const getCompleteListeningStageDataFromDB = (
+  currentUserID,
+  currentLessonID,
+) =>
+  fetchStageData("section-data/get-section-data", {
+    userID: currentUserID,
+    lessonID: currentLessonID,
+    stageID: listeningForGistandDetailStage,
+  });
+
+export const getReadingTextDataFromDB = (currentUserID, currentLessonID) =>
+  fetchStageData("get-textbook-data", {
+    userID: currentUserID,
+    lessonID: currentLessonID,
+    stageID: "Reading For Gist and Detail",
+  });
