@@ -22,9 +22,12 @@ export default function InputWithIcon({
   category,
   text,
 }) {
-  const { lessonID, updateDiscussionText, discussionForms } = useContext(
-    ReadingForGistAndDetailContext,
+  const { lessonID } = useContext(ReadingForGistAndDetailContext);
+
+  const updateDiscussionText = useReadingStore(
+    (state) => state.updateDiscussionText,
   );
+  const discussionForms = useReadingStore((state) => state.discussionForms);
 
   const updateInputTextForKey = useReadingStore(
     (state) => state.updateInputTextForKey,
@@ -75,7 +78,7 @@ export default function InputWithIcon({
         updateInputTextForKey("exercise", event.target.value);
         break;
       case "discussion":
-        updateDiscussionText(id, index, event.target.value); // ← stays on Context
+        updateDiscussionText(id, index, event.target.value);
         console.log(discussionForms);
         break;
       case "exercisePage":
@@ -91,9 +94,9 @@ export default function InputWithIcon({
         console.log("Discussion input in switch");
         console.log("######################");
         console.log(
-          "GET VALUE: " + discussionForms[id]?.discussionTexts[index],
+          "GET VALUE: " + discussionForms?.[id]?.discussionTexts?.[index],
         );
-        return discussionForms[id]?.discussionTexts[index] || "";
+        return discussionForms?.[id]?.discussionTexts?.[index] || "";
       //return JSON.stringify(discussionForms);
       default:
         return inputTexts?.[input] || "";

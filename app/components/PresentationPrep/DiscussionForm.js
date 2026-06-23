@@ -6,11 +6,11 @@ import AddIcon from "@mui/icons-material/Add";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { PhotoSizeSelectLargeTwoTone } from "@mui/icons-material";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 const DiscussionForm = ({ id, includedId }) => {
-  const { discussionForms, addDiscussionLine } = useContext(
-    ReadingForGistAndDetailContext
-  );
+  const discussionForms = useReadingStore((state) => state.discussionForms);
+  const addDiscussionLine = useReadingStore((state) => state.addDiscussionLine);
   console.log("COMPONENT discussionForms: " + JSON.stringify(discussionForms));
   console.log(typeof discussionForms);
   const discussionForm = discussionForms[id] || {

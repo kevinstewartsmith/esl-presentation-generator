@@ -113,9 +113,9 @@ const CreatePageComponent = ({ params }) => {
       getLessonTitle(data.title);
     }
     fetchData();
-    getAllInputDataFromFirestore(userID, paramsLessonID, params.stageID);
+    // getAllInputDataFromFirestore(userID, paramsLessonID, params.stageID);
     getAllDiscussionDataFromFirestore(userID, paramsLessonID, params.stageID);
-    fetchTextbookDataFromDB(userID, paramsLessonID, params.stageID);
+    // fetchTextbookDataFromDB(userID, paramsLessonID, params.stageID);
     fetchIncludedDataFromFirestore(userID, paramsLessonID, params.stageID);
     //fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
 

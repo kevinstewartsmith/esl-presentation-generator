@@ -18,6 +18,7 @@ const FIELD_MAP = {
   ComprehensionItems: "comprehensionItems",
   ImagePaths: "imagePathsByCategory",
   InputTexts: "inputTexts",
+  Discussions: "discussionForms",
 };
 
 export const POST = async (request) => {

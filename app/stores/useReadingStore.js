@@ -10,9 +10,11 @@ const initialReadingState = {
   questions: null,
   answers: null,
   inputTexts: null,
+  discussionForms: {},
 
   justHydratedTexts: false,
   justHydratedInputTexts: false,
+  justHydratedDiscussions: false,
   hasAttemptedReadingHydration: false,
 };
 
@@ -61,6 +63,42 @@ export const useReadingStore = create(
       })),
     setHydratedInputTexts: (obj) =>
       set({ inputTexts: obj ?? {}, justHydratedInputTexts: true }),
+
+    // discussionForms (nested: { [id]: { discussionTexts: [...] } })
+    updateDiscussionText: (id, index, text) =>
+      set((state) => {
+        const form = state.discussionForms?.[id] || { discussionTexts: [] };
+        const newTexts = [...form.discussionTexts];
+        newTexts[index] = text;
+        return {
+          discussionForms: {
+            ...state.discussionForms,
+            [id]: { ...form, discussionTexts: newTexts },
+          },
+          justHydratedDiscussions: false,
+        };
+      }),
+    setHydratedDiscussions: (obj) =>
+      set({ discussionForms: obj ?? {}, justHydratedDiscussions: true }),
+
+    addDiscussionLine: (id) =>
+      set((state) => {
+        const form = state.discussionForms?.[id] || {
+          numberOfDiscussionLines: 0,
+          discussionTexts: [],
+        };
+        return {
+          discussionForms: {
+            ...state.discussionForms,
+            [id]: {
+              ...form,
+              numberOfDiscussionLines: form.numberOfDiscussionLines + 1,
+              discussionTexts: [...form.discussionTexts, ""],
+            },
+          },
+          justHydratedDiscussions: false,
+        };
+      }),
   })),
 );
 
@@ -114,6 +152,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "inputTexts",
     flag: "justHydratedInputTexts",
     textType: "InputTexts",
+    isEmpty: isEmptyObject,
+  },
+  {
+    field: "discussionForms",
+    flag: "justHydratedDiscussions",
+    textType: "Discussions",
     isEmpty: isEmptyObject,
   },
 ];
