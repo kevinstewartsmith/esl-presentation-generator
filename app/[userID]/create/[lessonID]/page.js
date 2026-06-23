@@ -23,6 +23,7 @@ import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreateP
 import { Anton } from "next/font/google";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 //import Anton font from next font
 const anton = Anton({
@@ -61,13 +62,18 @@ const CreatePageComponent = ({ params }) => {
   // const userID = resolvedParams.userID;
   //const { userID, lessonID: paramsLessonID } = params;
   const resolvedParams = use(params);
-  const { userID, stageID } = resolvedParams;
+  const { userID, stageID, lessonID: paramsLessonID } = resolvedParams;
 
   const [sectionNumber, setSectionNumber] = useState(0);
   const [sectionLength, setSectionLength] = useState(0);
   const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
   const [currentStageFormIdx, setCurrentStageFormIdx] = useState(0);
   const [includedStages, setIncludedStages] = useState([]);
+
+  const setCurrentLessonID = useLessonStore(
+    (state) => state.setCurrentLessonID,
+  );
+  const setCurrentUserID = useLessonStore((state) => state.setCurrentUserID);
 
   //Render a component based on the current stage form index
   function renderComponent(componentName, idx) {
@@ -93,10 +99,12 @@ const CreatePageComponent = ({ params }) => {
     //updateLessonID(params.lessonID);
     console.log("CREATE PAGE USE EFFECT TRIGGERED");
     console.log("LESSON ID: " + lessonID);
+    setCurrentUserID(userID);
+    setCurrentLessonID(paramsLessonID);
 
     async function fetchData() {
       const res = await fetch(
-        `/api/firestore/get-lessons?userID=${userID}&lessonID=${lessonID}&method=getOneLesson`,
+        `/api/firestore/get-lessons?userID=${userID}&lessonID=${paramsLessonID}&method=getOneLesson`,
       );
       const data = await res.json();
       console.log("LESSON DATA CREATE");
@@ -105,16 +113,16 @@ const CreatePageComponent = ({ params }) => {
       getLessonTitle(data.title);
     }
     fetchData();
-    getAllInputDataFromFirestore(userID, lessonID, params.stageID);
-    getAllDiscussionDataFromFirestore(userID, lessonID, params.stageID);
-    fetchTextbookDataFromDB(userID, lessonID, params.stageID);
-    fetchIncludedDataFromFirestore(userID, lessonID, params.stageID);
+    getAllInputDataFromFirestore(userID, paramsLessonID, params.stageID);
+    getAllDiscussionDataFromFirestore(userID, paramsLessonID, params.stageID);
+    fetchTextbookDataFromDB(userID, paramsLessonID, params.stageID);
+    fetchIncludedDataFromFirestore(userID, paramsLessonID, params.stageID);
     //fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
 
     async function getLessonStages() {
       try {
         const response = await fetch(
-          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${lessonID}`,
+          `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`,
         );
         const data = await response.json();
         console.log("Lesson Stages:", data.root[0]);

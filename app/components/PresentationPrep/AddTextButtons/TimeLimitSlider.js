@@ -4,6 +4,7 @@ import CheckBoxAndLabel from "./CheckBoxAndLabel";
 import DiscreteSlider from "./DiscreteSlider";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 const TimeLimitSlider = ({
   label,
@@ -16,14 +17,13 @@ const TimeLimitSlider = ({
 }) => {
   console.log("TimeLimitSlider at render: " + id);
   const [sliderValue, setSliderValue] = useState(
-    defaultValue ? defaultValue : 3
+    defaultValue ? defaultValue : 3,
   );
-  // const { updateSliderStateMemory, addSliderStateMemory, sliders } =
-  //   useContext(PresentationContext);
 
-  const { updateInputTextsReading, inputTexts } = useContext(
-    ReadingForGistAndDetailContext
+  const updateInputTextForKey = useReadingStore(
+    (state) => state.updateInputTextForKey,
   );
+  const inputTexts = useReadingStore((state) => state.inputTexts);
 
   // if (!sliders[id]) {
   //   addSliderStateMemory(id, min, max, defaultValue, label);
@@ -44,7 +44,7 @@ const TimeLimitSlider = ({
     setSliderValue(newValue);
     console.log("sliderValue: " + sliderValue);
     console.log("label: " + label);
-    updateInputTextsReading(id, newValue);
+    updateInputTextForKey(id, newValue);
   };
 
   // const minuteValue = () => {
@@ -55,8 +55,8 @@ const TimeLimitSlider = ({
   //   }
   // };
   const minuteValue = () => {
-    if (inputTexts[id]) {
-      return inputTexts[id];
+    if (inputTexts?.[id]) {
+      return inputTexts?.[id];
     } else {
       return defaultValue;
     }
@@ -71,7 +71,7 @@ const TimeLimitSlider = ({
     >
       <Grid item xs={12} sm={12}>
         <CheckBoxAndLabel
-          label={`${label} - ${inputTexts[id]} minutes`}
+          label={`${label} - ${inputTexts?.[id]} minutes`}
           size={"small"}
           includedId={includedId}
         />
@@ -88,7 +88,7 @@ const TimeLimitSlider = ({
           defaultValue={defaultValue ? defaultValue : 3}
           onChange={handleSliderChange}
           //minuteValue={minuteValue()}
-          minuteValue={inputTexts[id] ? inputTexts[id] : defaultValue}
+          minuteValue={inputTexts?.[id] ? inputTexts?.[id] : defaultValue}
         />
       </Grid>
     </Grid>

@@ -34,6 +34,10 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
   const setHydratedAnswers = useReadingStore(
     (state) => state.setHydratedAnswers,
   );
+  const setHydratedInputTexts = useReadingStore(
+    (state) => state.setHydratedInputTexts,
+  );
+
   const setHasAttemptedReadingHydration = useReadingStore(
     (state) => state.setHasAttemptedReadingHydration,
   );
@@ -48,6 +52,7 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
       setHydratedTextbook(data?.texts ?? null);
       setHydratedQuestions(data?.questions ?? null);
       setHydratedAnswers(data?.answers ?? null);
+      setHydratedInputTexts(data?.inputTexts ?? {});
       setHasAttemptedReadingHydration(true);
     };
     if (currentUserID && currentLessonID) fetchReadingData();

@@ -5,19 +5,21 @@ import Autocomplete from "@mui/material/Autocomplete";
 //import { useContext } from 'react';
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 export default function FreeSoloDropDown({ label, input, stageID }) {
   const { textBoxInputs, updateTextBoxInputs } =
     useContext(PresentationContext);
 
-  const { updateInputTextsReading, inputTexts } = useContext(
-    ReadingForGistAndDetailContext
+  const updateInputTextForKey = useReadingStore(
+    (state) => state.updateInputTextForKey,
   );
+  const inputTexts = useReadingStore((state) => state.inputTexts);
 
   const handleChange = (event, newVal) => {
     //updateTextBoxInputs(input, newVal);
     console.log("textBoxInputs: " + JSON.stringify(textBoxInputs));
-    updateInputTextsReading(input, newVal);
+    updateInputTextForKey(input, newVal);
     console.log("UPDATING INPUT :" + input + " WITH VALUE: " + newVal);
   };
 
@@ -33,7 +35,7 @@ export default function FreeSoloDropDown({ label, input, stageID }) {
         id="free-solo-demo"
         freeSolo
         options={textBookTitles.map((option) => option.title)}
-        value={inputTexts[input] || ""}
+        value={inputTexts?.[input] || ""}
         onChange={handleChange}
         onInputChange={handleChange}
         renderInput={(params) => (

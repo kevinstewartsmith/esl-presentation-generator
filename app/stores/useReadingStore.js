@@ -9,8 +9,10 @@ const initialReadingState = {
   textbook: null,
   questions: null,
   answers: null,
+  inputTexts: null,
 
   justHydratedTexts: false,
+  justHydratedInputTexts: false,
   hasAttemptedReadingHydration: false,
 };
 
@@ -50,6 +52,15 @@ export const useReadingStore = create(
       set({ answers: data ?? null, justHydratedTexts: false }),
     setHydratedAnswers: (data) =>
       set({ answers: data ?? null, justHydratedTexts: true }),
+
+    // inputTexts (dynamic per-key object: title, page, book, exercise, ...)
+    updateInputTextForKey: (key, value) =>
+      set((state) => ({
+        inputTexts: { ...state.inputTexts, [key]: value },
+        justHydratedInputTexts: false,
+      })),
+    setHydratedInputTexts: (obj) =>
+      set({ inputTexts: obj ?? {}, justHydratedInputTexts: true }),
   })),
 );
 
@@ -77,26 +88,33 @@ function makeFieldSaver(textType) {
   }, 1500);
 }
 
-const isEmpty = (v) => v == null;
+const isEmptyText = (v) => v == null;
+const isEmptyObject = (v) => !v || Object.keys(v).length === 0;
 
 const FIELD_SUBSCRIPTIONS = [
   {
     field: "textbook",
     flag: "justHydratedTexts",
     textType: "BookText",
-    isEmpty,
+    isEmpty: isEmptyText,
   },
   {
     field: "questions",
     flag: "justHydratedTexts",
     textType: "QuestionText",
-    isEmpty,
+    isEmpty: isEmptyText,
   },
   {
     field: "answers",
     flag: "justHydratedTexts",
     textType: "AnswerText",
-    isEmpty,
+    isEmpty: isEmptyText,
+  },
+  {
+    field: "inputTexts",
+    flag: "justHydratedInputTexts",
+    textType: "InputTexts",
+    isEmpty: isEmptyObject,
   },
 ];
 

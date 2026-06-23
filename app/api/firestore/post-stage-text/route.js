@@ -1,3 +1,4 @@
+import { Input } from "@app/components/PresentationPrep/AudioUploaderUI/input";
 import { db } from "@app/utils/firebaseAdmin";
 
 // Maps a textType to the Firestore field it writes.
@@ -16,6 +17,7 @@ const FIELD_MAP = {
   AudioAnswers: "audioAnswers",
   ComprehensionItems: "comprehensionItems",
   ImagePaths: "imagePathsByCategory",
+  InputTexts: "inputTexts",
 };
 
 export const POST = async (request) => {

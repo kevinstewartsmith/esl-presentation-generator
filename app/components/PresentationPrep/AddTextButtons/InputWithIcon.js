@@ -10,6 +10,7 @@ import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndD
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 export default function InputWithIcon({
   label,
@@ -21,13 +22,14 @@ export default function InputWithIcon({
   category,
   text,
 }) {
-  const {
-    updateInputTextsReading,
-    inputTexts,
-    lessonID,
-    updateDiscussionText,
-    discussionForms,
-  } = useContext(ReadingForGistAndDetailContext);
+  const { lessonID, updateDiscussionText, discussionForms } = useContext(
+    ReadingForGistAndDetailContext,
+  );
+
+  const updateInputTextForKey = useReadingStore(
+    (state) => state.updateInputTextForKey,
+  );
+  const inputTexts = useReadingStore((state) => state.inputTexts);
 
   console.log("INPUT ICON LESSON ID: " + lessonID);
   console.log("INPUT ICON ID: " + id);
@@ -61,23 +63,23 @@ export default function InputWithIcon({
   const handleChange = (event) => {
     switch (input) {
       case "question":
-        updateInputTextsReading("question", event.target.value);
+        updateInputTextForKey("question", event.target.value);
         break;
       case "answer":
-        updateInputTextsReading("answer", event.target.value);
+        updateInputTextForKey("answer", event.target.value);
         break;
       case "page":
-        updateInputTextsReading("page", event.target.value);
+        updateInputTextForKey("page", event.target.value);
         break;
       case "exercise":
-        updateInputTextsReading("exercise", event.target.value);
+        updateInputTextForKey("exercise", event.target.value);
         break;
       case "discussion":
-        updateDiscussionText(id, index, event.target.value);
+        updateDiscussionText(id, index, event.target.value); // ← stays on Context
         console.log(discussionForms);
         break;
       case "exercisePage":
-        updateInputTextsReading("exercisePage", event.target.value);
+        updateInputTextForKey("exercisePage", event.target.value);
       default:
         break;
     }
@@ -89,12 +91,12 @@ export default function InputWithIcon({
         console.log("Discussion input in switch");
         console.log("######################");
         console.log(
-          "GET VALUE: " + discussionForms[id]?.discussionTexts[index]
+          "GET VALUE: " + discussionForms[id]?.discussionTexts[index],
         );
         return discussionForms[id]?.discussionTexts[index] || "";
       //return JSON.stringify(discussionForms);
       default:
-        return inputTexts[input] || "";
+        return inputTexts?.[input] || "";
     }
   };
 

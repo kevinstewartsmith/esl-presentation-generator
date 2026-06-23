@@ -323,13 +323,13 @@ const ReadingForGistAndDetailContextProvider = ({ children }) => {
     [],
   );
 
-  useEffect(() => {
-    if (Object.keys(inputTexts).length > 0) {
-      debouncedSave(inputTexts, lessonID);
-    } else {
-      console.log("No data to post");
-    }
-  }, [inputTexts]);
+  // useEffect(() => {
+  //   if (Object.keys(inputTexts).length > 0) {
+  //     debouncedSave(inputTexts, lessonID);
+  //   } else {
+  //     console.log("No data to post");
+  //   }
+  // }, [inputTexts]);
 
   useEffect(() => {
     if (Object.keys(discussionForms).length > 0 && discussionsLoaded) {
