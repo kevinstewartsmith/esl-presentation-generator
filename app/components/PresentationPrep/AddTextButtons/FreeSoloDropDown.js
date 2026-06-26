@@ -2,9 +2,7 @@ import React, { useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
-//import { useContext } from 'react';
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 
 export default function FreeSoloDropDown({ label, input, stageID }) {

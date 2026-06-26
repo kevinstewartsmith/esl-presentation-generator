@@ -2,8 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { Grid } from "@mui/material";
 import CheckBoxAndLabel from "./CheckBoxAndLabel";
 import DiscreteSlider from "./DiscreteSlider";
-import { PresentationContext } from "@app/contexts/PresentationContext";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 
 const TimeLimitSlider = ({

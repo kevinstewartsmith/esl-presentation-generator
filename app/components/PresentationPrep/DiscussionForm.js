@@ -3,9 +3,6 @@ import React, { useState, useContext, useEffect } from "react";
 import CheckBoxAndLabel from "./AddTextButtons/CheckBoxAndLabel";
 import InputWithIcon from "./AddTextButtons/InputWithIcon";
 import AddIcon from "@mui/icons-material/Add";
-import { PresentationContext } from "@app/contexts/PresentationContext";
-import { PhotoSizeSelectLargeTwoTone } from "@mui/icons-material";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 
 const DiscussionForm = ({ id, includedId }) => {

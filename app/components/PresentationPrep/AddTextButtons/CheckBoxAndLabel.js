@@ -1,8 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import { Grid } from "@mui/material";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 
 const CheckBoxAndLabel = ({

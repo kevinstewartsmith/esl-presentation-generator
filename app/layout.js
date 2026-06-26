@@ -1,11 +1,7 @@
 import { Inter } from "next/font/google";
 import "@styles/globals.css";
 import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
-import { ReadingForGistAndDetailContextProvider } from "./contexts/ReadingForGistAndDetailContext";
 import Nav from "./components/Nav";
-import { DashboardContextProvider } from "./contexts/DashboardContext";
-import dynamic from "next/dynamic";
-// Dynamically import the client-only component
 import ZustandSyncWrapper from "@app/stores/ZustandSyncWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,11 +16,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ZustandSyncWrapper />
-        <ReadingForGistAndDetailContextProvider>
-          <GlobalVariablesContextProvider>
-            <Nav>{children}</Nav>
-          </GlobalVariablesContextProvider>
-        </ReadingForGistAndDetailContextProvider>
+
+        <GlobalVariablesContextProvider>
+          <Nav>{children}</Nav>
+        </GlobalVariablesContextProvider>
       </body>
     </html>
   );

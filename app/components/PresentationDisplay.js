@@ -1,47 +1,30 @@
 // components/PresentationDisplay.js
 "use client";
 import { useEffect, useRef, useContext } from "react";
-
 import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "@app/components/FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "@app/components/FinalizedPresentation/PartnerDiscussionSection";
-//import ThinkPairShairPresSection from "./FinalPresentationSections/ThinkPairSharePresSection";
-//import "reveal.js/dist/theme/moon.css";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 
 const PresentationDisplay = ({ presData, includedStages }) => {
-  //import("reveal.js/dist/theme/moon.css");
   import("@styles/reveal-hedonic.css");
 
   const revealRef = useRef(null);
-  console.log(presData);
-  console.log("Presentation Display - Included Stages: ", includedStages);
 
-  const {
-    //vocabulary,
-    //included,
-    gistReadingQuestions,
-    gistReadingPage,
-    sliders,
-    textbookExercises,
-    textBoxInputs,
-    //includedStages,
-    //discussionForms,
-  } = useContext(PresentationContext);
-  const { included, vocabulary, inputTexts, discussionForms } = useContext(
-    ReadingForGistAndDetailContext
-  );
+  const { sliders, textBoxInputs } = useContext(PresentationContext);
   const { hidePresentation } = useContext(GlobalVariablesContext);
-  console.log("VOCAB LENGTH: " + JSON.stringify(vocabulary));
-  console.log("INCLUDED: " + JSON.stringify(included));
+
+  const included = useReadingStore((state) => state.included);
+  const vocabulary = useReadingStore((state) => state.readingVocab);
+  const inputTexts = useReadingStore((state) => state.inputTexts);
+  const discussionForms = useReadingStore((state) => state.discussionForms);
 
   useEffect(() => {
-    // Ensure this runs only on the client-side
     if (typeof window !== "undefined") {
       (async () => {
         const Reveal = (await import("reveal.js")).default;
@@ -56,23 +39,16 @@ const PresentationDisplay = ({ presData, includedStages }) => {
       })();
     }
   }, []);
-  //Render a component based on the current stage form index
+
   function renderComponent(componentName) {
     const ComponentToRender = PresSectionComponentMap[componentName]
       ? PresSectionComponentMap[componentName]
       : null;
 
-    //const ComponentToRender = ReadingForGistandDetailForm;
-
     if (!ComponentToRender) {
       return <div>Component not found</div>;
     }
-    return (
-      <ComponentToRender
-      // section={sectionNumber}
-      // getSectionsLength={getSectionsLength}
-      />
-    );
+    return <ComponentToRender />;
   }
 
   return (
@@ -92,69 +68,66 @@ const PresentationDisplay = ({ presData, includedStages }) => {
           }}
         />
       </button>
-      {/* <h1>test</h1> */}
       <div className="slides">
-        {/* <section data-background-color="blue" data-font-family="Arial">
-          <h1>Slide1</h1>Slide 1
-        </section> */}
-
-        {included["includePreReadingVocabulary"] ? (
+        {included?.["includePreReadingVocabulary"] ? (
           <PreReadingVocabularySection vocabulary={vocabulary} />
         ) : null}
 
-        {included["includeReadingForGistSection"] ? (
+        {included?.["includeReadingForGistSection"] ? (
           <GistReadingInstructions
-            gistReadingQuestions={inputTexts["question"]}
-            gistReadingPage={inputTexts["page"]}
+            gistReadingQuestions={inputTexts?.["question"]}
+            gistReadingPage={inputTexts?.["page"]}
             sliders={sliders}
             textBoxInputs={textBoxInputs}
             inputTexts={inputTexts}
-            //FIX
-            time={inputTexts["gistReadingTime"]}
+            time={inputTexts?.["gistReadingTime"]}
             includeGistReadingTimeLimit={
-              included["includeGistReadingTimeLimit"]
+              included?.["includeGistReadingTimeLimit"]
             }
           />
         ) : null}
+
         <section>
           <h1>Stop and Look</h1>
           <ul>Zip It</ul>
-          <ul> Eyes on teacher</ul>
+          <ul>Eyes on teacher</ul>
           <ul>Listen</ul>
         </section>
-        {included["includeGistReadingQuestionPartnerCheck"] ? (
+
+        {included?.["includeGistReadingQuestionPartnerCheck"] ? (
           <PartnerDiscussionSection
-            slider={inputTexts["gistDiscussionTime"]}
-            discussion={discussionForms["gistQuestionDiscussion"]}
+            slider={inputTexts?.["gistDiscussionTime"]}
+            discussion={discussionForms?.["gistQuestionDiscussion"]}
           />
         ) : null}
-        {included["includeReadingForDetailSection"] ? (
+
+        {included?.["includeReadingForDetailSection"] ? (
           <DetailReadingInstructions
-            //slider={inputTexts["detailReadingTime"]}
-            textbookExercises={inputTexts["exercise"]}
-            slider={inputTexts["detailReadingDiscussionTimeLimit"]}
+            textbookExercises={inputTexts?.["exercise"]}
+            slider={inputTexts?.["detailReadingDiscussionTimeLimit"]}
           />
         ) : null}
+
         <section>
           <h1>Stop and Look</h1>
           <ul>Zip It</ul>
-          <ul> Eyes on teacher</ul>
+          <ul>Eyes on teacher</ul>
           <ul>Listen</ul>
         </section>
 
         <PartnerDiscussionSection
-          slider={inputTexts["detailReadingDiscussionTimeLimit"]}
+          slider={inputTexts?.["detailReadingDiscussionTimeLimit"]}
           time={"detailDiscussionTime"}
-          discussion={discussionForms["detailAnswersDiscussion"]}
+          discussion={discussionForms?.["detailAnswersDiscussion"]}
         />
+
         <section>
           <h1>Book Answers</h1>
         </section>
-        {/* <ThinkPairShairPresSection /> */}
+
         {includedStages.map((stage, index) => {
           if (stage !== "Start Presentation") {
-            const ComponentToRender = renderComponent(stage, index);
-            return ComponentToRender;
+            return renderComponent(stage, index);
           } else {
             return null;
           }

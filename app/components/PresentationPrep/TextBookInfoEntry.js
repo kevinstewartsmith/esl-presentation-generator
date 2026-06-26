@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 
 const TextBookInfoEntry = ({ category, stageID }) => {
   const inputs = (category) => {

@@ -1,29 +1,17 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReadingContent from "@app/components/PresentationPrep/ReadingContent";
 import SectionSelector from "@app/components/PresentationPrep/SectionSelector";
 import PreReadingVocabSlides from "@app/components/PresentationPrep/PreReadingVocabSlides";
 import PreReadingGames from "@app/components/PresentationPrep/PreReadingGames";
 import FinishReading from "@app/components/SectionSelector/FinishReading";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getReadingTextDataFromDB } from "@app/utils/GetStageData";
 
 const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
-  const {
-    fetchDataFromFirestore,
-    getAllInputDataFromFirestore,
-    updateLessonID,
-    lessonID,
-    getAllDiscussionDataFromFirestore,
-    fetchTextbookDataFromDB,
-    fetchIncludedDataFromFirestore,
-  } = useContext(ReadingForGistAndDetailContext);
-
   const currentUserID = useLessonStore((state) => state.currentUserID);
   const currentLessonID = useLessonStore((state) => state.currentLessonID);
-
   const resetReadingStore = useReadingStore((state) => state.resetReadingStore);
   const setHydratedTextbook = useReadingStore(
     (state) => state.setHydratedTextbook,
@@ -37,19 +25,15 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
   const setHydratedInputTexts = useReadingStore(
     (state) => state.setHydratedInputTexts,
   );
-
   const setHasAttemptedReadingHydration = useReadingStore(
     (state) => state.setHasAttemptedReadingHydration,
   );
-
   const setHydratedDiscussions = useReadingStore(
     (state) => state.setHydratedDiscussions,
   );
-
   const setHydratedReadingVocab = useReadingStore(
     (state) => state.setHydratedReadingVocab,
   );
-
   const setHydratedIncluded = useReadingStore(
     (state) => state.setHydratedIncluded,
   );
@@ -78,7 +62,7 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
     <SectionSelector stageID={readingForGistandDetailStage} />,
     <PreReadingVocabSlides
       stageID={readingForGistandDetailStage}
-      lessonID={lessonID}
+      lessonID={currentLessonID}
     />,
     <PreReadingGames stageID={readingForGistandDetailStage} />,
     <FinishReading stageID={readingForGistandDetailStage} />,

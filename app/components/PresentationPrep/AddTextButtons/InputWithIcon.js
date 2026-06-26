@@ -6,7 +6,6 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
