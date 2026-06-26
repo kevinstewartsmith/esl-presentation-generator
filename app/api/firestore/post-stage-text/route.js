@@ -19,6 +19,7 @@ const FIELD_MAP = {
   ImagePaths: "imagePathsByCategory",
   InputTexts: "inputTexts",
   Discussions: "discussionForms",
+  ReadingVocab: "readingVocab",
 };
 
 export const POST = async (request) => {

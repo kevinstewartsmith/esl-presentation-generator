@@ -25,19 +25,6 @@ const TimeLimitSlider = ({
   );
   const inputTexts = useReadingStore((state) => state.inputTexts);
 
-  // if (!sliders[id]) {
-  //   addSliderStateMemory(id, min, max, defaultValue, label);
-  // }
-  // console.log("sliders: " + JSON.stringify(sliders));
-
-  // useEffect(() => {
-  //   if (sliders[id] && sliders[id].value) {
-  //     setSliderValue(sliders[id].value);
-  //   } else {
-  //     setSliderValue(defaultValue);
-  //   }
-  // }, [sliders]);
-
   const handleSliderChange = (event, newValue) => {
     console.log("handleSliderChange: " + id);
     //updateSliderStateMemory(id, newValue);
@@ -47,13 +34,6 @@ const TimeLimitSlider = ({
     updateInputTextForKey(id, newValue);
   };
 
-  // const minuteValue = () => {
-  //   if (sliders[id] && sliders[id].value) {
-  //     return sliders[id].value || defaultValue;
-  //   } else {
-  //     return defaultValue;
-  //   }
-  // };
   const minuteValue = () => {
     if (inputTexts?.[id]) {
       return inputTexts?.[id];

@@ -11,10 +11,12 @@ const initialReadingState = {
   answers: null,
   inputTexts: null,
   discussionForms: {},
+  readingVocab: [],
 
   justHydratedTexts: false,
   justHydratedInputTexts: false,
   justHydratedDiscussions: false,
+  justHydratedReadingVocab: false,
   hasAttemptedReadingHydration: false,
 };
 
@@ -99,6 +101,46 @@ export const useReadingStore = create(
           justHydratedDiscussions: false,
         };
       }),
+
+    // readingVocab: array of { word, definition, img_url, selected }
+    // Words come from ChatGPT (Get Vocab). Images fetched lazily on first selection.
+    setReadingVocab: (words) =>
+      set({ readingVocab: words ?? [], justHydratedReadingVocab: false }),
+
+    // Select a word. Pass imgUrl only on first selection (when the word has no image yet);
+    // omit it if the word already has an img_url (no re-fetch needed).
+    selectVocabWord: (index, imgUrl) =>
+      set((state) => {
+        const next = [...state.readingVocab];
+        if (!next[index]) return {};
+        next[index] = {
+          ...next[index],
+          selected: true,
+          ...(imgUrl !== undefined ? { img_url: imgUrl } : {}),
+        };
+        return { readingVocab: next, justHydratedReadingVocab: false };
+      }),
+
+    // Deselect a word — flips selected only, deliberately KEEPS img_url (sticky image).
+    deselectVocabWord: (index) =>
+      set((state) => {
+        const next = [...state.readingVocab];
+        if (!next[index]) return {};
+        next[index] = { ...next[index], selected: false };
+        return { readingVocab: next, justHydratedReadingVocab: false };
+      }),
+
+    // Future "pick a different image" menu — overwrite one word's image.
+    setVocabImageUrl: (index, url) =>
+      set((state) => {
+        const next = [...state.readingVocab];
+        if (!next[index]) return {};
+        next[index] = { ...next[index], img_url: url ?? "" };
+        return { readingVocab: next, justHydratedReadingVocab: false };
+      }),
+
+    setHydratedReadingVocab: (words) =>
+      set({ readingVocab: words ?? [], justHydratedReadingVocab: true }),
   })),
 );
 
@@ -128,6 +170,7 @@ function makeFieldSaver(textType) {
 
 const isEmptyText = (v) => v == null;
 const isEmptyObject = (v) => !v || Object.keys(v).length === 0;
+const isEmptyArray = (v) => !v || v.length === 0;
 
 const FIELD_SUBSCRIPTIONS = [
   {
@@ -159,6 +202,12 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedDiscussions",
     textType: "Discussions",
     isEmpty: isEmptyObject,
+  },
+  {
+    field: "readingVocab",
+    flag: "justHydratedReadingVocab",
+    textType: "ReadingVocab",
+    isEmpty: isEmptyArray,
   },
 ];
 

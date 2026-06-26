@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect, use } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Grid } from "@mui/material";
 import PreviewVocabSlides from "@app/components/PresentationPrep/PreviewVocabSlides";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 const PreReadingVocabSlides = () => {
   //const words = ['Carpet', 'Dolphin', 'Rubbish', 'Sequence']
@@ -9,59 +10,29 @@ const PreReadingVocabSlides = () => {
   const [selectedVocabulary, setSelectedVocabulary] = useState([]);
   const [selectedSlide, setSelectedSlide] = useState(0);
 
-  const {
-    textbook,
-    vocabulary,
-    updateVocabulary,
-    loadVocabulary,
-    fetchVocabulary,
-    userID,
-    lessonID,
-  } = useContext(ReadingForGistAndDetailContext);
-  //fetchVocabulary();
-
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (count === 0) {
-      console.log("PREREADING VOCAB: FETCHING VOCABULARY");
-      fetchVocabulary(userID, lessonID, "Reading For Gist and Detail");
-      setCount(count + 1);
-    }
-  }, []);
+  const textbook = useReadingStore((state) => state.textbook);
+  const readingVocab = useReadingStore((state) => state.readingVocab);
+  const setReadingVocab = useReadingStore((state) => state.setReadingVocab);
+  const selectVocabWord = useReadingStore((state) => state.selectVocabWord);
+  const deselectVocabWord = useReadingStore((state) => state.deselectVocabWord);
 
   const checkMarkClicked = async (e) => {
-    const key = e.target.value;
+    const index = Number(e.target.value);
     const checked = e.target.checked;
 
-    console.log(
-      checked
-        ? `Checkmark clicked: key ${key}`
-        : `Checkmark unclicked: key ${key}`
-    );
-
     if (checked) {
-      const word = vocabulary[key];
-      const img_url = await getPhotos(word.word);
-      //const encodedURL = encodeURI(img_url);
-      const encodedURL = encodeURIComponent(img_url);
-      console.log("ENCODED URL:", encodedURL);
-      const updatedVocabulary = [...vocabulary];
-      updatedVocabulary[key] = {
-        ...word,
-        img_url: encodedURL,
-        selected: true,
-      };
-      updateVocabulary(updatedVocabulary);
-      console.log(vocabulary);
+      const word = readingVocab[index];
+      if (word.img_url) {
+        // already has an image — just select, no fetch
+        selectVocabWord(index);
+      } else {
+        // first selection — fetch the image, then select with it
+        const img_url = await getPhotos(word.word);
+        const encodedURL = encodeURIComponent(img_url);
+        selectVocabWord(index, encodedURL);
+      }
     } else {
-      const updatedVocabulary = [...vocabulary];
-      updatedVocabulary[key] = {
-        ...vocabulary[key],
-        selected: false,
-        //img_url: "",
-      };
-      updateVocabulary(updatedVocabulary);
-      console.log(vocabulary);
+      deselectVocabWord(index); // keeps img_url (sticky)
     }
   };
 
@@ -71,7 +42,7 @@ const PreReadingVocabSlides = () => {
       console.log(textbook);
 
       const response = await fetch(
-        `/api/get-vocabulary-chatgpt?query=${textbook}&cefr_level=a2`
+        `/api/get-vocabulary-chatgpt?query=${textbook}&cefr_level=a2`,
       );
 
       if (!response.ok) {
@@ -101,25 +72,16 @@ const PreReadingVocabSlides = () => {
       console.log("Parsed data:", parsedData); // Log the parsed data
       console.log(typeof parsedData); // Log the type of parsed data
 
-      loadVocabulary(parsedData);
+      //loadVocabulary(parsedData);
+      const enriched = parsedData.map((word) => ({
+        ...word,
+        img_url: "",
+        selected: false,
+      }));
+      setReadingVocab(enriched);
     } catch (error) {
       console.error("Error fetching vocabulary:", error);
     }
-  }
-
-  async function getPhotos0() {
-    const response = await fetch(`/api/images/search?query=${photoInputValue}`);
-    //const response = await fetch(`/api/test`);
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-
-    console.log(typeof data.results);
-    console.log(data.results);
-    setPhotoSearchResults(data.results);
   }
 
   const getPhotos = async (query) => {
@@ -145,8 +107,8 @@ const PreReadingVocabSlides = () => {
   useEffect(() => {
     //console.log("Vocabulary updated:", vocabulary);
 
-    if (vocabulary) {
-      const filtered = vocabulary.filter((item) => item.selected);
+    if (readingVocab) {
+      const filtered = readingVocab.filter((item) => item.selected);
       setSelectedVocabulary(filtered);
       setSelectedVocabNum(filtered.length);
       // Automatically set the slide to the first selected word when a new word is selected
@@ -157,7 +119,7 @@ const PreReadingVocabSlides = () => {
 
     console.log("use effect triggered");
     console.log(selectedVocabulary);
-  }, [vocabulary]);
+  }, [readingVocab]);
 
   return (
     <div className="presentation-grid-container">
@@ -211,10 +173,11 @@ const PreReadingVocabSlides = () => {
               maxHeight: "100%",
             }}
           >
-            {vocabulary
-              ? vocabulary.map((word, index) => (
+            {readingVocab
+              ? readingVocab.map((word, index) => (
                   <Grid
                     item
+                    key={index}
                     xs={12}
                     style={{ borderColor: "gray", borderWidth: 1, height: 80 }}
                     marginBottom={2}
@@ -288,7 +251,7 @@ const PreReadingVocabSlides = () => {
         >
           {/* <div style={{ width: "80%", height: "100%" }}> */}
           <PreviewVocabSlides
-            vocabulary={vocabulary}
+            vocabulary={readingVocab}
             selectedVocabNum={selectedVocabNum}
             selectedVocabulary={selectedVocabulary}
             selectedSlide={selectedSlide}
