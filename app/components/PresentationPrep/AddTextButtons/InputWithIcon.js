@@ -11,6 +11,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 export default function InputWithIcon({
   label,
@@ -22,7 +23,7 @@ export default function InputWithIcon({
   category,
   text,
 }) {
-  const { lessonID } = useContext(ReadingForGistAndDetailContext);
+  const lessonID = useLessonStore((state) => state.currentLessonID);
 
   const updateDiscussionText = useReadingStore(
     (state) => state.updateDiscussionText,

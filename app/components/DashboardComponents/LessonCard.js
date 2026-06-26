@@ -1,35 +1,30 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
-import Image from "next/image";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 export default function LessonCard({ deleteLesson, lesson, userID }) {
   const router = useRouter();
-  const { updateLessonID } = useContext(ReadingForGistAndDetailContext);
+  const setCurrentLessonID = useLessonStore(
+    (state) => state.setCurrentLessonID,
+  );
   const lessonId = lesson.id;
 
   const handleNavigation = () => {
-    updateLessonID(lessonId);
+    setCurrentLessonID(lessonId);
     router.push(`/${userID}/lesson/${lessonId}`);
   };
 
-  // console.log(lesson);
   return (
-    <Card
-      sx={{ maxWidth: 345, borderRadius: 3 }}
-      //onClick={() => console.log(lesson.title)}
-    >
+    <Card sx={{ maxWidth: 345, borderRadius: 3 }}>
       <CardActionArea onClick={handleNavigation}>
-        {/* <Link href={`/${userID}/lesson/${lessonId}`}> */}
         <CardMedia
           component="img"
           height="140"
@@ -44,7 +39,6 @@ export default function LessonCard({ deleteLesson, lesson, userID }) {
           </Typography>
           <Typography>{lesson["id"]}</Typography>
         </CardContent>
-        {/* </Link> */}
       </CardActionArea>
 
       <CardActions>

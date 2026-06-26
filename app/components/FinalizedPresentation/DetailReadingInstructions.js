@@ -1,20 +1,18 @@
-import React, { useContext } from "react";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import React from "react";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 const DetailReadingInstructions = ({ textbookExercises, slider }) => {
-  const { inputTexts } = useContext(ReadingForGistAndDetailContext);
+  const inputTexts = useReadingStore((state) => state.inputTexts);
   const minutes = slider === 1 ? "minute" : "minutes";
   return (
     <>
-      <section
-      //data-background-color="red"
-      >
+      <section>
         <h1>
           Reading for <em>Detail</em>
         </h1>
         <ul>
           <li>
-            {"Read "} <em>{"'" + inputTexts["title"] + "' "}</em>
+            {"Read "} <em>{"'" + inputTexts?.["title"] + "' "}</em>
             <strong>
               <em>
                 <u>slowly</u>
@@ -23,10 +21,10 @@ const DetailReadingInstructions = ({ textbookExercises, slider }) => {
           </li>
           <li>
             <em>
-              {"Complete p." + inputTexts["exercisePage"] + " Exercise(s): "}
+              {"Complete p." + inputTexts?.["exercisePage"] + " Exercise(s): "}
             </em>
 
-            {inputTexts["exercise"]}
+            {inputTexts?.["exercise"]}
           </li>
           <li>No talking</li>
           <li>Raise your hand when you are finished</li>

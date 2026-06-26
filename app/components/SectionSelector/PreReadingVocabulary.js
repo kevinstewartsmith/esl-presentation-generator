@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Grid } from "@mui/material";
-
 import CheckBoxAndLabel from "../PresentationPrep/AddTextButtons/CheckBoxAndLabel";
 
 const PreReadingVocabulary = ({ includedId }) => {

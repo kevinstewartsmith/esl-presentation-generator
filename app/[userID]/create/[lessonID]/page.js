@@ -2,7 +2,6 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useState, useContext, useEffect, use } from "react";
-// Dynamically import the PresentationDisplay component to ensure it only loads on the client side
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
   { ssr: false },
@@ -11,7 +10,6 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { Handjet } from "next/font/google";
-import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 
 import { usePathname } from "next/navigation";
@@ -25,7 +23,6 @@ import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 
-//import Anton font from next font
 const anton = Anton({
   weight: "400",
   subsets: ["latin"],
@@ -42,15 +39,6 @@ const CreatePageComponent = ({ params }) => {
     updateLessonTitle,
     updatePathname,
   } = useContext(GlobalVariablesContext);
-  const {
-    fetchDataFromFirestore,
-    getAllInputDataFromFirestore,
-    updateLessonID,
-    lessonID,
-    getAllDiscussionDataFromFirestore,
-    fetchTextbookDataFromDB,
-    fetchIncludedDataFromFirestore,
-  } = useContext(ReadingForGistAndDetailContext);
 
   const pathname = usePathname();
 
@@ -58,9 +46,6 @@ const CreatePageComponent = ({ params }) => {
 
   const [lessonData, setLessonData] = useState({});
 
-  // const resolvedParams = React.use(params);
-  // const userID = resolvedParams.userID;
-  //const { userID, lessonID: paramsLessonID } = params;
   const resolvedParams = use(params);
   const { userID, stageID, lessonID: paramsLessonID } = resolvedParams;
 
@@ -75,13 +60,11 @@ const CreatePageComponent = ({ params }) => {
   );
   const setCurrentUserID = useLessonStore((state) => state.setCurrentUserID);
 
-  //Render a component based on the current stage form index
-  function renderComponent(componentName, idx) {
+  function renderComponent() {
     const stageTitle = includedStages
       ? includedStages[currentStageFormIdx]
       : null;
     const ComponentToRender = ComponentMap[stageTitle];
-    //const ComponentToRender = ReadingForGistandDetailForm;
     if (!ComponentToRender) {
       return <div>Component not found</div>;
     }
@@ -96,9 +79,6 @@ const CreatePageComponent = ({ params }) => {
 
   useEffect(() => {
     updatePathname(pathname);
-    //updateLessonID(params.lessonID);
-    console.log("CREATE PAGE USE EFFECT TRIGGERED");
-    console.log("LESSON ID: " + lessonID);
     setCurrentUserID(userID);
     setCurrentLessonID(paramsLessonID);
 
@@ -107,17 +87,10 @@ const CreatePageComponent = ({ params }) => {
         `/api/firestore/get-lessons?userID=${userID}&lessonID=${paramsLessonID}&method=getOneLesson`,
       );
       const data = await res.json();
-      console.log("LESSON DATA CREATE");
-      console.log(data);
       setLessonData(data);
       getLessonTitle(data.title);
     }
     fetchData();
-    // getAllInputDataFromFirestore(userID, paramsLessonID, params.stageID);
-    getAllDiscussionDataFromFirestore(userID, paramsLessonID, params.stageID);
-    // fetchTextbookDataFromDB(userID, paramsLessonID, params.stageID);
-    fetchIncludedDataFromFirestore(userID, paramsLessonID, params.stageID);
-    //fetchAudioQuestionDataFromDB(userID, lessonID, params.stageID);
 
     async function getLessonStages() {
       try {
@@ -125,42 +98,22 @@ const CreatePageComponent = ({ params }) => {
           `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`,
         );
         const data = await response.json();
-        console.log("Lesson Stages:", data.root[0]);
-        console.log(typeof data.root[0]);
-
-        console.log("Items: " + JSON.stringify(data.root[0]));
-
         updateItems(data);
-        //setIncludedStages(data.root);
         setIncludedStages([...data.root, "Start Presentation"]);
-        //makeStageArray(data.root);
       } catch (error) {
         console.error(error);
       }
     }
 
     getLessonStages();
-
-    function makeStageArray(data) {
-      console.log("Make Stage Array");
-      console.log(data);
-
-      setIncludedStages(data);
-      //setIncludedStages(data.root);
-    }
-    //makeStageArray();
   }, []);
 
   function getLessonTitle(title) {
-    console.log("Lesson Title: " + title);
     updateLessonTitle(title);
   }
 
   const [prevSectionLength, setPrevSectionLength] = useState([]);
   function arrowClick(dir) {
-    console.log("arrow clicked");
-    console.log("Section Number: " + sectionNumber);
-
     switch (dir) {
       case "right":
         if (sectionNumber < sectionLength - 1) {
@@ -169,39 +122,31 @@ const CreatePageComponent = ({ params }) => {
           updateSectionLengthsArray(currentStageFormIdx, sectionLength);
           setSectionNumber(0);
           setCurrentStageFormIdx(currentStageFormIdx + 1);
-          console.log("Current Stage Form Index: " + currentStageFormIdx);
         }
         break;
       case "left":
-        //setSectionNumber(sectionNumber - 1);
-
         if (sectionNumber === 0 && currentStageFormIdx > 0) {
           setSectionNumber(prevSectionLength[currentStageFormIdx - 1] - 1);
           setCurrentStageFormIdx(currentStageFormIdx - 1);
         } else if (sectionNumber > 0) {
           setSectionNumber(sectionNumber - 1);
         }
-
         break;
-
       default:
         break;
     }
   }
 
   const getSectionsLength = (length) => {
-    console.log(length);
     setSectionLength(length);
   };
 
   const updateSectionLengthsArray = (idx, newValue) => {
-    // Create a copy of the array
     const updatedArray = [...prevSectionLength];
     updatedArray[idx] = newValue;
-    console.log("Updated Array: " + updatedArray);
-
     setPrevSectionLength(updatedArray);
   };
+
   const itemsArray = Object.values(items);
   const numberOfStageForms = itemsArray.length;
 
