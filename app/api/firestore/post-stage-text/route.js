@@ -20,6 +20,7 @@ const FIELD_MAP = {
   InputTexts: "inputTexts",
   Discussions: "discussionForms",
   ReadingVocab: "readingVocab",
+  Included: "included",
 };
 
 export const POST = async (request) => {

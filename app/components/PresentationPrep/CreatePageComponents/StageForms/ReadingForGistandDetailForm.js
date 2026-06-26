@@ -50,6 +50,10 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
     (state) => state.setHydratedReadingVocab,
   );
 
+  const setHydratedIncluded = useReadingStore(
+    (state) => state.setHydratedIncluded,
+  );
+
   useEffect(() => {
     const fetchReadingData = async () => {
       resetReadingStore();
@@ -64,6 +68,7 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
       setHydratedDiscussions(data?.discussionForms ?? {});
       setHasAttemptedReadingHydration(true);
       setHydratedReadingVocab(data?.readingVocab ?? []);
+      setHydratedIncluded(data?.included ?? {});
     };
     if (currentUserID && currentLessonID) fetchReadingData();
   }, [currentUserID, currentLessonID]);

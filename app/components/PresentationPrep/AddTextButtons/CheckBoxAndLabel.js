@@ -3,6 +3,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import { Grid } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { ReadingForGistAndDetailContext } from "@app/contexts/ReadingForGistAndDetailContext";
+import { useReadingStore } from "@app/stores/useReadingStore";
 
 const CheckBoxAndLabel = ({
   label,
@@ -12,12 +13,13 @@ const CheckBoxAndLabel = ({
   onChange,
   includedId,
 }) => {
-  //const { included, updateIncludedSection } = useContext(PresentationContext);
-  const { included, updateIncludedSection } = useContext(
-    ReadingForGistAndDetailContext
+  const included = useReadingStore((state) => state.included);
+
+  const toggleIncludedSection = useReadingStore(
+    (state) => state.toggleIncludedSection,
   );
   function onCheck() {
-    updateIncludedSection(includedId);
+    toggleIncludedSection(includedId);
     //updateInputTextsReading(inputTexts[includedId], !included[includedId]);
   }
 
@@ -64,7 +66,7 @@ const CheckBoxAndLabel = ({
           <input
             type="checkbox"
             style={{ width: setInputSize(), height: setInputSize() }}
-            checked={included[includedId] ? included[includedId] : false}
+            checked={included?.[includedId] ? included?.[includedId] : false}
             onChange={onCheck}
           />
         </Grid>

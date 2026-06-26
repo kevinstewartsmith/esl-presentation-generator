@@ -12,11 +12,13 @@ const initialReadingState = {
   inputTexts: null,
   discussionForms: {},
   readingVocab: [],
+  included: {},
 
   justHydratedTexts: false,
   justHydratedInputTexts: false,
   justHydratedDiscussions: false,
   justHydratedReadingVocab: false,
+  justHydratedIncluded: false,
   hasAttemptedReadingHydration: false,
 };
 
@@ -141,6 +143,15 @@ export const useReadingStore = create(
 
     setHydratedReadingVocab: (words) =>
       set({ readingVocab: words ?? [], justHydratedReadingVocab: true }),
+
+    // included: { [sectionId]: boolean } — which optional sections are toggled on
+    toggleIncludedSection: (id) =>
+      set((state) => ({
+        included: { ...state.included, [id]: !state.included?.[id] },
+        justHydratedIncluded: false,
+      })),
+    setHydratedIncluded: (obj) =>
+      set({ included: obj ?? {}, justHydratedIncluded: true }),
   })),
 );
 
@@ -208,6 +219,12 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedReadingVocab",
     textType: "ReadingVocab",
     isEmpty: isEmptyArray,
+  },
+  {
+    field: "included",
+    flag: "justHydratedIncluded",
+    textType: "Included",
+    isEmpty: isEmptyObject,
   },
 ];
 
