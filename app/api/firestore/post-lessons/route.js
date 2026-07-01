@@ -23,7 +23,7 @@ export const POST = async (request) => {
     ],
     unincludedStageOrder: [
       "Warm-Up: Board Race",
-      "Reading For Gist and Detail",
+      "Reading for Gist and Detail",
       "Listening for Gist and Detail",
       "Advantages - Disadvantages",
       "Brainstorming",

@@ -25,7 +25,7 @@ const PresentationContextProvider = ({ children }) => {
     root: ["Class Rules", "Effort and Attitude Score", "Warm-Up: Speaking"],
     container1: [
       "Warm-Up: Board Race",
-      "Reading For Gist and Detail",
+      "Reading for Gist and Detail",
       "Listening for Gist and Detail",
       "Advantages - Disadvantages",
       "Brainstorming",

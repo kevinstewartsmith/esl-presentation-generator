@@ -10,7 +10,7 @@ const PresSectionComponentMap = {
   // "PreReadingGames": PreReadingGamesSection,
   // "FinishReading": FinishReadingSection,
   // "ListeningPrep": ListeningPrepSection,
-  "Reading For Gist and Detail": ReadingForGistandDetailPresSection,
+  "Reading for Gist and Detail": ReadingForGistandDetailPresSection,
 };
 
 export default PresSectionComponentMap;

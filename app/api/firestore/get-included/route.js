@@ -9,7 +9,7 @@ export const GET = async (request) => {
 
   console.log("Stage ID-----C: ", stageIDC);
 
-  const stageID = "Reading For Gist and Detail";
+  const stageID = "Reading for Gist and Detail";
   // decode stageID
   //const decodedStageID = decodeURIComponent(stageID);
   console.log("SERVER: GET Included Data");

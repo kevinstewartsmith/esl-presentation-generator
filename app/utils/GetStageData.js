@@ -30,5 +30,5 @@ export const getReadingTextDataFromDB = (currentUserID, currentLessonID) =>
   fetchStageData("get-textbook-data", {
     userID: currentUserID,
     lessonID: currentLessonID,
-    stageID: "Reading For Gist and Detail",
+    stageID: "Reading for Gist and Detail",
   });

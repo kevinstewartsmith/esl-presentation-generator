@@ -20,7 +20,7 @@ const ComponentMap = {
   "Listening for Gist and Detail": ListeningForGistAndDetail,
   "Effort and Attitude Score": EffortAndAttitudeScore,
   "Warm-Up-Speaking": WarmUpSpeaking,
-  "Reading For Gist and Detail": ReadingForGistandDetailForm,
+  "Reading for Gist and Detail": ReadingForGistandDetailForm,
   "Advantages - Disadvantages": AdvantagesDisadvantages,
   "Writing-Essay": WritingEssay,
   // "Speaking-Debate": SpeakingDebate,

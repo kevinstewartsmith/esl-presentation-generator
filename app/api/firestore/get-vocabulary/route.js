@@ -14,7 +14,7 @@ export const GET = async (request) => {
     const response = await getVocabulary(
       userID,
       lessonID,
-      "Reading For Gist and Detail"
+      "Reading for Gist and Detail"
     );
 
     //const data = await response.vocabulary;

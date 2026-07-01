@@ -37,6 +37,9 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
   const setHydratedIncluded = useReadingStore(
     (state) => state.setHydratedIncluded,
   );
+  const setHydratedImagePaths = useReadingStore(
+    (state) => state.setHydratedImagePaths,
+  );
 
   useEffect(() => {
     const fetchReadingData = async () => {
@@ -53,6 +56,7 @@ const ReadingForGistandDetailForm = ({ section, getSectionsLength }) => {
       setHasAttemptedReadingHydration(true);
       setHydratedReadingVocab(data?.readingVocab ?? []);
       setHydratedIncluded(data?.included ?? {});
+      setHydratedImagePaths(data?.imagePathsByCategory ?? {});
     };
     if (currentUserID && currentLessonID) fetchReadingData();
   }, [currentUserID, currentLessonID]);

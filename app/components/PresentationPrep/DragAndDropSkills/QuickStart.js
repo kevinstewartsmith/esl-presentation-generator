@@ -11,7 +11,7 @@ function Quickstart() {
 
   const [isDropped, setIsDropped] = useState(null);
   const draggableMarkup = (
-    <Draggable id="draggable">Reading For Gist and Detail</Draggable>
+    <Draggable id="draggable">Reading for Gist and Detail</Draggable>
   );
   const draggableMarkup2 = (
     <Draggable id="draggable2">Listening for Gist and Detail</Draggable>

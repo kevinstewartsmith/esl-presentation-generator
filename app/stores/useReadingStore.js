@@ -3,7 +3,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { debounce } from "@app/utils/debounce";
 
-const STAGE_ID = "Reading For Gist and Detail";
+const STAGE_ID = "Reading for Gist and Detail";
 
 const initialReadingState = {
   textbook: null,
@@ -13,12 +13,14 @@ const initialReadingState = {
   discussionForms: {},
   readingVocab: [],
   included: {},
+  imagePathsByCategory: {},
 
   justHydratedTexts: false,
   justHydratedInputTexts: false,
   justHydratedDiscussions: false,
   justHydratedReadingVocab: false,
   justHydratedIncluded: false,
+  justHydratedImagePaths: false,
   hasAttemptedReadingHydration: false,
 };
 
@@ -152,6 +154,18 @@ export const useReadingStore = create(
       })),
     setHydratedIncluded: (obj) =>
       set({ included: obj ?? {}, justHydratedIncluded: true }),
+
+    // imagePathsByCategory (per-category OCR screenshot paths — Reading textbook uploads)
+    updateImagePathForCategory: (category, path) =>
+      set((state) => ({
+        imagePathsByCategory: {
+          ...state.imagePathsByCategory,
+          [category]: path ?? "",
+        },
+        justHydratedImagePaths: false,
+      })),
+    setHydratedImagePaths: (obj) =>
+      set({ imagePathsByCategory: obj ?? {}, justHydratedImagePaths: true }),
   })),
 );
 
@@ -224,6 +238,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "included",
     flag: "justHydratedIncluded",
     textType: "Included",
+    isEmpty: isEmptyObject,
+  },
+  {
+    field: "imagePathsByCategory",
+    flag: "justHydratedImagePaths",
+    textType: "ImagePaths",
     isEmpty: isEmptyObject,
   },
 ];
