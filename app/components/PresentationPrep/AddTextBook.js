@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useMemo, useContext, use } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { createWorker } from "tesseract.js";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
-import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
+import {
+  listeningForGistandDetailStage,
+  readingForGistandDetailStage,
+} from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useReadingStore } from "@app/stores/useReadingStore";
@@ -27,8 +30,6 @@ import {
 } from "@app/utils/AddTextBookUtil_CSS";
 
 function AddTextBook({ category, stageID }) {
-  console.log("The category is: ", category);
-
   const textbook = useReadingStore((state) => state.textbook);
   const questions = useReadingStore((state) => state.questions);
   const answers = useReadingStore((state) => state.answers);
@@ -39,7 +40,7 @@ function AddTextBook({ category, stageID }) {
     (state) => state.updateTextbookTranscript,
   );
 
-  //Audio Questions and Answers for useAudioTextStore
+  // Audio text for useAudioTextStore
   const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
   const updateAudioQuestions = useAudioTextStore(
     (state) => state.updateAudioQuestions,
@@ -48,36 +49,44 @@ function AddTextBook({ category, stageID }) {
   const updateAudioAnswers = useAudioTextStore(
     (state) => state.updateAudioAnswers,
   );
-
   const audioTranscript = useAudioTextStore((state) => state.ocrTranscript);
   const updateAudioTranscript = useAudioTextStore(
     (state) => state.updateOcrTranscript,
   );
 
-  const imagePathsByCategory = useAudioTextStore(
-    (state) => state.imagePathsByCategory,
+  // ---- Stage-agnostic image-path store selection ----
+  // Both stores expose identically-named imagePathsByCategory + updateImagePathForCategory.
+  // Select from all unconditionally (hook-rules), then pick by stageID.
+  // Adding a stage (e.g. Vocabulary) = add its two selectors + one registry line.
+  const audioImagePaths = useAudioTextStore((s) => s.imagePathsByCategory);
+  const audioUpdateImagePath = useAudioTextStore(
+    (s) => s.updateImagePathForCategory,
   );
-  const updateImagePathForCategory = useAudioTextStore(
-    (state) => state.updateImagePathForCategory,
+  const readingImagePaths = useReadingStore((s) => s.imagePathsByCategory);
+  const readingUpdateImagePath = useReadingStore(
+    (s) => s.updateImagePathForCategory,
   );
 
-  const isListeningCategory = category.startsWith("Listening");
+  const IMAGE_STORE_BY_STAGE = {
+    [listeningForGistandDetailStage]: {
+      paths: audioImagePaths,
+      update: audioUpdateImagePath,
+    },
+    [readingForGistandDetailStage]: {
+      paths: readingImagePaths,
+      update: readingUpdateImagePath,
+    },
+  };
+  const { paths: imagePathsByCategory, update: updateImagePathForCategory } =
+    IMAGE_STORE_BY_STAGE[stageID] ??
+    IMAGE_STORE_BY_STAGE[readingForGistandDetailStage];
 
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonId = useLessonStore((state) => state.currentLessonID);
-  const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData,
-  );
-  const completeListeningStageData = useLessonStore(
-    (state) => state.completeListeningStageData,
-  );
   const [files, setFiles] = useState([]);
-  // ...existing code...
 
   useEffect(() => {
-    const imagePath = isListeningCategory
-      ? imagePathsByCategory?.[category]
-      : completeListeningStageData?.[`${category}ImageData`];
+    const imagePath = imagePathsByCategory?.[category];
 
     if (!imagePath) {
       setFiles([]);
@@ -105,14 +114,9 @@ function AddTextBook({ category, stageID }) {
       cancelled = true;
       if (createdPreview) URL.revokeObjectURL(createdPreview);
     };
-  }, [
-    category,
-    isListeningCategory
-      ? imagePathsByCategory?.[category]
-      : completeListeningStageData?.[`${category}ImageData`],
-  ]);
+  }, [category, imagePathsByCategory?.[category]]);
 
-  //Reads the text from the image
+  // Reads the text from the image
   async function handleReadText(base64File, file) {
     const worker = await createWorker();
     await worker.loadLanguage("eng");
@@ -125,10 +129,8 @@ function AddTextBook({ category, stageID }) {
   }
 
   function handleTextStateMemory(text) {
-    console.log("The category is SWITCH: ", category);
     switch (category) {
       case "BookText":
-        //updateTextTranscript(text);
         updateTextbook(text);
         return null;
       case "QuestionText":
@@ -152,7 +154,7 @@ function AddTextBook({ category, stageID }) {
     }
   }
 
-  //Drag and Drop
+  // Drag and Drop
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
       accept: {
@@ -180,31 +182,20 @@ function AddTextBook({ category, stageID }) {
       },
     });
 
-  //Delete Image
+  // Delete Image
   const handleDeleteImage = async (file) => {
-    console.log("Delete Image and data.");
-    // 1. Remove from IndexedDB
     const encodedStageID = encodeURIComponent(stageID);
     const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
     await deleteFile(filePath);
 
-    // 2. Remove filepath from stoe
-    if (isListeningCategory) {
-      updateImagePathForCategory(category, "");
-    } else {
-      updateCompleteListeningStageData({
-        ...completeListeningStageData,
-        [`${category}ImageData`]: "",
-      });
-    }
+    updateImagePathForCategory(category, "");
 
-    // 3. Remove from files state
     handleTextStateMemory("");
 
-    // 4. Remove from files state (removes preview)
     setFiles((prev) => prev.filter((f) => f.name !== file.name));
   };
-  //Textbook Image Thumbnails
+
+  // Textbook Image Thumbnails
   const thumbs = files.map((file) => (
     <TextbookImageThumb
       key={file.name}
@@ -213,7 +204,6 @@ function AddTextBook({ category, stageID }) {
     />
   ));
 
-  //Saves audio file name to lessonstore and sends audio file to Firestore
   const saveTextBookData = async (
     userID,
     lessonId,
@@ -221,48 +211,13 @@ function AddTextBook({ category, stageID }) {
     category,
     file,
   ) => {
-    const fileName = file.name;
     const encodedStageID = encodeURIComponent(stageID);
-    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`; // Handle both path and name
-    // Save audio file name to lesson store
-    if (isListeningCategory) {
-      updateImagePathForCategory(category, filePath);
-    } else {
-      updateCompleteListeningStageData({
-        ...completeListeningStageData,
-        [`${category}ImageData`]: filePath,
-      });
-    }
+    const filePath = `${userID}_${lessonId}_${encodedStageID}_${category}_${file.name}`;
+    updateImagePathForCategory(category, filePath);
     saveImageToIndexedDB(filePath, file);
   };
 
-  //useEffect(() => {
-  // const imagePath = completeListeningStageData?.[`${category}ImageData`];
-  // if (!imagePath) return;
-
-  // getFile(imagePath).then((blob) => {
-  //   if (blob && blob instanceof Blob) {
-  //     setFiles([
-  //       {
-  //         name: imagePath, // or use a better name if you have it
-  //         preview: URL.createObjectURL(blob),
-  //       },
-  //     ]);
-  //   } else {
-  //     setFiles([]); // No preview if not found
-  //   }
-  // });
-
-  // Cleanup previews on unmount
-  //   return () => {
-  //     setFiles((prev) => {
-  //       prev.forEach((file) => URL.revokeObjectURL(file.preview));
-  //       return [];
-  //     });
-  //   };
-  // }, [category, completeListeningStageData]);
-
-  //Styles Memo
+  // Styles Memo
   const style = useMemo(
     () => ({
       ...baseStyle,
@@ -306,15 +261,12 @@ function AddTextBook({ category, stageID }) {
         return <button onClick={handleClick}>Clean Audio Answers</button>;
       case "ListeningTranscript":
         return <button onClick={handleClick}>Clean Audio Transcript</button>;
-
       default:
-        //console.log("No category selected");
         return null;
     }
   };
 
   async function handleClick() {
-    //console.log("HANDLECLICK The category is: ", category);
     const textContent = (category) => {
       switch (category) {
         case "BookText":
@@ -339,9 +291,6 @@ function AddTextBook({ category, stageID }) {
       `/api/clean-text-json?query=${text}&category=${category}`,
     );
     const data = await response.json();
-
-    // updatetext so that key textEdits hold the value [...text, textEdits: data]
-    console.log("The data is: ", data);
     updateTextbookTranscript(data);
   }
 
