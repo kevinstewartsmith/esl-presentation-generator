@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, use } from "react";
+import React, { useEffect } from "react";
 
 import ListeningUploadandTranscribeAudio from "./ListeningUploadandTranscribeAudio";
 import ListeningQuestionUploader from "./ListeningQuestionUploader";
@@ -7,22 +7,10 @@ import CreeateAudioSnippets from "./CreateAudioSnippets";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
-function buildImagePathsFromBlob(blob) {
-  if (!blob) return null;
-  const result = {};
-  for (const key of Object.keys(blob)) {
-    if (key.endsWith("ImageData") && blob[key]) {
-      const category = key.replace("ImageData", "");
-      result[category] = blob[key];
-    }
-  }
-  return Object.keys(result).length > 0 ? result : null;
-}
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
   const lessonID = useLessonStore((state) => state.currentLessonID);
-  //update audio questions
   const resetAudioStore = useAudioTextStore((state) => state.resetAudioStore);
 
   const setHydratedAudioQuestions = useAudioTextStore(
@@ -39,10 +27,6 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
 
   const setHydratedComprehensionItems = useAudioTextStore(
     (state) => state.setHydratedComprehensionItems,
-  );
-
-  const updateCompleteListeningStageData = useLessonStore(
-    (state) => state.updateCompleteListeningStageData,
   );
 
   const setHydratedSelectedAudioFileName = useAudioTextStore(
@@ -90,23 +74,12 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       setHydratedAudioQuestions(allListeningData?.audioQuestions || []);
       setHydratedAudioAnswers(allListeningData?.audioAnswers || []);
       setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
-      setHydratedComprehensionItems(
-        allListeningData?.comprehensionItems ||
-          allListeningData?.completeListeningStageData?.questionsAndAnswers ||
-          [],
-      );
+      setHydratedComprehensionItems(allListeningData?.comprehensionItems || []);
 
-      const savedImagePaths =
-        allListeningData?.imagePathsByCategory ||
-        buildImagePathsFromBlob(allListeningData?.completeListeningStageData) ||
-        {};
+      const savedImagePaths = allListeningData?.imagePathsByCategory || {};
       setHydratedImagePaths(savedImagePaths);
 
-      updateCompleteListeningStageData(
-        allListeningData?.completeListeningStageData || {},
-      );
       setHydratedSelectedAudioFileName(allListeningData?.audioFileName || "");
-      useLessonStore.getState().setHasHydratedCompleteListeningStageData(true);
       setHasAttemptedAudioHydration(true);
     };
     fetchListeningData();
