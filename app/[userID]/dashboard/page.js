@@ -10,7 +10,6 @@ import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
 import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
-//import ZustandSyncClient from "@app/stores/ZustandSyncClient"; // Import ZustandSyncClient
 
 const PageComponent = ({ params }) => {
   const { loadLessons, deleteLessonFromDB, addNewLesson } =

@@ -17,15 +17,6 @@ export const useLessonStore = create(
     setCurrentUserID: (id) => set({ currentUserID: id }),
     setCurrentLessonID: (id) => set({ currentLessonID: id }),
 
-    // Audio Stage - Start
-
-    //has hydrated methods for fetching data
-    hasHydratedCompleteListeningStageData: false,
-    setHasHydratedCompleteListeningStageData: (value) =>
-      set({ hasHydratedCompleteListeningStageData: value }),
-
-    //end hydrated methods
-
     audioQuestionsImageFilePath: "",
     updateAudioQuestionsImageFilePath: (path) =>
       set({ audioQuestionsImageFilePath: path }),
@@ -59,15 +50,6 @@ export const useLessonStore = create(
 
         return { audioClipQuestionData: updated };
       }),
-
-    completeListeningStageData: {
-      questionsAndAnswers: [],
-      transcript: "",
-      wordArray: [],
-      audioFileName: "",
-    },
-    updateCompleteListeningStageData: (data) =>
-      set({ completeListeningStageData: data }),
 
     audioSnippetFilenameArray: [],
     updateAudioSnippetFilenameArray: (array) =>
