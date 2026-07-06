@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState, useContext, use } from "react";
 import Link from "next/link";
-import { DashboardContext } from "@app/contexts/DashboardContext";
+
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import { usePathname } from "next/navigation";
-import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { loadLessons } from "@app/utils/lessonApi";
 
 const LessonPageComponent = ({ params }) => {
   const pathname = usePathname();
@@ -27,7 +27,7 @@ const LessonPageComponent = ({ params }) => {
   const { userID, lessonID: paramsLessonID } = resolvedParams;
 
   const [lesson, setLesson] = useState(null);
-  const { loadLessons } = useContext(DashboardContext);
+
   const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
     useContext(GlobalVariablesContext);
 
@@ -91,10 +91,8 @@ const LessonPageComponent = ({ params }) => {
 };
 
 const page = (props) => (
-  <DashboardContextProvider>
-    <PresentationContextProvider>
-      <LessonPageComponent {...props} />
-    </PresentationContextProvider>
-  </DashboardContextProvider>
+  <PresentationContextProvider>
+    <LessonPageComponent {...props} />
+  </PresentationContextProvider>
 );
 export default page;

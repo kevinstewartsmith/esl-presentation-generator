@@ -19,7 +19,6 @@ import ComponentMap from "@app/utils/ComponentMap";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 import { Anton } from "next/font/google";
-import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 
@@ -193,10 +192,8 @@ const CreatePageComponent = ({ params }) => {
   );
 };
 const page = (props) => (
-  <DashboardContextProvider>
-    <PresentationContextProvider>
-      <CreatePageComponent {...props} />
-    </PresentationContextProvider>
-  </DashboardContextProvider>
+  <PresentationContextProvider>
+    <CreatePageComponent {...props} />
+  </PresentationContextProvider>
 );
 export default page;

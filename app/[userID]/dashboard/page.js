@@ -1,19 +1,20 @@
 "use client";
 import React, { useState, useEffect, useContext, use } from "react";
 import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
-import { DashboardContext } from "@app/contexts/DashboardContext";
 import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
 import { Grid } from "@mui/material";
 import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
 import LessonModal from "@app/components/DashboardComponents/lessonModal";
-import { DashboardContextProvider } from "@app/contexts/DashboardContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import {
+  loadLessons,
+  addNewLesson,
+  deleteLessonFromDB,
+} from "@app/utils/lessonApi";
 
 const PageComponent = ({ params }) => {
-  const { loadLessons, deleteLessonFromDB, addNewLesson } =
-    useContext(DashboardContext);
   const { updatePathname } = useContext(GlobalVariablesContext);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -132,12 +133,6 @@ const PageComponent = ({ params }) => {
   );
 };
 
-const page = (props) => (
-  <>
-    <DashboardContextProvider>
-      <PageComponent {...props} />
-    </DashboardContextProvider>
-  </>
-);
+const page = (props) => <PageComponent {...props} />;
 
 export default page;
