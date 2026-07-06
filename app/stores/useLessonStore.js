@@ -16,10 +16,5 @@ export const useLessonStore = create(
 
     setCurrentUserID: (id) => set({ currentUserID: id }),
     setCurrentLessonID: (id) => set({ currentLessonID: id }),
-
-    // Audio bucket (still used by AudioUploader)
-    audioBucketContents: [],
-    updateAudioBucketContents: (contents) =>
-      set({ audioBucketContents: contents }),
   })),
 );

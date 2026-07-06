@@ -95,10 +95,10 @@ export default function AudioUploader() {
   };
   const currentUserID = useLessonStore((state) => state.currentUserID);
   const currentLessonID = useLessonStore((state) => state.currentLessonID);
-  const updateAudioBucketContents = useLessonStore(
+  const updateAudioBucketContents = useAudioTextStore(
     (state) => state.updateAudioBucketContents,
   );
-  const audioBucketContents = useLessonStore(
+  const audioBucketContents = useAudioTextStore(
     (state) => state.audioBucketContents,
   );
 

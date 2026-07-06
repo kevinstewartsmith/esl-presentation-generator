@@ -14,6 +14,7 @@ const initialAudioState = {
   audioAnswers: [],
   comprehensionItems: [],
   imagePathsByCategory: {},
+  audioBucketContents: [],
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -85,6 +86,9 @@ export const useAudioTextStore = create(
       })),
     setHydratedImagePaths: (obj) =>
       set({ imagePathsByCategory: obj ?? {}, justHydratedImagePaths: true }),
+
+    updateAudioBucketContents: (contents) =>
+      set({ audioBucketContents: contents ?? [] }),
   })),
 );
 
