@@ -3,13 +3,13 @@
 import { useEffect, useRef, useContext } from "react";
 import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "@app/components/FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "@app/components/FinalizedPresentation/PartnerDiscussionSection";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const PresentationDisplay = ({ presData, includedStages }) => {
   import("@styles/reveal-hedonic.css");
@@ -17,7 +17,7 @@ const PresentationDisplay = ({ presData, includedStages }) => {
   const revealRef = useRef(null);
 
   const { sliders, textBoxInputs } = useContext(PresentationContext);
-  const { hidePresentation } = useContext(GlobalVariablesContext);
+  const hidePresentation = useLessonStore((s) => s.hidePresentation);
 
   const included = useReadingStore((state) => state.included);
   const vocabulary = useReadingStore((state) => state.readingVocab);

@@ -1,42 +1,31 @@
 "use client";
 import React, { useEffect, useState, useContext, use } from "react";
 import Link from "next/link";
-
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-import { usePathname } from "next/navigation";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { loadLessons } from "@app/utils/lessonApi";
 
 const LessonPageComponent = ({ params }) => {
-  const pathname = usePathname();
-  const { currentUserID, setCurrentLessonID, currentLessonID } =
-    useLessonStore();
+  const currentUserID = useLessonStore((s) => s.currentUserID);
+  const currentLessonID = useLessonStore((s) => s.currentLessonID);
+  const setCurrentLessonID = useLessonStore((s) => s.setCurrentLessonID);
+  const updateLessonTitle = useLessonStore((s) => s.updateLessonTitle);
 
-  const {
-    updateLessonIDPresentationContext,
-    updateStages,
-    updateItems,
-    items,
-  } = useContext(PresentationContext);
+  const { updateItems } = useContext(PresentationContext);
 
   const resolvedParams = use(params);
   const { userID, lessonID: paramsLessonID } = resolvedParams;
 
   const [lesson, setLesson] = useState(null);
 
-  const { loggedInUser, lessonTitle, updateLessonTitle, updatePathname } =
-    useContext(GlobalVariablesContext);
-
   useEffect(() => {
     setCurrentLessonID(paramsLessonID);
   }, [paramsLessonID]);
 
   useEffect(() => {
-    updatePathname(pathname);
     async function fetchData() {
       try {
         const response = await loadLessons(
@@ -49,7 +38,7 @@ const LessonPageComponent = ({ params }) => {
         }
         const data = await response.json();
         setLesson(data);
-        getLessonTitle(data.title);
+        updateLessonTitle(data.title);
       } catch (error) {
         console.error(error);
       }
@@ -69,10 +58,6 @@ const LessonPageComponent = ({ params }) => {
     }
     getLessonStages();
   }, [paramsLessonID]);
-
-  function getLessonTitle(title) {
-    updateLessonTitle(title);
-  }
 
   return (
     <div>

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import React, { useEffect, useState } from "react";
 import { PresentationContext } from "@app/contexts/PresentationContext";
 import {
   DndContext,
@@ -10,12 +9,11 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { useContext } from "react";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-
 import Container from "./container";
 import { Item } from "./sortable_item";
-//import { Padding } from "@mui/icons-material";
-//import { PresentationContext } from "@app/contexts/PresentationContext";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 const wrapperStyle = {
   display: "flex",
@@ -35,7 +33,6 @@ const defaultAnnouncements = {
       );
       return;
     }
-
     console.log(`Draggable item ${id} is no longer over a droppable area.`);
   },
   onDragEnd(id, overId) {
@@ -45,7 +42,6 @@ const defaultAnnouncements = {
       );
       return;
     }
-
     console.log(`Draggable item ${id} was dropped.`);
   },
   onDragCancel(id) {
@@ -54,35 +50,8 @@ const defaultAnnouncements = {
 };
 
 export default function StageSorter({ lessonID }) {
-  const { stages, updateStages, items, updateItems } =
-    useContext(PresentationContext);
-  const { loggedInUser } = useContext(GlobalVariablesContext);
-  //const { stages } = useContext(PresentationContext);
-
-  // useEffect(() => {
-  //   console.log("Items: ");
-  //   //change back to items if there is an error
-  //   console.log(items);
-  //   async function postStagesToDB() {
-  //     try {
-  //       const stages = JSON.stringify(items);
-  //       const response = await fetch(
-  //         `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           //body: JSON.stringify(items),
-  //         }
-  //       );
-  //       console.log(response);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   postStagesToDB();
-  // }, [items, lessonID]);
+  const { items, updateItems } = useContext(PresentationContext);
+  const currentUserID = useLessonStore((s) => s.currentUserID);
 
   useEffect(() => {
     const root = items?.root ?? [];
@@ -95,7 +64,7 @@ export default function StageSorter({ lessonID }) {
       try {
         const stages = JSON.stringify(items);
         const response = await fetch(
-          `/api/firestore/post-stages?userID=${loggedInUser}&lessonID=${lessonID}&stages=${stages}`,
+          `/api/firestore/post-stages?userID=${currentUserID}&lessonID=${lessonID}&stages=${stages}`,
           { method: "POST", headers: { "Content-Type": "application/json" } },
         );
         console.log(response);
@@ -127,8 +96,7 @@ export default function StageSorter({ lessonID }) {
       >
         <Container id="root" items={items.root} />
         <Container id="container1" items={items.container1} />
-        {/* <Container id="container2" items={items.container2} />
-        <Container id="container3" items={items.container3} /> */}
+
         <DragOverlay>{activeId ? <Item id={activeId} /> : null}</DragOverlay>
       </DndContext>
     </div>
@@ -153,13 +121,7 @@ export default function StageSorter({ lessonID }) {
     const { active, over, draggingRect } = event;
     const { id } = active;
     const { id: overId } = over;
-    console.log(event);
-    console.log("OVER: ");
-    console.log(over);
-    console.log("DRAGGING RECT: ");
-    console.log(draggingRect);
 
-    // Find the containers
     const activeContainer = findContainer(id);
     const overContainer = findContainer(overId);
 
@@ -171,17 +133,14 @@ export default function StageSorter({ lessonID }) {
       return;
     }
     updateItems((prev) => {
-      //setItems((prev) => {
       const activeItems = prev[activeContainer];
       const overItems = prev[overContainer];
 
-      // Find the indexes for the items
       const activeIndex = activeItems.indexOf(id);
       const overIndex = overItems.indexOf(overId);
 
       let newIndex;
       if (overId in prev) {
-        // We're at the root droppable of a container
         newIndex = overItems.length + 1;
       } else {
         const isBelowLastItem =
@@ -229,7 +188,6 @@ export default function StageSorter({ lessonID }) {
 
     if (activeIndex !== overIndex) {
       updateItems((items) => ({
-        //setItems((items) => ({
         ...items,
         [overContainer]: arrayMove(
           items[overContainer],

@@ -8,15 +8,9 @@ const PresentationDisplay = dynamic(
 );
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { Handjet } from "next/font/google";
 import { PresentationContext } from "@app/contexts/PresentationContext";
-
-import { usePathname } from "next/navigation";
-import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
-import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/ListeningForGistAndDetail";
 import ComponentMap from "@app/utils/ComponentMap";
-import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 import { Anton } from "next/font/google";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
@@ -32,14 +26,8 @@ const handjet = Handjet({
 });
 
 const CreatePageComponent = ({ params }) => {
-  const {
-    presentationIsShowing,
-    lessonTitle,
-    updateLessonTitle,
-    updatePathname,
-  } = useContext(GlobalVariablesContext);
-
-  const pathname = usePathname();
+  const presentationIsShowing = useLessonStore((s) => s.presentationIsShowing);
+  const updateLessonTitle = useLessonStore((s) => s.updateLessonTitle);
 
   const { items, updateItems } = useContext(PresentationContext);
 
@@ -50,7 +38,6 @@ const CreatePageComponent = ({ params }) => {
 
   const [sectionNumber, setSectionNumber] = useState(0);
   const [sectionLength, setSectionLength] = useState(0);
-  const [sectionComponentIndex, setSectionComponentIndex] = useState(0);
   const [currentStageFormIdx, setCurrentStageFormIdx] = useState(0);
   const [includedStages, setIncludedStages] = useState([]);
 
@@ -77,7 +64,6 @@ const CreatePageComponent = ({ params }) => {
   }
 
   useEffect(() => {
-    updatePathname(pathname);
     setCurrentUserID(userID);
     setCurrentLessonID(paramsLessonID);
 

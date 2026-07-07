@@ -1,11 +1,9 @@
 "use client";
 import StegaIcon from "./StegaIcon";
-//import handjet from "handjet";
 import { Handjet } from "next/font/google";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
-import { useContext } from "react";
 import { Anton } from "next/font/google";
-//import Anton font from next font
+import { useLessonStore } from "@app/stores/useLessonStore";
+
 const anton = Anton({
   weight: "400",
   subsets: ["latin"],
@@ -17,9 +15,8 @@ const handjet = Handjet({
 });
 
 const Nav = ({ children }) => {
-  const { presentationIsShowing, lessonTitle } = useContext(
-    GlobalVariablesContext
-  );
+  const presentationIsShowing = useLessonStore((s) => s.presentationIsShowing);
+  const lessonTitle = useLessonStore((s) => s.lessonTitle);
 
   const title = (lessonTitle) => {
     return (

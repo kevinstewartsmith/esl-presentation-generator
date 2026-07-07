@@ -1,8 +1,6 @@
 "use client";
-import React, { useState, useEffect, useContext, use } from "react";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
+import React, { useState, useEffect, use } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { usePathname } from "next/navigation";
 import { Grid } from "@mui/material";
 import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,7 +13,6 @@ import {
 } from "@app/utils/lessonApi";
 
 const PageComponent = ({ params }) => {
-  const { updatePathname } = useContext(GlobalVariablesContext);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -23,17 +20,16 @@ const PageComponent = ({ params }) => {
   const resolvedParams = use(params);
   const userID = resolvedParams.userID;
   //update userid in lesson store
-  const { setCurrentUserID } = useLessonStore();
+  // Individual selectors (one per line):
+  const setCurrentUserID = useLessonStore((s) => s.setCurrentUserID);
+  const clearLessonContext = useLessonStore((s) => s.clearLessonContext);
 
   useEffect(() => {
     setCurrentUserID(userID);
-  }, [userID, setCurrentUserID]);
-
-  const pathname = usePathname();
+    clearLessonContext();
+  }, [userID]);
 
   useEffect(() => {
-    updatePathname(pathname);
-
     async function fetchAllLessons() {
       try {
         const response = await loadLessons(userID, "getAllLessons");

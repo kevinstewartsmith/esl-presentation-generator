@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -8,7 +8,6 @@ import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
-import { GlobalVariablesContext } from "@app/contexts/GlobalVariablesContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
 
@@ -40,7 +39,6 @@ export default function InputWithIcon({
   console.log("INPUT ICON STAGE ID: " + stageID);
   console.log("INPUT ICON CATEGORY: " + category);
   console.log("INPUT ICON TEXT: " + text);
-  const { loggedInUser } = useContext(GlobalVariablesContext);
 
   function setInput() {
     switch (input) {

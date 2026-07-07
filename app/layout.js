@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import "@styles/globals.css";
-import { GlobalVariablesContextProvider } from "./contexts/GlobalVariablesContext";
 import Nav from "./components/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,9 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlobalVariablesContextProvider>
-          <Nav>{children}</Nav>
-        </GlobalVariablesContextProvider>
+        <Nav>{children}</Nav>
       </body>
     </html>
   );
