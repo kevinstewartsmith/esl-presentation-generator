@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { PresentationContext } from "@app/contexts/PresentationContext";
+import React, { useState } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -9,11 +8,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useContext } from "react";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Container from "./container";
 import { Item } from "./sortable_item";
-import { useLessonStore } from "@app/stores/useLessonStore";
+import { useStageOrderStore } from "@app/stores/useStageOrderStore";
 
 const wrapperStyle = {
   display: "flex",
@@ -49,31 +47,9 @@ const defaultAnnouncements = {
   },
 };
 
-export default function StageSorter({ lessonID }) {
-  const { items, updateItems } = useContext(PresentationContext);
-  const currentUserID = useLessonStore((s) => s.currentUserID);
-
-  useEffect(() => {
-    const root = items?.root ?? [];
-    const container1 = items?.container1 ?? [];
-
-    // Don't auto-save the empty/initial state — that's what overwrote real data.
-    if (root.length === 0 && container1.length === 0) return;
-
-    async function postStagesToDB() {
-      try {
-        const stages = JSON.stringify(items);
-        const response = await fetch(
-          `/api/firestore/post-stages?userID=${currentUserID}&lessonID=${lessonID}&stages=${stages}`,
-          { method: "POST", headers: { "Content-Type": "application/json" } },
-        );
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    postStagesToDB();
-  }, [items, lessonID]);
+export default function StageSorter() {
+  const items = useStageOrderStore((s) => s.items);
+  const updateItems = useStageOrderStore((s) => s.updateItems);
 
   const [activeId, setActiveId] = useState();
 
