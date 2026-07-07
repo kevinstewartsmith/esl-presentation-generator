@@ -15,6 +15,7 @@ import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreateP
 import { Anton } from "next/font/google";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { useStageOrderStore } from "@app/stores/useStageOrderStore";
 
 const anton = Anton({
   weight: "400",
@@ -29,7 +30,8 @@ const CreatePageComponent = ({ params }) => {
   const presentationIsShowing = useLessonStore((s) => s.presentationIsShowing);
   const updateLessonTitle = useLessonStore((s) => s.updateLessonTitle);
 
-  const { items, updateItems } = useContext(PresentationContext);
+  const items = useStageOrderStore((s) => s.items);
+  const setHydratedItems = useStageOrderStore((s) => s.setHydratedItems);
 
   const [lessonData, setLessonData] = useState({});
 
@@ -83,7 +85,7 @@ const CreatePageComponent = ({ params }) => {
           `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`,
         );
         const data = await response.json();
-        updateItems(data);
+        setHydratedItems(data);
         setIncludedStages([...data.root, "Start Presentation"]);
       } catch (error) {
         console.error(error);

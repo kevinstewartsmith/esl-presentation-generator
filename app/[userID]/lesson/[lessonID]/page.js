@@ -7,6 +7,7 @@ import { PresentationContext } from "@app/contexts/PresentationContext";
 import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { loadLessons } from "@app/utils/lessonApi";
+import { useStageOrderStore } from "@app/stores/useStageOrderStore";
 
 const LessonPageComponent = ({ params }) => {
   const currentUserID = useLessonStore((s) => s.currentUserID);
@@ -14,7 +15,7 @@ const LessonPageComponent = ({ params }) => {
   const setCurrentLessonID = useLessonStore((s) => s.setCurrentLessonID);
   const updateLessonTitle = useLessonStore((s) => s.updateLessonTitle);
 
-  const { updateItems } = useContext(PresentationContext);
+  const setHydratedItems = useStageOrderStore((s) => s.setHydratedItems);
 
   const resolvedParams = use(params);
   const { userID, lessonID: paramsLessonID } = resolvedParams;
@@ -51,7 +52,7 @@ const LessonPageComponent = ({ params }) => {
           `/api/firestore/get-stage-order?userID=${userID}&lessonID=${paramsLessonID}`,
         );
         const data = await response.json();
-        updateItems(data);
+        setHydratedItems(data);
       } catch (error) {
         console.error(error);
       }

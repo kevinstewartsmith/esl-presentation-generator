@@ -10,9 +10,10 @@ import PartnerDiscussionSection from "@app/components/FinalizedPresentation/Part
 import CancelIcon from "@mui/icons-material/Cancel";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import "@styles/reveal-hedonic.css";
 
 const PresentationDisplay = ({ presData, includedStages }) => {
-  import("@styles/reveal-hedonic.css");
+  //import("@styles/reveal-hedonic.css");
 
   const revealRef = useRef(null);
 
