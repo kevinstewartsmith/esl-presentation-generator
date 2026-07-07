@@ -1,17 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import CheckBoxAndLabel from "../PresentationPrep/AddTextButtons/CheckBoxAndLabel";
 import InputWithIcon from "../PresentationPrep/AddTextButtons/InputWithIcon";
 import TimeLimitSlider from "../PresentationPrep/AddTextButtons/TimeLimitSlider";
 import DiscussionForm from "../PresentationPrep/DiscussionForm";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import DetailReadingExercises from "../PresentationPrep/DetailReadingExercises";
 import DetailReadingExAnswers from "../PresentationPrep/DetailReadingExAnswers";
 import DetailExerciseInputs from "../PresentationPrep/DetailExerciseInputs";
 
 const ReadingForDetail = ({ includedId }) => {
   const [detailReadingChecked, setDetailReadingChecked] = useState(true);
-  const { answers, textTranscript } = useContext(PresentationContext);
 
   const handleCheckBoxChange = () => {
     setDetailReadingChecked(!detailReadingChecked);

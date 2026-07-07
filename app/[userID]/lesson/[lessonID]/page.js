@@ -3,8 +3,6 @@ import React, { useEffect, useState, useContext, use } from "react";
 import Link from "next/link";
 import DnDSkillsContainer from "@app/components/PresentationPrep/DragAndDropSkills/DnDSkillsContainer";
 import StageSorter from "@app/components/PresentationPrep/DragAndDropSkills/stage_sorter";
-import { PresentationContext } from "@app/contexts/PresentationContext";
-import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { loadLessons } from "@app/utils/lessonApi";
 import { useStageOrderStore } from "@app/stores/useStageOrderStore";
@@ -76,9 +74,5 @@ const LessonPageComponent = ({ params }) => {
   );
 };
 
-const page = (props) => (
-  <PresentationContextProvider>
-    <LessonPageComponent {...props} />
-  </PresentationContextProvider>
-);
+const page = (props) => <LessonPageComponent {...props} />;
 export default page;

@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import React, { useState, useContext, useEffect, use } from "react";
+import React, { useState, useEffect, use } from "react";
 const PresentationDisplay = dynamic(
   () => import("@app/components/PresentationDisplay"),
   { ssr: false },
@@ -9,11 +9,9 @@ const PresentationDisplay = dynamic(
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Handjet } from "next/font/google";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import ComponentMap from "@app/utils/ComponentMap";
 import HorizontalNonLinearStepper from "@app/components/PresentationPrep/CreatePageComponents/HorizontalNonLinearStepper";
 import { Anton } from "next/font/google";
-import { PresentationContextProvider } from "@app/contexts/PresentationContext";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { useStageOrderStore } from "@app/stores/useStageOrderStore";
 
@@ -179,9 +177,5 @@ const CreatePageComponent = ({ params }) => {
     </div>
   );
 };
-const page = (props) => (
-  <PresentationContextProvider>
-    <CreatePageComponent {...props} />
-  </PresentationContextProvider>
-);
+const page = (props) => <CreatePageComponent {...props} />;
 export default page;

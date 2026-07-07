@@ -1,7 +1,5 @@
-import { useRef, useContext } from "react";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "@app/components/FinalizedPresentation/DetailReadingInstructions";
 import PartnerDiscussionSection from "@app/components/FinalizedPresentation/PartnerDiscussionSection";
@@ -14,8 +12,6 @@ const ReadingForGistandDetailPresSection = () => {
   const inputTexts = useReadingStore((state) => state.inputTexts);
   const discussionForms = useReadingStore((state) => state.discussionForms);
 
-  const { sliders, textBoxInputs } = useContext(PresentationContext);
-
   return (
     <>
       {included?.["includePreReadingVocabulary"] ? (
@@ -26,8 +22,6 @@ const ReadingForGistandDetailPresSection = () => {
         <GistReadingInstructions
           gistReadingQuestions={inputTexts?.["question"]}
           gistReadingPage={inputTexts?.["page"]}
-          sliders={sliders}
-          textBoxInputs={textBoxInputs}
           inputTexts={inputTexts}
           time={inputTexts?.["gistReadingTime"]}
           includeGistReadingTimeLimit={

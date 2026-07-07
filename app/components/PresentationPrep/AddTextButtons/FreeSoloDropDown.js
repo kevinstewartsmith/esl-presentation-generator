@@ -1,22 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 
-export default function FreeSoloDropDown({ label, input, stageID }) {
-  const { textBoxInputs, updateTextBoxInputs } =
-    useContext(PresentationContext);
-
+export default function FreeSoloDropDown({ label, input }) {
   const updateInputTextForKey = useReadingStore(
     (state) => state.updateInputTextForKey,
   );
   const inputTexts = useReadingStore((state) => state.inputTexts);
 
   const handleChange = (event, newVal) => {
-    //updateTextBoxInputs(input, newVal);
-    console.log("textBoxInputs: " + JSON.stringify(textBoxInputs));
     updateInputTextForKey(input, newVal);
     console.log("UPDATING INPUT :" + input + " WITH VALUE: " + newVal);
   };
@@ -50,7 +44,6 @@ export default function FreeSoloDropDown({ label, input, stageID }) {
   );
 }
 
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
 const textBookTitles = [
   { title: "Think Starter Student Book", year: 1994 },
   { title: "Think Starter Workbook", year: 1972 },

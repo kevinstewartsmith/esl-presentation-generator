@@ -2,7 +2,6 @@
 "use client";
 import { useEffect, useRef, useContext } from "react";
 import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
-import { PresentationContext } from "@app/contexts/PresentationContext";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";
 import DetailReadingInstructions from "@app/components/FinalizedPresentation/DetailReadingInstructions";
@@ -17,7 +16,6 @@ const PresentationDisplay = ({ presData, includedStages }) => {
 
   const revealRef = useRef(null);
 
-  const { sliders, textBoxInputs } = useContext(PresentationContext);
   const hidePresentation = useLessonStore((s) => s.hidePresentation);
 
   const included = useReadingStore((state) => state.included);
@@ -78,8 +76,6 @@ const PresentationDisplay = ({ presData, includedStages }) => {
           <GistReadingInstructions
             gistReadingQuestions={inputTexts?.["question"]}
             gistReadingPage={inputTexts?.["page"]}
-            sliders={sliders}
-            textBoxInputs={textBoxInputs}
             inputTexts={inputTexts}
             time={inputTexts?.["gistReadingTime"]}
             includeGistReadingTimeLimit={
