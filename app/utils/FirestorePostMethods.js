@@ -3,15 +3,13 @@ import { db } from "@app/utils/firebaseAdmin";
 export const postData = async (userID, lesson, section) => {
   try {
     const lessonId = await postUserLesson(userID, lesson);
-    console.log(lessonId);
 
-    await postSectionToLesson("kevinstewartsmith", lessonId, section);
+    await postSectionToLesson(userID, lessonId, section); // ← was hardcoded "kevinstewartsmith"
 
-    console.log("Section successfully added!");
-    return new Response("Document successfully written!", { status: 200 });
+    return Response.json({ id: lessonId }, { status: 200 }); // ← return the real ID as JSON
   } catch (e) {
     console.error("ERROR: " + e);
-    return new Response("Error writing document", { status: 500 });
+    return Response.json({ error: "Error writing document" }, { status: 500 });
   }
 };
 
@@ -42,7 +40,7 @@ export const postInputs = async (
   stageID,
   key,
   value,
-  data
+  data,
 ) => {
   console.log("Posting inputs to Firestore");
   try {
@@ -61,7 +59,7 @@ async function postInputsToStage(
   stageID,
   key,
   value,
-  parsedData
+  parsedData,
 ) {
   const input = parsedData;
   console.log(parsedData);

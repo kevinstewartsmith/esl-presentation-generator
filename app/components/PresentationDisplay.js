@@ -1,6 +1,6 @@
 // components/PresentationDisplay.js
 "use client";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef } from "react";
 import PreReadingVocabularySection from "@app/components/FinalizedPresentation/PrereadingVocabulary/PreReadingVocabularySection";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import GistReadingInstructions from "@app/components/FinalizedPresentation/GistReadingInstructions";

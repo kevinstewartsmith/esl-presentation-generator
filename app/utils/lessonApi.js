@@ -11,18 +11,12 @@ export async function loadLessons(userID, method, lessonID) {
 }
 
 export async function addNewLesson(userID, title) {
-  try {
-    const data = await fetch(
-      `/api/firestore/post-lessons?userID=${userID}&lessonTitle=${title}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ lessonTitle: "lesson title" }),
-      },
-    );
-    return data.json();
-  } catch (error) {
-    console.log(error);
-  }
+  const res = await fetch(
+    `/api/firestore/post-lessons?userID=${userID}&lessonTitle=${encodeURIComponent(title)}`,
+    { method: "POST" },
+  );
+  if (!res.ok) throw new Error("Failed to create lesson");
+  return res.json(); // → { id: "<real firestore id>" }
 }
 
 export async function deleteLessonFromDB(userID, lessonID) {

@@ -45,33 +45,17 @@ const PageComponent = ({ params }) => {
     fetchAllLessons();
   }, []);
 
-  const addLesson = (title) => {
-    const lessonId = uuidv4();
-    console.log("Lesson ID: ", lessonId);
-    const newLesson = {
-      id: lessonId,
-      title: title,
-      description: "This is a new lesson",
-    };
-
-    setLessons([...lessons, newLesson]);
-    console.log(lessons);
-
+  const addLesson = async (title) => {
     handleClose();
-
-    async function dbAddLesson() {
-      try {
-        const response = await addNewLesson(userID, title);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response;
-        console.log(JSON.stringify(data));
-      } catch (error) {
-        console.error(error);
-      }
+    try {
+      const { id } = await addNewLesson(userID, title);
+      setLessons((prev) => [
+        ...prev,
+        { id, title, description: "This is a new lesson" },
+      ]);
+    } catch (error) {
+      console.error(error);
     }
-    dbAddLesson();
   };
 
   function deleteLesson(lessonID) {
