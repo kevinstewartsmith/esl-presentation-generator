@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Grid } from "@mui/material";
 import LessonCard from "@app/components/DashboardComponents/LessonCard";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,8 +18,6 @@ const PageComponent = ({ params }) => {
   const [lessons, setLessons] = useState([]);
   const resolvedParams = use(params);
   const userID = resolvedParams.userID;
-  //update userid in lesson store
-  // Individual selectors (one per line):
   const setCurrentUserID = useLessonStore((s) => s.setCurrentUserID);
   const clearLessonContext = useLessonStore((s) => s.clearLessonContext);
 

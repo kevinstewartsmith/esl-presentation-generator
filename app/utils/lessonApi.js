@@ -20,20 +20,10 @@ export async function addNewLesson(userID, title) {
 }
 
 export async function deleteLessonFromDB(userID, lessonID) {
-  try {
-    const data = await fetch(
-      `/api/firestore/delete-lesson?userID=${userID}&lessonID=${lessonID}`,
-      {
-        method: "DELETE",
-        body: JSON.stringify({ lessonID, userID }),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      },
-    );
-    return data.json();
-  } catch (error) {
-    console.log(error);
-  }
+  const res = await fetch(
+    `/api/firestore/delete-lesson?userID=${userID}&lessonID=${lessonID}`,
+    { method: "DELETE" },
+  );
+  if (!res.ok) throw new Error("Failed to delete lesson");
+  return res.json();
 }

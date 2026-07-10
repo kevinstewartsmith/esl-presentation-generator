@@ -1,54 +1,33 @@
 import { db } from "@app/utils/firebaseAdmin";
 
-//Delete from the firebase database
-export const DELETE = async (request, { params }) => {
-  console.log("Trying to DELETE");
-  console.log(request.url);
+export const DELETE = async (request) => {
   try {
     const url = new URL(request.url);
     const userID = url.searchParams.get("userID");
     const lessonID = url.searchParams.get("lessonID");
-    await deleteSectionsDocuments(userID, lessonID);
-    //await deleteSection(userID, lessonID);
-    await deleteUserLesson(userID, lessonID);
 
-    return new Response("Document successfully deleted!", { status: 200 });
-  } catch (e) {
-    console.error(e);
-    return new Response("damn", { status: 500 });
-  }
+    if (!userID || !lessonID) {
+      return Response.json(
+        { error: "Missing userID or lessonID" },
+        { status: 400 },
+      );
+    }
 
-  async function deleteUserLesson(userID, lessonID) {
     const lessonRef = db
       .collection("users")
       .doc(userID)
       .collection("lessons")
       .doc(lessonID);
-    await lessonRef.delete();
-  }
 
-  //Delete sections collection from the lesson
-  async function deleteSectionsDocuments(userID, lessonID) {
-    const sectionsRef = db
-      .collection("users")
-      .doc(userID)
-      .collection("lessons")
-      .doc(lessonID)
-      .collection("Sections");
-    const sections = await sectionsRef.get();
-    sections.forEach((section) => {
-      section.ref.delete();
-    });
-  }
+    // Firestore does NOT cascade-delete subcollections when a document is deleted.
+    // recursiveDelete removes the lesson doc AND every nested subcollection at any
+    // depth (Sections → inputs/Vocabulary/ThinkPairShare, stages → images),
+    // batched and rate-limited by the Admin SDK.
+    await db.recursiveDelete(lessonRef);
 
-  //Delete "Sections" collection from the lesson document
-  async function deleteSection(userID, lessonID) {
-    const sectionRef = db
-      .collection("users")
-      .doc(userID)
-      .collection("lessons")
-      .doc(lessonID)
-      .collection("Sections");
-    await sectionRef.delete();
+    return Response.json({ message: "Lesson deleted" }, { status: 200 });
+  } catch (e) {
+    console.error(e);
+    return Response.json({ error: "Delete failed" }, { status: 500 });
   }
 };

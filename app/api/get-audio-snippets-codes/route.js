@@ -1,29 +1,11 @@
 const axios = require("axios");
-import { snippetPrompt, getPassages } from "@app/utils/prompts";
+import { getPassages } from "@app/utils/prompts";
 
-export const GET = async (request) => {
-  const urlQuery = new URL(request.url);
-  // const questions = urlQuery.searchParams.get("questions");
-  // const audioData = urlQuery.searchParams.get("audiodata");
-  // const transcriptStr = urlQuery.searchParams.get("transcript_str");
-  // const wordsArray = transcriptStr.split(" ");
-  const questionsAndAnswers = urlQuery.searchParams.get("questionsandanswers");
-  const transcript = urlQuery.searchParams.get("transcript");
-  //console.log(wordsArray);
-
+export const POST = async (request) => {
   try {
-    // console.log("AUDIO DATA");
-    // console.log(audioData);
-    // console.log("QUESTIONS");
-    // console.log(questions);
-    // console.log("TRANSCRIPT STRING");
-    // console.log(transcriptStr);
-    // console.log("WORD ARRAY");
-    // console.log(wordsArray);
-    // const prompt = snippetPrompt(questions, transcriptStr, wordsArray);
+    const { questionsAndAnswers, transcript } = await request.json();
+
     const prompt = getPassages(questionsAndAnswers, transcript);
-    console.log("Prompt for audio snippets:");
-    console.log(prompt);
 
     const options = {
       method: "POST",
@@ -35,30 +17,23 @@ export const GET = async (request) => {
       },
       data: {
         model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+        messages: [{ role: "user", content: prompt }],
       },
     };
 
     const response = await axios.request(options);
-    const results = response.data.choices[0].message.content;
-    console.log("results beginning");
-    console.log(results);
-    console.log("results end");
-    console.log(typeof results);
-    const parsed = JSON.parse(results);
+    const raw = response.data.choices[0].message.content;
 
-    return new Response(results, {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-    //return new Response(results, { status: 200, headers: { "Content-Type": "application/json" } });
+    // ChatGPT sometimes wraps JSON in ```json fences — strip before parsing.
+    const cleaned = raw.replace(/```json\s*|```/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    return Response.json(parsed, { status: 200 });
   } catch (error) {
-    console.log("Audio snippet error: ", error);
-    return new Response("Failed to fetch all prompts", { status: 500 });
+    console.error("Audio snippet error:", error);
+    return Response.json(
+      { error: "Failed to fetch passages" },
+      { status: 500 },
+    );
   }
 };

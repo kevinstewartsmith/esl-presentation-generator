@@ -22,6 +22,7 @@ const CreateAudioSnippets = () => {
   const audioQuestions = useAudioTextStore((state) => state.audioQuestions);
   const audioAnswers = useAudioTextStore((state) => state.audioAnswers);
   const s2tTranscript = useAudioTextStore((state) => state.s2tTranscript);
+
   const hasAttemptedAudioHydration = useAudioTextStore(
     (state) => state.hasAttemptedAudioHydration,
   );
@@ -41,52 +42,108 @@ const CreateAudioSnippets = () => {
   const [audioAnswerObj, setAudioAnswerObj] = useState([]);
 
   // Guard helper: is the comprehensionItems array ready to use?
-  const qaReady = comprehensionItems && comprehensionItems.length > 0;
+  const comprehensionItemsExist =
+    comprehensionItems && comprehensionItems.length > 0;
+  console.log("qaReady:", comprehensionItemsExist);
 
   useEffect(() => {
+    console.log("First useEffect in CreateAudioSnippets.");
+
+    console.log(
+      "Q:",
+      audioQuestionObj.length,
+      "A:",
+      audioAnswerObj.length,
+      "T:",
+      s2tTranscript.length,
+    );
+    console.log("hasAttemptedAudioHydration:", hasAttemptedAudioHydration);
+    console.log("comprehensionItemsExist:", comprehensionItemsExist);
+    console.log("audioQuestions:", audioQuestions);
+    console.log("audioAnswers:", audioAnswers);
     if (!hasAttemptedAudioHydration) return;
-    if (!qaReady) {
+    if (!comprehensionItemsExist) {
       getAudioQuestionParts("question");
       getAudioQuestionParts("answer");
     }
   }, [hasAttemptedAudioHydration]);
 
   useEffect(() => {
-    if (audioQuestionObj.length > 0 && audioAnswerObj.length > 0 && !qaReady) {
+    console.log("Second useEffect in CreateAudioSnippets.");
+
+    console.log(
+      "Q:",
+      audioQuestionObj.length,
+      "A:",
+      audioAnswerObj.length,
+      "T:",
+      s2tTranscript.length,
+    );
+    console.log("audioQuestions: ", audioQuestions);
+    console.log("audioAnswers: ", audioAnswers);
+
+    if (
+      audioQuestionObj.length > 0 &&
+      audioAnswerObj.length > 0 &&
+      s2tTranscript.length > 0 &&
+      !comprehensionItemsExist
+    ) {
       mergeQuestionsAndAnswers(audioQuestionObj, audioAnswerObj);
       setReadyForSnippets(true);
     }
   }, [audioQuestionObj, audioAnswerObj]);
 
   // Call snippet api to get answer passages
+  // Takes comprehensionItems and s2tTranscript as input, returns updated comprehensionItems with passages
+
   useEffect(() => {
+    console.log("Third useEffect in CreateAudioSnippets.");
+
+    console.log(
+      "Q:",
+      audioQuestionObj.length,
+      "A:",
+      audioAnswerObj.length,
+      "T:",
+      s2tTranscript.length,
+    );
+
     if (!readyForSnippets) return;
     if (!s2tTranscript) return;
-    if (!qaReady) return;
+    if (!comprehensionItemsExist) return;
 
-    const qa = JSON.stringify(comprehensionItems);
-    const url =
-      "/api/get-audio-snippets-codes?questionsandanswers=" +
-      qa +
-      "&transcript=" +
-      s2tTranscript;
+    async function fetchPassages() {
+      try {
+        const qa = JSON.stringify(comprehensionItems);
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
+        const response = await fetch("/api/get-audio-snippets-codes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            questionsAndAnswers: qa,
+            transcript: s2tTranscript,
+          }),
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch passages");
+
+        const data = await response.json();
+
         const updated = addPassagesToQuestions(comprehensionItems, data);
         updateComprehensionItems(updated);
         setReadyForWordTimeData(true);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching passages:", error);
-      });
+      }
+    }
+
+    fetchPassages();
   }, [readyForSnippets]);
 
   //SO NOT DONE
   useEffect(() => {
     if (!readyForWordTimeData) return;
-    if (!qaReady) return;
+    if (!comprehensionItemsExist) return;
     if (!wordTimeArray || wordTimeArray.length === 0) return;
 
     const indices = findBatchPassageIndices(
@@ -115,7 +172,7 @@ const CreateAudioSnippets = () => {
   }, [readyForWordTimeData]);
 
   useEffect(() => {
-    if (!readyForAudioClips || !qaReady) {
+    if (!readyForAudioClips || !comprehensionItemsExist) {
       return;
     }
 
@@ -137,21 +194,24 @@ const CreateAudioSnippets = () => {
   }, [readyForAudioClips]);
 
   async function getAudioQuestionParts(type) {
-    let response;
-    if (type === "question") {
-      const url =
-        "/api/make-question-json?query=" + audioQuestions + "&type=" + type;
-      response = await fetch(url);
-    } else if (type === "answer") {
-      const url =
-        "/api/make-question-json?query=" + audioAnswers + "&type=" + type;
-      response = await fetch(url);
-    }
+    const query = type === "question" ? audioQuestions : audioAnswers;
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+    const response = await fetch("/api/make-question-json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, type }),
+    });
+
+    if (!response.ok) throw new Error("make-question-json failed");
     const data = await response.json();
+    console.log(
+      "getAudioQuestionParts type:",
+      type,
+      "response.ok:",
+      response.ok,
+      "data:",
+      data,
+    );
 
     if (type === "question") {
       setAudioQuestionObj(data);

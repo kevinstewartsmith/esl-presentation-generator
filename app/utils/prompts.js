@@ -9,7 +9,7 @@ const objectExample = JSON.stringify({
 
 export const getWordsArrayIndicesPrompt = (passages, wordsArray) => {
   const prompt = `Given the object array: "${passages}" and the words array: ${JSON.stringify(
-    wordsArray
+    wordsArray,
   )}, return the start and end indices of the snippet within the words array. Respond with only the indices in the following format: { start: ##, end: ## }`;
   return prompt;
 };
@@ -108,7 +108,7 @@ export function findSentenceStemsPrompt(
   theme,
   number,
   grammar_tense,
-  cefrLevel
+  cefrLevel,
 ) {
   console.log("Prompting for sentence stems with  parameters. ");
 
