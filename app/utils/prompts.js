@@ -57,8 +57,23 @@ export function snippetPrompt(questions, transcriptStr, wordsArray) {
 //   return prompt2;
 // }
 export function getPassages(QuestionsAndAnswers, Transcript) {
-  const prompt = `Extract passages from the following transcript that correspond to the given questions and answers. Here are the questions and answers: ${QuestionsAndAnswers}. Here is the transcript: ${Transcript}
-  For each question in questionsAndAnswers, return a "passage" field that shows the exact phrase in the transcript that supports the answer. Do not paraphrase. Retrurn only a stringified array of passages strings in the order of the questions and answers. Do not include any other text or explanation.`;
+  const prompt = `You will be given questions with their answers, and a transcript.
+
+For each question, find the CONTIGUOUS span of words in the transcript that supports the answer, and return it copied VERBATIM.
+
+CRITICAL RULES:
+- The passage must be an EXACT, UNBROKEN substring of the transcript.
+- Copy the words in order, with nothing removed from the middle.
+- NEVER use "..." or any ellipsis. NEVER skip or omit words.
+- NEVER paraphrase, summarize, correct, or rephrase.
+- If the supporting evidence is spread across separate parts of the transcript, choose the SINGLE BEST contiguous span — do not stitch fragments together.
+- Keep each passage reasonably short (roughly 5-25 words) but always contiguous.
+
+Return ONLY a JSON array of passage strings, in the same order as the questions. No explanation, no code fences, no other text.
+
+Questions and answers: ${QuestionsAndAnswers}
+
+Transcript: ${Transcript}`;
   return prompt;
 }
 

@@ -146,6 +146,13 @@ const CreateAudioSnippets = () => {
     if (!comprehensionItemsExist) return;
     if (!wordTimeArray || wordTimeArray.length === 0) return;
 
+    console.log(
+      "PASSAGES:",
+      comprehensionItems.map((i) => i.passage),
+    );
+    console.log("WTA length:", wordTimeArray.length);
+    console.log("WTA sample:", wordTimeArray.slice(0, 3));
+
     const indices = findBatchPassageIndices(
       comprehensionItems.map((qa) => qa.passage),
       wordTimeArray,
