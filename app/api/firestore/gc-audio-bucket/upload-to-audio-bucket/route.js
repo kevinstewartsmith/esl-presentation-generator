@@ -4,19 +4,25 @@ import path from "path";
 
 const directory = process.env.SERVICE_ACCOUNT_DIR;
 const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
+// const serviceFilePath = path.join(
+//   __dirname,
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   directory,
+//   serviceFileName
+// );
 const serviceFilePath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
+  process.cwd(),
   "..",
   directory,
-  serviceFileName
+  serviceFileName,
 );
 
 process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
@@ -33,7 +39,7 @@ export async function POST(request) {
     if (!file) {
       return new Response(
         JSON.stringify({ error: "No audio file uploaded." }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 

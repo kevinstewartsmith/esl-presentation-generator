@@ -1,36 +1,37 @@
-import { Storage } from '@google-cloud/storage';
-import fs from 'fs';
-import path from 'path';
+import { Storage } from "@google-cloud/storage";
+import fs from "fs";
+import path from "path";
 //import lamejs from 'lamejs';
-const lamejs = require('lamejs');
+const lamejs = require("lamejs");
 
-const directory = process.env.SERVICE_ACCOUNT_DIR
-const serviceFileName = process.env.SERVICE_ACCOUNT_NAME
+const directory = process.env.SERVICE_ACCOUNT_DIR;
+const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
 
+//const serviceFilePath = path.join(__dirname, "..", "..", "..", "..","..","..","..", directory, serviceFileName);
+const serviceFilePath = path.join(
+  process.cwd(),
+  "..",
+  directory,
+  serviceFileName,
+);
+process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
 
-const serviceFilePath = path.join(__dirname, "..", "..", "..", "..","..","..","..", directory, serviceFileName);
-
-process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath; 
-
-
-const bucketName = process.env.BUCKET_NAME
+const bucketName = process.env.BUCKET_NAME;
 //const fileName = process.env.FILE_NAME
 
-
-export const GET = async (request) =>  {
-  const urlQuery = new URL(request.url)
-  const name = urlQuery.searchParams.get("name")
-  console.log("File name in udio route server: " + name);
+export const GET = async (request) => {
+  const urlQuery = new URL(request.url);
+  const name = urlQuery.searchParams.get("name");
+  console.log("File name in audio route server: " + name);
   //Snippet Add-Ons START
   //const startTime = parseFloat(urlQuery.searchParams.get("start"))
   //const endTime = parseFloat(urlQuery.searchParams.get("end"))
   //Snippet Add-Ons END
   //const startTime = parseFloat(5)
   //const endTime = parseFloat(10)
-  
+
   const storage = new Storage();
   const file = storage.bucket(bucketName).file(name);
-  
 
   try {
     const audioBuffer = await fetchAudioFromBucket(file);
@@ -38,29 +39,31 @@ export const GET = async (request) =>  {
     // console.log('File metadata:', metadata);
 
     //return new Response("Response from audio fetch", { status: 200, headers: { "Content-Type": "application/json" } });
-    return new Response(audioBuffer, { status: 200, headers: { "Content-Type": "audio/mp3" } });
+    return new Response(audioBuffer, {
+      status: 200,
+      headers: { "Content-Type": "audio/mp3" },
+    });
   } catch (error) {
-    console.error('Error getting audio:', error);
+    console.error("Error getting audio:", error);
     return new Response(error);
   }
-}
+};
 
 async function fetchAudioFromBucket(file, startTime, endTime) {
   try {
-    const fileData = await file.download()
-    const audioBuffer = fileData[0]
+    const fileData = await file.download();
+    const audioBuffer = fileData[0];
     //Snippet
     // if (startTime !== null && endTime !== null) {
     //   const slicedAudioBuffer = await sliceAudioSnippet(audioBuffer, startTime, endTime)
     // }
-     
+
     //Snippet
-    return audioBuffer
+    return audioBuffer;
   } catch (error) {
-    console.error('Error fetching audio from bucket:', error);
+    console.error("Error fetching audio from bucket:", error);
     throw error;
   }
-  
 }
 
 function sliceAudioSnippet(audioBuffer, startTime, endTime) {
@@ -75,4 +78,3 @@ function sliceAudioSnippet(audioBuffer, startTime, endTime) {
 
   return mp3Data.data;
 }
-

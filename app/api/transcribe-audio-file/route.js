@@ -6,18 +6,27 @@ const fs = require("fs");
 const directory = process.env.SERVICE_ACCOUNT_DIR;
 
 const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
+// const serviceFilePath = path.join(
+//   __dirname,
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   directory,
+//   serviceFileName
+// );
+
+console.log("CWD IS:", process.cwd());
 const serviceFilePath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
+  process.cwd(),
   "..",
   directory,
-  serviceFileName
+  serviceFileName,
 );
+console.log("RESOLVED TO:", serviceFilePath);
 //const serviceFilePath = path.join(process.cwd(), directory, serviceFileName);
 process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
 console.log("Service file exists: " + fs.existsSync(serviceFilePath));
@@ -31,7 +40,7 @@ export async function POST(request) {
     if (!file) {
       return new Response(
         JSON.stringify({ error: "No audio file uploaded." }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,7 +58,7 @@ export async function POST(request) {
       audioBytes,
       encoding,
       sampleRateHertz,
-      languageCode
+      languageCode,
     );
 
     return new Response(JSON.stringify(text), { status: 200 });
@@ -57,7 +66,7 @@ export async function POST(request) {
     console.log("google-api-s2t error: " + error);
     return new Response(
       JSON.stringify({ error: "Failed to transcribe audio" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -66,7 +75,7 @@ async function transcribeAudioFromBlob(
   audioBase64,
   encoding,
   sampleRateHertz,
-  languageCode
+  languageCode,
 ) {
   try {
     const speechClient = new speech.SpeechClient();

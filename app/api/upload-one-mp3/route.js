@@ -9,17 +9,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 const directory = process.env.SERVICE_ACCOUNT_DIR;
 const serviceFileName = process.env.SERVICE_ACCOUNT_NAME;
 
+// const serviceFilePath = path.join(
+//   __dirname,
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   "..",
+//   directory,
+//   serviceFileName
+// );
 const serviceFilePath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
+  process.cwd(),
   "..",
   directory,
-  serviceFileName
+  serviceFileName,
 );
 
 process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceFilePath;
