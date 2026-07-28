@@ -1,4 +1,4 @@
-import { saveFile } from "@app/utils/IndexedDBWrapper";
+import { saveFile } from "@app/utils/indexedDBWrapper";
 import { Category } from "@node_modules/@mui/icons-material";
 
 export const saveImageToIndexedDB = async (filePath, file) => {
