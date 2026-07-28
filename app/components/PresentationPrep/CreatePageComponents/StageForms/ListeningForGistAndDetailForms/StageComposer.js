@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import {
   DndContext,
   DragOverlay,
@@ -190,7 +191,31 @@ function ListDropZone({ children }) {
 }
 
 export default function StageComposer() {
-  const [items, setItems] = useState(() => seedFromPreset(REDUCED_PRESET));
+  const slideOrder = useAudioTextStore((s) => s.slideOrder);
+  const updateSlideOrder = useAudioTextStore((s) => s.updateSlideOrder);
+
+  // The store is the source of truth. `items` is just a readable alias.
+  const items = slideOrder;
+
+  // Seed from the preset ONCE, only if the store is empty (new lesson).
+  useEffect(() => {
+    if (!slideOrder || slideOrder.length === 0) {
+      updateSlideOrder(seedFromPreset(REDUCED_PRESET));
+    }
+    // run only on mount / when store identity changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Adapter so existing `setItems(next)` and `setItems(prev => ...)` calls
+  // both route through the store without rewriting each call site.
+  const setItems = useCallback(
+    (updater) => {
+      const current = useAudioTextStore.getState().slideOrder;
+      const next = typeof updater === "function" ? updater(current) : updater;
+      updateSlideOrder(next);
+    },
+    [updateSlideOrder],
+  );
   const [activeDrag, setActiveDrag] = useState(null);
   const [insertAt, setInsertAt] = useState(null);
 

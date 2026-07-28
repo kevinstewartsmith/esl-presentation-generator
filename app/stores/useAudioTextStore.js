@@ -15,6 +15,7 @@ const initialAudioState = {
   comprehensionItems: [],
   imagePathsByCategory: {},
   audioBucketContents: [],
+  slideOrder: [],
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -22,6 +23,7 @@ const initialAudioState = {
   justHydratedQA: false,
   justHydratedComprehension: false,
   justHydratedImagePaths: false,
+  justHydratedSlideOrder: false,
   hasAttemptedAudioHydration: false,
 };
 
@@ -74,6 +76,13 @@ export const useAudioTextStore = create(
       }),
     setHydratedComprehensionItems: (items) =>
       set({ comprehensionItems: items ?? [], justHydratedComprehension: true }),
+
+    // slideOrder (the StageComposer arrangement)
+    updateSlideOrder: (order) =>
+      set({ slideOrder: order ?? [], justHydratedSlideOrder: false }),
+
+    setHydratedSlideOrder: (order) =>
+      set({ slideOrder: order ?? [], justHydratedSlideOrder: true }),
 
     // imagePathsByCategory (per-category writes)
     updateImagePathForCategory: (category, path) =>
@@ -168,6 +177,12 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedImagePaths",
     textType: "ImagePaths",
     isEmpty: isEmptyObject,
+  },
+  {
+    field: "slideOrder",
+    flag: "justHydratedSlideOrder",
+    textType: "SlideOrder",
+    isEmpty: isEmptyArray,
   },
 ];
 

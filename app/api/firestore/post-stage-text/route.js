@@ -21,6 +21,7 @@ const FIELD_MAP = {
   Discussions: "discussionForms",
   ReadingVocab: "readingVocab",
   Included: "included",
+  SlideOrder: "slideOrder",
 };
 
 export const POST = async (request) => {

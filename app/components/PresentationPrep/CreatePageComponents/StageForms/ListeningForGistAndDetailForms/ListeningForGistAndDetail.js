@@ -8,6 +8,7 @@ import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import StageComposer from "./StageComposer";
+import ConfigureStageDetails from "./ConfigureStageDetails/ConfigureStageDetails";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
@@ -46,12 +47,16 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const setHydratedImagePaths = useAudioTextStore(
     (state) => state.setHydratedImagePaths,
   );
+  const setHydratedSlideOrder = useAudioTextStore(
+    (state) => state.setHydratedSlideOrder,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
     <ListeningUploadandTranscribeAudio />,
     <CreateAudioSnippets />,
-    <StageComposer stageID={listeningForGistandDetailStage} />,
+    <StageComposer />,
+    <ConfigureStageDetails />,
   ];
 
   useEffect(() => {
@@ -77,6 +82,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       setHydratedAudioAnswers(allListeningData?.audioAnswers || []);
       setHydratedOcrTranscript(allListeningData?.audioTranscript || "");
       setHydratedComprehensionItems(allListeningData?.comprehensionItems || []);
+      setHydratedSlideOrder(allListeningData?.slideOrder || []);
 
       const savedImagePaths = allListeningData?.imagePathsByCategory || {};
       setHydratedImagePaths(savedImagePaths);
