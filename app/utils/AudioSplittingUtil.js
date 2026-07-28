@@ -1,4 +1,4 @@
-import { getFile, listFiles, saveFile } from "@app/utils/IndexedDBWrapper";
+import { getFile, listFiles, saveFile } from "@app/utils/indexedDBWrapper";
 
 export const splitAudioFile = async (
   audioFileName,

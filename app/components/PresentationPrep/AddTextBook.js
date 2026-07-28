@@ -4,7 +4,7 @@ import { createWorker } from "tesseract.js";
 import TextBookInfoEntry from "@app/components/PresentationPrep/TextBookInfoEntry";
 import { TextbookImageThumb } from "@app/components/PresentationPrep/TextbookImageThumb";
 import { useLessonStore } from "@app/stores/useLessonStore";
-import { deleteFile, getFile } from "@app/utils/IndexedDBWrapper";
+import { deleteFile, getFile } from "@app/utils/indexedDBWrapper";
 import {
   listeningForGistandDetailStage,
   readingForGistandDetailStage,
