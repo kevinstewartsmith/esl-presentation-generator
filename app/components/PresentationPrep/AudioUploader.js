@@ -14,7 +14,7 @@ import { Progress } from "./AudioUploaderUI/progress";
 import { Card } from "./AudioUploaderUI/card";
 import { Badge } from "./AudioUploaderUI/badge";
 import { Input } from "./AudioUploaderUI/input";
-import { saveFile } from "@app/utils/IndexedDBWrapper";
+import { saveFile } from "@app/utils/indexedDBWrapper";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import FileCard from "./AudioUploaderUI/filecard";
@@ -225,11 +225,12 @@ export default function AudioUploader() {
 
       setSelectedFiles([file]);
       updateSelectedAudioFileName(file.name);
-      //await saveFile(file, file); // <-- FIXED
+      await saveFile(file.name, file); // <-- FIXED
       //await saveFile({ name: file.name, blob: file });
 
       // Simulate upload progress
-      setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
+
+      setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
       // let progress = 0;
       // const interval = setInterval(() => {
       //   progress += Math.random() * 20;
@@ -243,10 +244,10 @@ export default function AudioUploader() {
       // Upload to bucket
       try {
         await uploadToBucket(file);
-        setUploadProgress((prev) => ({ ...prev, [file]: 100 }));
+        setUploadProgress((prev) => ({ ...prev, [file.name]: 100 }));
         await getBucketContents();
       } catch (err) {
-        setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
+        setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
         alert("Upload failed: " + err.message);
       }
     }

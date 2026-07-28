@@ -2,7 +2,7 @@
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
 import { useEffect, useRef } from "react";
-
+import { getFile } from "@app/utils/indexedDBWrapper";
 import { combinedTranscript } from "@app/utils/transcript";
 import { createAudioSlice } from "@app/utils/AudioSnipper";
 import { playAudioFile, playAudioFileClip } from "@app/utils/AudioControls";
@@ -10,6 +10,7 @@ import { playFromIndexedDB } from "@app/utils/AudioSplittingUtil";
 import { useState } from "react";
 function SnippetPlayer({ index, snippetFileNames }) {
   const [playing, setPlaying] = useState(false);
+  const currentAudioRef = useRef(null);
 
   const audioURL = "/api/audio";
   const audioContextRef = useRef(null);
@@ -65,38 +66,42 @@ function SnippetPlayer({ index, snippetFileNames }) {
   //   //snippetBufferArray
   // ]);
 
-  function playSnippetClicked() {
-    console.log(typeof index);
-    // console.log(snippetData[index].snippet);
-    // const transcriptArray = transcript.split(" ");
-    // const transcriptArray2 = removeEmptyStrings(transcriptArray);
-    // console.log("Transcript Array 1: " + transcriptArray.length);
-    // console.log("Transcript Array 2: " + transcriptArray2.length);
-    // console.log(transcriptArray2);
-    // console.log(wordTimeArray);
-    // console.log("Transcript 2: " + transcriptArray2.length);
-    // console.log("Word array length: " + wordTimeArray.length);
+  async function playSnippetClicked() {
+    // If already playing, ignore the click (prevents overlap)
+    if (playing) return;
 
-    // const snippet = snippetData[index].snippet;
-    // const indeces = findSnippetIndices(snippet, transcriptArray2);
-    // console.log(indeces);
-    // const startIndex = indeces[0].start;
-    // const endIndex = indeces[0].end;
-    // const slicedArray = transcriptArray2.slice(startIndex, endIndex + 1);
-    // console.log(slicedArray);
-    // console.log(typeof startIndex);
-    // // console.log(slicedArray.join(' '));
-    // console.log(wordTimeArray[startIndex]);
-    // console.log(wordTimeArray[endIndex]);
-    // // console.log(wordTimeArray[startIndex].startTime);
-    // // console.log(wordTimeArray[endIndex].endTime);
-    // const startTime = wordTimeArray[startIndex].startTime;
-    // const endTime = wordTimeArray[endIndex].endTime;
-    // console.log(startTime);
-    // playSnippet(selectedAudioFileName, startTime, endTime);
-    setPlaying(true);
     const snippetName = snippetFileNames[index];
-    playFromIndexedDB(snippetName);
+    if (!snippetName || snippetName === "No Audio") {
+      console.warn("No snippet available for this question.");
+      return;
+    }
+
+    const blob = await getFile(snippetName);
+    if (!(blob instanceof Blob) || blob.size === 0) {
+      console.error("No valid audio blob for:", snippetName);
+      return;
+    }
+
+    const audioURL = URL.createObjectURL(blob);
+    const audio = new Audio(audioURL);
+    currentAudioRef.current = audio;
+
+    setPlaying(true);
+
+    audio.onended = () => {
+      setPlaying(false);
+      URL.revokeObjectURL(audioURL); // clean up
+      currentAudioRef.current = null;
+    };
+    audio.onerror = () => {
+      setPlaying(false);
+      currentAudioRef.current = null;
+    };
+
+    audio.play().catch((err) => {
+      console.error("Playback failed:", err);
+      setPlaying(false);
+    });
   }
   function getTimeStamp(data) {
     //const data = {seconds: '19', nanos: 200000000};
