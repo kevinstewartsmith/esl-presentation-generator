@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import ListeningUploadandTranscribeAudio from "./ListeningUploadandTranscribeAudio";
 import ListeningQuestionUploader from "./ListeningQuestionUploader";
 import { listeningForGistandDetailStage } from "@app/utils/SectionIDs";
-import CreeateAudioSnippets from "./CreateAudioSnippets";
+import CreateAudioSnippets from "./CreateAudioSnippets";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import StageComposer from "./StageComposer";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);
@@ -49,7 +50,8 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
     <ListeningUploadandTranscribeAudio />,
-    <CreeateAudioSnippets />,
+    <CreateAudioSnippets />,
+    <StageComposer stageID={listeningForGistandDetailStage} />,
   ];
 
   useEffect(() => {
