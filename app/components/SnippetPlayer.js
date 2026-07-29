@@ -6,8 +6,10 @@ import { getFile } from "@app/utils/indexedDBWrapper";
 import { combinedTranscript } from "@app/utils/transcript";
 import { createAudioSlice } from "@app/utils/AudioSnipper";
 import { playAudioFile, playAudioFileClip } from "@app/utils/AudioControls";
-import { playFromIndexedDB } from "@app/utils/AudioSplittingUtil";
+//import { playFromIndexedDB } from "@app/utils/AudioSplittingUtil";
 import { useState } from "react";
+import { getAudioBlob } from "@app/utils/AudioStorage";
+
 function SnippetPlayer({ index, snippetFileNames }) {
   const [playing, setPlaying] = useState(false);
   const currentAudioRef = useRef(null);
@@ -76,7 +78,7 @@ function SnippetPlayer({ index, snippetFileNames }) {
       return;
     }
 
-    const blob = await getFile(snippetName);
+    const blob = await getAudioBlob(snippetName);
     if (!(blob instanceof Blob) || blob.size === 0) {
       console.error("No valid audio blob for:", snippetName);
       return;

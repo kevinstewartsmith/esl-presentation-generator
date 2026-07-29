@@ -9,6 +9,7 @@ import PartnerDiscussionSection from "@app/components/FinalizedPresentation/Part
 import CancelIcon from "@mui/icons-material/Cancel";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import DecodeUnscramblePresSection from "@app/components/FinalPresentationSections/DecodeUnscramblePresSection";
 import "@styles/reveal-hedonic.css";
 
 const PresentationDisplay = ({ presData, includedStages }) => {
@@ -121,6 +122,8 @@ const PresentationDisplay = ({ presData, includedStages }) => {
         <section>
           <h1>Book Answers</h1>
         </section>
+
+        <DecodeUnscramblePresSection />
 
         {includedStages.map((stage, index) => {
           if (stage !== "Start Presentation") {

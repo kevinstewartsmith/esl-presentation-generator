@@ -1,4 +1,5 @@
 import { getFile, listFiles, saveFile } from "@app/utils/indexedDBWrapper";
+import { getAudioBlob } from "@app/utils/AudioStorage";
 
 export const splitAudioFile = async (
   audioFileName,
@@ -110,43 +111,43 @@ async function splitAudioFileIntoMultipleClips(
   return snippets;
 }
 
-//Retrieve audio blob from IndexedDB
-async function getAudioBlob(fileName) {
-  if (!fileName) {
-    console.warn("getAudioBlob called with no fileName.");
-    return null;
-  }
+// //Retrieve audio blob from IndexedDB
+// async function getAudioBlob(fileName) {
+//   if (!fileName) {
+//     console.warn("getAudioBlob called with no fileName.");
+//     return null;
+//   }
 
-  // 1. Local cache first — IndexedDB
-  try {
-    const fileBlob = await getFile(fileName);
-    if (fileBlob) {
-      console.log(`File ${fileName} retrieved from IndexedDB.`);
-      return fileBlob;
-    }
-  } catch (error) {
-    // Not in IndexedDB (getFile throws on a missing key) — fall through to the bucket.
-  }
+//   // 1. Local cache first — IndexedDB
+//   try {
+//     const fileBlob = await getFile(fileName);
+//     if (fileBlob) {
+//       console.log(`File ${fileName} retrieved from IndexedDB.`);
+//       return fileBlob;
+//     }
+//   } catch (error) {
+//     // Not in IndexedDB (getFile throws on a missing key) — fall through to the bucket.
+//   }
 
-  // 2. Fall back to the bucket, then cache locally so next time is a local hit.
-  try {
-    console.log(`File ${fileName} not in IndexedDB — fetching from bucket.`);
-    const response = await fetch(
-      `/api/audio?name=${encodeURIComponent(fileName)}`,
-    );
-    if (!response.ok) {
-      throw new Error(`Bucket fetch failed for ${fileName}`);
-    }
+//   // 2. Fall back to the bucket, then cache locally so next time is a local hit.
+//   try {
+//     console.log(`File ${fileName} not in IndexedDB — fetching from bucket.`);
+//     const response = await fetch(
+//       `/api/audio?name=${encodeURIComponent(fileName)}`,
+//     );
+//     if (!response.ok) {
+//       throw new Error(`Bucket fetch failed for ${fileName}`);
+//     }
 
-    const blob = await response.blob();
-    await saveFile(fileName, blob);
-    console.log(`File ${fileName} downloaded from bucket and cached.`);
-    return blob;
-  } catch (error) {
-    console.error(`File ${fileName} not found in IndexedDB or bucket.`, error);
-    return null;
-  }
-}
+//     const blob = await response.blob();
+//     await saveFile(fileName, blob);
+//     console.log(`File ${fileName} downloaded from bucket and cached.`);
+//     return blob;
+//   } catch (error) {
+//     console.error(`File ${fileName} not found in IndexedDB or bucket.`, error);
+//     return null;
+//   }
+// }
 
 //Decode the audio file
 async function decodeAudioFile(audioBlob, audioContext) {
