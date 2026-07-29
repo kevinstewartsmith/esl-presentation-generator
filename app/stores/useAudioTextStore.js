@@ -16,6 +16,8 @@ const initialAudioState = {
   imagePathsByCategory: {},
   audioBucketContents: [],
   slideOrder: [],
+  gistOptions: [], // [{ question, answer }, ...]
+  selectedGist: null, // the chosen { question, answer }
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -24,6 +26,7 @@ const initialAudioState = {
   justHydratedComprehension: false,
   justHydratedImagePaths: false,
   justHydratedSlideOrder: false,
+  justHydratedGist: false,
   hasAttemptedAudioHydration: false,
 };
 
@@ -98,6 +101,19 @@ export const useAudioTextStore = create(
 
     updateAudioBucketContents: (contents) =>
       set({ audioBucketContents: contents ?? [] }),
+
+    // gistOptions + selectedGist (share justHydratedGist)
+    updateGistOptions: (options) =>
+      set({ gistOptions: options ?? [], justHydratedGist: false }),
+    updateSelectedGist: (gist) =>
+      set({ selectedGist: gist ?? null, justHydratedGist: false }),
+
+    setHydratedGist: (options, selected) =>
+      set({
+        gistOptions: options ?? [],
+        selectedGist: selected ?? null,
+        justHydratedGist: true,
+      }),
   })),
 );
 
@@ -183,6 +199,18 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedSlideOrder",
     textType: "SlideOrder",
     isEmpty: isEmptyArray,
+  },
+  {
+    field: "gistOptions",
+    flag: "justHydratedGist",
+    textType: "GistOptions",
+    isEmpty: isEmptyArray,
+  },
+  {
+    field: "selectedGist",
+    flag: "justHydratedGist",
+    textType: "SelectedGist",
+    isEmpty: (v) => v == null,
   },
 ];
 

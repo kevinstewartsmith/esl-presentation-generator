@@ -22,6 +22,8 @@ const FIELD_MAP = {
   ReadingVocab: "readingVocab",
   Included: "included",
   SlideOrder: "slideOrder",
+  GistOptions: "gistOptions",
+  SelectedGist: "selectedGist",
 };
 
 export const POST = async (request) => {
