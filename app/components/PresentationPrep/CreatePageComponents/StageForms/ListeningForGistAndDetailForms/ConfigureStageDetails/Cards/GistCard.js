@@ -19,13 +19,6 @@ import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import CardShell from "./CardShell";
 
 export default function GistCard({ item, position }) {
-  console.log("GIST CARD:", {
-    ready,
-    hasOptions,
-    hasTranscript,
-    qLen: questions.length,
-    aLen: answers.length,
-  });
   const s2tTranscript = useAudioTextStore((s) => s.s2tTranscript);
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
   const gistOptions = useAudioTextStore((s) => s.gistOptions);
@@ -47,6 +40,14 @@ export default function GistCard({ item, position }) {
   const ready = hasTranscript && questions.length > 0 && answers.length > 0;
 
   const hasOptions = Array.isArray(gistOptions) && gistOptions.length > 0;
+
+  console.log("GIST CARD:", {
+    ready,
+    hasOptions,
+    hasTranscript,
+    qLen: questions.length,
+    aLen: answers.length,
+  });
 
   async function generate() {
     console.log("GIST: calling /api/generate-gist");
