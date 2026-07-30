@@ -127,6 +127,24 @@ function AddTextBook({ category, stageID }) {
     handleTextStateMemory(text, file);
     await worker.terminate();
   }
+  async function handleExtractText(base64File, file) {
+    try {
+      const res = await fetch("/api/extract-textbook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64File, category }),
+      });
+      if (!res.ok) throw new Error(`Extraction failed (${res.status})`);
+      const { data } = await res.json();
+
+      // Quick swap: stringify so the existing (string-based) store updaters and
+      // downstream display keep working. Migrate to storing structured `data`
+      // (+ a QUESTION_COMPONENT_MAP renderer) later.
+      handleTextStateMemory(JSON.stringify(data, null, 2), file);
+    } catch (e) {
+      console.error("handleExtractText failed:", e);
+    }
+  }
 
   function handleTextStateMemory(text) {
     switch (category) {
@@ -173,7 +191,8 @@ function AddTextBook({ category, stageID }) {
         acceptedFiles.forEach((file) => {
           const reader = new FileReader();
           reader.onload = () => {
-            handleReadText(reader.result, file);
+            //handleReadText(reader.result, file);
+            handleExtractText(reader.result, file);
           };
           reader.readAsDataURL(file);
 
