@@ -47,10 +47,15 @@ export const GET = async (request) => {
 
 async function transcribeAudio(name) {
   const bucketName = process.env.BUCKET_NAME;
-  const fileName = process.env.FILE_NAME;
+  const decodedName = decodeURIComponent(name); // ← %20 → real spaces
+
+  console.log("RAW name:", JSON.stringify(name));
+  console.log("DECODED:", JSON.stringify(decodedName));
 
   const storage = new Storage();
-  const file = storage.bucket(bucketName).file(name);
+  const file = storage.bucket(bucketName).file(decodedName);
+  // ... use `file` as before
+  console.log("cloudStorageURI:", file.cloudStorageURI);
 
   try {
     // Initialize a SpeechClient from the Google Cloud Speech library.
@@ -61,7 +66,8 @@ async function transcribeAudio(name) {
       //content: audioBytes
       //content: audioName
       //uri: audioFilePathGS
-      uri: file.cloudStorageURI,
+      //uri: file.cloudStorageURI,
+      uri: `gs://${bucketName}/${decodedName}`,
       //content: audioFilePathLocal
       //content: file
     };
