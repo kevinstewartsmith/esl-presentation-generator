@@ -1,0 +1,209 @@
+/* SlideFrame.module.css
+ *
+ * SIZING CONTRACT: every length here is fixed px against a 1280x720 logical
+ * canvas. Reveal scales that canvas to the display with a transform, so px
+ * behaves as a percentage of slide height on every screen. Do NOT reintroduce
+ * vw/vh — inside reveal they resolve against the browser viewport, not the
+ * slide, and then get scaled a second time.
+ */
+
+.slide {
+  --blue: #4487ef;
+  --blue-dark: #2f70d7;
+  --blue-soft: #dfeafe;
+
+  --orange: #ff762f;
+  --orange-dark: #ec6225;
+  --orange-soft: #fff2e8;
+
+  --text: #5e6064;
+  --heading: #383a3d;
+  --background: #f8fbff;
+
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 34px 72px 44px;
+
+  background:
+    radial-gradient(circle at 50% 18%, #ffffff 0%, transparent 45%),
+    linear-gradient(135deg, #f6f9ff 0%, var(--background) 100%);
+
+  color: var(--text);
+  font-family: Inter, Avenir, "Trebuchet MS", Arial, sans-serif;
+  text-align: left;
+
+  isolation: isolate;
+}
+
+/* Reveal themes restyle headings and paragraphs. Neutralise that here so the
+   slide looks the same regardless of which reveal theme css is loaded. */
+.slide h1,
+.slide p {
+  margin: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: inherit;
+}
+
+.header {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.headerIcon {
+  display: block;
+  width: 48px;
+  margin-bottom: 8px;
+  color: var(--blue);
+}
+
+.headerIcon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.titleRow h1 {
+  color: var(--heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.titleRow h1 span {
+  color: var(--blue);
+}
+
+.miniWaveform {
+  width: 62px;
+  color: #a8c9f8;
+}
+
+.body {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 0;
+}
+
+/* --- background decoration --- */
+
+.topLeftShape,
+.topRightShape,
+.bottomWaveOne,
+.bottomWaveTwo {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.topLeftShape {
+  top: -13%;
+  left: -8%;
+  width: 39%;
+  height: 27%;
+  border-radius: 0 0 55% 0;
+  background: #c7dafa;
+  transform: rotate(-5deg);
+}
+
+.topRightShape {
+  top: -11%;
+  right: -7%;
+  width: 34%;
+  height: 29%;
+  border-radius: 0 0 0 70%;
+  background: #bdd3f7;
+  transform: rotate(7deg);
+}
+
+.bottomWaveOne {
+  bottom: -15%;
+  left: -10%;
+  width: 75%;
+  height: 26%;
+  border-radius: 50% 60% 0 0;
+  background: #c5dafa;
+  transform: rotate(3deg);
+}
+
+.bottomWaveTwo {
+  right: -8%;
+  bottom: -17%;
+  width: 70%;
+  height: 31%;
+  border-radius: 58% 50% 0 0;
+  background: linear-gradient(135deg, #aacaf9, #568fee);
+  transform: rotate(-4deg);
+}
+
+.dotGrid {
+  position: absolute;
+  z-index: 1;
+  width: 90px;
+  height: 90px;
+
+  opacity: 0.4;
+  background-image: radial-gradient(circle, #76a6ec 4px, transparent 5px);
+  background-size: 22px 22px;
+}
+
+.dotGridTop {
+  top: 4%;
+  left: 2.5%;
+}
+
+.dotGridBottom {
+  right: 3%;
+  bottom: 2%;
+}
+
+.orangeLineTop,
+.orangeLineBottom {
+  position: absolute;
+  z-index: 1;
+
+  width: 35%;
+  height: auto;
+
+  color: var(--orange);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.orangeLineTop {
+  top: -4%;
+  right: -2%;
+}
+
+.orangeLineBottom {
+  bottom: -2%;
+  left: -3%;
+}

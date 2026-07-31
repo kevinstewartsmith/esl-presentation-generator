@@ -1,22 +1,26 @@
 // GistPresSection.js
-// Placeholder gist slide for the presentation. Renders the teacher's SELECTED
-// gist question (from the store) if one was picked; otherwise a stub. Flesh out
-// later (instructions slide, peer-check, answer reveal).
+// Container for the gist stage. Three lines of actual work:
+//   1. build the view model from the store
+//   2. ask the active theme for its gist slide
+//   3. render it inside the reveal <section>
+//
+// It knows about Zustand. It does not know what the slide looks like.
+// The theme knows what the slide looks like. It does not know about Zustand.
 
-import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { useSlideComponent } from "@app/presentation/theme/SlideThemeProvider";
+import { useGistSlideModel } from "./gistSlideModel";
 
 export default function GistPresSection() {
-  const selectedGist = useAudioTextStore((s) => s.selectedGist);
+  const model = useGistSlideModel();
+  const GistSlide = useSlideComponent("gist");
+
+  // A theme that hasn't implemented this slide type drops it rather than
+  // breaking the deck mid-lesson.
+  if (!GistSlide) return null;
 
   return (
-    <section>
-      <h1>Listen for Gist</h1>
-      <p>Listen once. What is the main idea?</p>
-      {selectedGist?.question && (
-        <p style={{ marginTop: "1.5rem", fontWeight: 600 }}>
-          {selectedGist.question}
-        </p>
-      )}
+    <section className="slide-full">
+      <GistSlide {...model} />
     </section>
   );
 }

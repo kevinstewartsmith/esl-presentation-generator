@@ -12,6 +12,9 @@ import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection";
 import GistPresSection from "./GistPresSection";
 import DetailPresSection from "./DetailPresSection";
+import "@styles/reveal-hedonic.css";
+import "@styles/reveal-hedonic.css";
+import { SlideThemeProvider } from "@app/presentation/theme/SlideThemeProvider";
 
 // activity type -> the section that renders its slides
 const SECTION_BY_TYPE = {
@@ -28,12 +31,12 @@ const ListeningForGistandDetailPresSection = () => {
   const included = (slideOrder ?? []).filter((it) => it.included);
 
   return (
-    <>
+    <SlideThemeProvider>
       {included.map((item) => {
         const Section = SECTION_BY_TYPE[item.type];
         return Section ? <Section key={item.id} item={item} /> : null;
       })}
-    </>
+    </SlideThemeProvider>
   );
 };
 

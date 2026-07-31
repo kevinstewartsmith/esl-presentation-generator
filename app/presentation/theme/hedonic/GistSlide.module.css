@@ -1,0 +1,12 @@
+/* GistSlide.module.css — fixed px against the 1280x720 canvas. */
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+
+  width: 100%;
+  max-width: 1136px;
+  margin: 0 auto;
+}

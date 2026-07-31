@@ -1,0 +1,39 @@
+/* reveal-slide-host.css
+ *
+ * Import once, alongside reveal.css. Lets a themed slide component fill the
+ * whole logical canvas instead of sitting in reveal's centred text column.
+ *
+ * Pair with:
+ *   Reveal.initialize({
+ *     width: 1280,        // must match the theme manifest's canvas
+ *     height: 720,
+ *     margin: 0,
+ *     center: false,      // full-bleed slides do their own vertical layout
+ *     minScale: 0.2,
+ *     maxScale: 2.0,
+ *   });
+ */
+
+.reveal .slides {
+  height: 100%;
+}
+
+.reveal .slides section.slide-full {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  top: 0 !important;
+  text-align: left;
+}
+
+/* Reveal's own themes set uppercase headings, line-height and colour on
+   descendants. Themed slides opt out entirely. */
+.reveal .slides section.slide-full h1,
+.reveal .slides section.slide-full h2,
+.reveal .slides section.slide-full h3,
+.reveal .slides section.slide-full p {
+  color: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
