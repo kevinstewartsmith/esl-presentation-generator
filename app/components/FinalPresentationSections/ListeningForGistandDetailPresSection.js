@@ -24,8 +24,6 @@ const SECTION_BY_TYPE = {
 };
 
 const ListeningForGistandDetailPresSection = () => {
-  import("@styles/reveal-hedonic.css");
-
   const slideOrder = useAudioTextStore((s) => s.slideOrder);
 
   const included = (slideOrder ?? []).filter((it) => it.included);

@@ -11,6 +11,7 @@ import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import DecodeUnscramblePresSection from "@app/components/FinalPresentationSections/DecodeUnscramblePresSection";
 import "@styles/reveal-hedonic.css";
+import "@styles/reveal-slide-host.css";
 
 const PresentationDisplay = ({ presData, includedStages }) => {
   //import("@styles/reveal-hedonic.css");
@@ -34,6 +35,12 @@ const PresentationDisplay = ({ presData, includedStages }) => {
 
         const deck = new Reveal(revealRef.current, {
           plugins: [Markdown],
+          width: 1280,
+          height: 720,
+          margin: 0,
+          center: false,
+          minScale: 0.2,
+          maxScale: 2.0,
         });
         deck.initialize();
       })();
