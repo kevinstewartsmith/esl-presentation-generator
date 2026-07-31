@@ -60,7 +60,7 @@
   place-items: center;
 
   flex: 0 0 auto;
-  padding: 20%;
+  padding: 12%;
 
   color: white;
   border: 8px solid white;
@@ -117,8 +117,11 @@
   color: currentColor;
 }
 
-.label {
+/* .label {
   color: var(--heading);
+} */
+.label {
+  color: currentColor;
 }
 
 .italicLabel {

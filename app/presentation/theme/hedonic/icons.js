@@ -20,25 +20,27 @@ export function HeadphonesIcon() {
 
 export function EarIcon() {
   return (
-    <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+    <svg viewBox="29 29 340 340" fill="none" aria-hidden="true">
       <path
-        d="M61 69C58 79 49 83 43 78C38 74 41 66 35 62C25 55 24 39 31 29C39 16 59 14 70 25C82 37 78 54 68 61C63 65 64 66 61 69Z"
+        d="M105.488 117.524C113.408 99.7187 120.359 78.852 137.7 68.0142C219.412 16.9436 304.012 96.8239 291.596 183.735C284.41 234.037 231.516 260.946 210.472 303.034C192.435 339.108 121.338 372.909 115.629 321.526"
         stroke="currentColor"
-        strokeWidth="7"
+        strokeWidth="20"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M43 54C38 46 40 36 49 33C58 30 66 37 65 45C64 53 56 53 53 60"
+        d="M229.563 238.612C271.782 193.835 261.136 88.7032 191.386 91.8739C138.895 94.26 151.137 164.677 163.351 189.103"
         stroke="currentColor"
-        strokeWidth="7"
+        strokeWidth="20"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
-        d="M78 32L88 25M81 47H94M77 61L87 69"
+        d="M152.723 155.103C208.642 151.222 227.658 210.091 191.382 246.368C181.932 255.816 163.669 242.087 152.723 247.56C141.774 253.035 133.574 270.289 122.785 257.701"
         stroke="currentColor"
-        strokeWidth="6"
+        strokeWidth="20"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -46,7 +48,7 @@ export function EarIcon() {
 
 export function LightbulbIcon() {
   return (
-    <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+    <svg viewBox="1.5 -2.5 96 96" fill="none" aria-hidden="true">
       <path
         d="M34 60C25 54 20 45 22 35C24 22 35 14 49 14C64 14 76 25 76 39C76 48 71 55 64 60C59 64 58 68 58 73H40C40 68 39 64 34 60Z"
         stroke="currentColor"

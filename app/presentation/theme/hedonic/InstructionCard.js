@@ -17,7 +17,7 @@ export default function InstructionCard({
   const toneClass = tone === "accent" ? styles.accentCard : styles.primaryCard;
 
   return (
-    <section className={`${styles.card} ${toneClass}`}>
+    <div className={`${styles.card} ${toneClass}`}>
       <div className={styles.iconArea}>
         <div className={styles.iconCircle}>{icon}</div>
         <div className={styles.divider} />
@@ -37,6 +37,6 @@ export default function InstructionCard({
       {decoration ? (
         <div className={styles.cardDecoration}>{decoration}</div>
       ) : null}
-    </section>
+    </div>
   );
 }
