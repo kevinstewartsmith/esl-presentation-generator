@@ -9,7 +9,7 @@ import PartnerDiscussionSection from "@app/components/FinalizedPresentation/Part
 import CancelIcon from "@mui/icons-material/Cancel";
 import PresSectionComponentMap from "@app/utils/PresSectionComponentMap";
 import { useLessonStore } from "@app/stores/useLessonStore";
-import DecodeUnscramblePresSection from "@app/components/FinalPresentationSections/DecodeUnscramblePresSection";
+//import DecodeUnscramblePresSection from "@app/components/FinalPresentationSections/DecodeUnscramblePresSection-legacy";
 import "@styles/reveal-hedonic.css";
 import "@styles/reveal-slide-host.css";
 

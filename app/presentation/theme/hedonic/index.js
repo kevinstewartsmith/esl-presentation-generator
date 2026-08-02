@@ -4,6 +4,8 @@
 // Reveal.initialize(), or the fixed px sizing will be off.
 
 import GistSlide from "./GistSlide";
+import InstructionSlide from "./InstructionSlide";
+import ScrambleRoundSlide from "./ScrambleRoundSlide";
 
 const hedonicTheme = {
   id: "hedonic",
@@ -11,8 +13,9 @@ const hedonicTheme = {
   canvas: { width: 1280, height: 720 },
   slides: {
     gist: GistSlide,
+    scrambleInstruction: InstructionSlide,
+    scrambleRound: ScrambleRoundSlide,
     // detail: DetailSlide,
-    // scramble: ScrambleRoundSlide,
   },
 };
 

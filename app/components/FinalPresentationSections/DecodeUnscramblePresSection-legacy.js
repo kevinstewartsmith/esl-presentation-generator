@@ -6,7 +6,7 @@
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { buildScrambleRounds } from "@app/utils/scramblePassage";
-import DecodeRoundSlides from "./DecodeRoundSlides";
+import DecodeRoundSlides from "./DecodeRoundSlides-legacy";
 
 const DecodeUnscramblePresSection = () => {
   import("@styles/reveal-hedonic.css");

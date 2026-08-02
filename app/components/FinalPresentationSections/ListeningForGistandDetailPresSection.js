@@ -9,16 +9,17 @@
 // "Listening for Gist and Detail".
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
-import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection";
+//import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection-legacy";
 import GistPresSection from "./GistPresSection";
 import DetailPresSection from "./DetailPresSection";
 import "@styles/reveal-hedonic.css";
-import "@styles/reveal-hedonic.css";
 import { SlideThemeProvider } from "@app/presentation/theme/SlideThemeProvider";
+// was: import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection";
+import ScramblePresSection from "./ScramblePresSection";
 
 // activity type -> the section that renders its slides
 const SECTION_BY_TYPE = {
-  scramble: DecodeUnscramblePresSection,
+  scramble: ScramblePresSection, // ← was DecodeUnscramblePresSection
   gist: GistPresSection,
   detail: DetailPresSection,
 };
