@@ -88,12 +88,14 @@
   gap: 18px;
 }
 
+
 .titleRow h1 {
   color: var(--heading);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 46px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;        /* ← ADD — keep the title on one line */
 }
 
 .titleRow h1 span {

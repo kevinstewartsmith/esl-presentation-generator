@@ -1,0 +1,27 @@
+/* StatementSlide.module.css — big centered statement, fit to the body box. */
+
+.box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.text {
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--heading);
+
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.accent {
+  color: var(--orange);
+}

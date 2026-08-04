@@ -1,38 +1,59 @@
 // useFitText.js
-// Shrinks font-size until the element fits its box (height AND width). Steps
-// down from a max until scrollHeight/scrollWidth fit, so a long scrambled
-// sentence scales down instead of overflowing. Re-runs when `text` changes.
-//
-// Lives in the theme layer — fitting text to a slide box is a presentation
-// concern.
+// Shrinks font-size until the text fits its container (both dimensions). Runs
+// after layout via requestAnimationFrame so the box has real measurements, and
+// re-runs on resize. Lives in the theme layer.
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
-const useIsoLayoutEffect =
+const useIso =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function useFitText(text, { max = 96, min = 24, step = 2 } = {}) {
+export function useFitText(text, { max = 88, min = 22, step = 2 } = {}) {
   const ref = useRef(null);
-  const [size, setSize] = useState(max);
 
-  useIsoLayoutEffect(() => {
+  useIso(() => {
     const el = ref.current;
     if (!el) return;
 
-    let current = max;
-    el.style.fontSize = `${current}px`;
+    let raf = 0;
 
-    // Shrink until it fits or we hit the floor.
-    while (
-      current > min &&
-      (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)
-    ) {
-      current -= step;
+    const fit = () => {
+      const parent = el.parentElement;
+      if (!parent) return;
+
+      // Available box = the flex slot this text lives in.
+      const availH = parent.clientHeight;
+      const availW = parent.clientWidth;
+      if (availH === 0 || availW === 0) {
+        raf = requestAnimationFrame(fit); // layout not ready yet — retry
+        return;
+      }
+
+      let current = max;
       el.style.fontSize = `${current}px`;
-    }
 
-    setSize(current);
+      while (
+        current > min &&
+        (el.scrollHeight > availH || el.scrollWidth > availW)
+      ) {
+        current -= step;
+        el.style.fontSize = `${current}px`;
+      }
+    };
+
+    raf = requestAnimationFrame(fit);
+
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(fit);
+    });
+    if (el.parentElement) ro.observe(el.parentElement);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
   }, [text, max, min, step]);
 
-  return { ref, size };
+  return { ref };
 }

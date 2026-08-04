@@ -17,7 +17,7 @@ const ScramblePresSection = () => {
 
   const InstructionSlide = useSlideComponent("scrambleInstruction");
   const RoundSlide = useSlideComponent("scrambleRound");
-
+  const StatementSlide = useSlideComponent("scrambleStatement");
   // A theme that hasn't implemented these drops the stage rather than crashing.
   if (!InstructionSlide || !RoundSlide) return null;
   if (slides.length === 0) return null;
@@ -33,6 +33,7 @@ const ScramblePresSection = () => {
                   title={slide.title}
                   titleAccent={slide.titleAccent}
                   lines={slide.lines}
+                  compact
                 />
               </section>
             );
@@ -40,7 +41,7 @@ const ScramblePresSection = () => {
           case "pass":
             return (
               <section key={slide.id} className="slide-full">
-                <InstructionSlide title={slide.title} lines={[]} numbered={false} />
+                <StatementSlide text={slide.title} />
               </section>
             );
 

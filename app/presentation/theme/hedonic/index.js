@@ -6,6 +6,7 @@
 import GistSlide from "./GistSlide";
 import InstructionSlide from "./InstructionSlide";
 import ScrambleRoundSlide from "./ScrambleRoundSlide";
+import StatementSlide from "./StatementSlide";
 
 const hedonicTheme = {
   id: "hedonic",
@@ -15,6 +16,7 @@ const hedonicTheme = {
     gist: GistSlide,
     scrambleInstruction: InstructionSlide,
     scrambleRound: ScrambleRoundSlide,
+    scrambleStatement: StatementSlide,
     // detail: DetailSlide,
   },
 };

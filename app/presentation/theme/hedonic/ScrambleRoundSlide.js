@@ -1,12 +1,9 @@
 // ScrambleRoundSlide.js
-// Hedonic rendering for a scramble round — both the "question" kind (scrambled
-// words + play) and the "answer" kind (natural passage + replay). One component,
-// a `variant` decides which.
+// Hedonic rendering for a scramble round — "question" (scrambled words + play)
+// and "answer" (natural passage + replay). One component; `variant` decides.
 //
-// The big text auto-fits its box (useFitText) so a long sentence scales down
-// instead of overflowing. The audio control is injected by the section as
-// `player` (audio is an app capability, not a theme concern) so this file stays
-// pure presentational.
+// The words live in a flex-filled box (.textBox) and useFitText scales the font
+// down to fit that box, so long passages shrink instead of clipping.
 
 import SlideFrame from "./SlideFrame";
 import { useFitText } from "./useFitText";
@@ -21,7 +18,7 @@ export default function ScrambleRoundSlide({
   hint,
   player = null,
 }) {
-  const { ref } = useFitText(text, { max: 92, min: 28, step: 2 });
+  const { ref } = useFitText(text, { max: 84, min: 22, step: 2 });
   const isAnswer = variant === "answer";
 
   return (
@@ -29,11 +26,13 @@ export default function ScrambleRoundSlide({
       <div className={styles.wrap}>
         {player ? <div className={styles.player}>{player}</div> : null}
 
-        <div
-          ref={ref}
-          className={`${styles.text} ${isAnswer ? styles.answer : styles.scrambled}`}
-        >
-          {text}
+        <div className={styles.textBox}>
+          <div
+            ref={ref}
+            className={`${styles.text} ${isAnswer ? styles.answer : styles.scrambled}`}
+          >
+            {text}
+          </div>
         </div>
 
         {hint ? <p className={styles.hint}>{hint}</p> : null}

@@ -12,12 +12,15 @@ export default function InstructionCard({
   italicLabel = false,
   icon,
   decoration,
+  compact = false,
   children,
 }) {
   const toneClass = tone === "accent" ? styles.accentCard : styles.primaryCard;
 
   return (
-    <div className={`${styles.card} ${toneClass}`}>
+    <div
+      className={`${styles.card} ${tone === "accent" ? styles.accentCard : styles.primaryCard} ${compact ? styles.compact : ""}`}
+    >
       <div className={styles.iconArea}>
         <div className={styles.iconCircle}>{icon}</div>
         <div className={styles.divider} />
