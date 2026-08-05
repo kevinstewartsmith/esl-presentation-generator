@@ -1,0 +1,26 @@
+/* InstructionSlide.module.css
+   The fit box fills the slide body and clips; the stack is scaled by useFitScale
+   to fit inside it (transform-origin top-center so it shrinks from the top down,
+   never bleeding up into the header). */
+
+.fitBox {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  width: 100%;
+  max-width: 1136px;
+
+  transform-origin: center center;
+  will-change: transform;
+}

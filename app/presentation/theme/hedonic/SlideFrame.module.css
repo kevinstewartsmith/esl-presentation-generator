@@ -110,14 +110,13 @@
 .body {
   position: relative;
   z-index: 3;
-
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
-
   width: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* --- background decoration --- */
