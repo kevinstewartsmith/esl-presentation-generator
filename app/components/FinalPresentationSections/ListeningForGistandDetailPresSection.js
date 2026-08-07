@@ -16,12 +16,14 @@ import "@styles/reveal-hedonic.css";
 import { SlideThemeProvider } from "@app/presentation/theme/SlideThemeProvider";
 // was: import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection";
 import ScramblePresSection from "./ScramblePresSection";
-
+import PeerCheckPresSection from "./PeerCheckPresSection"; // ← ADD this line (line 19)
 // activity type -> the section that renders its slides
+
 const SECTION_BY_TYPE = {
   scramble: ScramblePresSection, // ← was DecodeUnscramblePresSection
   gist: GistPresSection,
   detail: DetailPresSection,
+  peerCheckAnswers: PeerCheckPresSection, // ← ADD this line
 };
 
 const ListeningForGistandDetailPresSection = () => {

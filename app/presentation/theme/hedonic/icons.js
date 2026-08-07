@@ -142,3 +142,27 @@ export function QuestionBubbles() {
     </svg>
   );
 }
+
+export function UsersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="9" cy="8" r="3.2" fill="currentColor" />
+      <path
+        d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <circle cx="16.5" cy="8.5" r="2.6" fill="currentColor" opacity="0.85" />
+      <path
+        d="M15 14.2c2.6.2 4.5 2.1 4.5 4.8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.85"
+      />
+    </svg>
+  );
+}

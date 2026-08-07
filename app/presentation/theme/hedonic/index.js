@@ -7,6 +7,7 @@ import GistSlide from "./GistSlide";
 import InstructionSlide from "./InstructionSlide";
 import ScrambleRoundSlide from "./ScrambleRoundSlide";
 import StatementSlide from "./StatementSlide";
+import PartnerCheckSlide from "./PartnerCheckSlide";
 
 const hedonicTheme = {
   id: "hedonic",
@@ -17,7 +18,8 @@ const hedonicTheme = {
     scrambleInstruction: InstructionSlide,
     scrambleRound: ScrambleRoundSlide,
     scrambleStatement: StatementSlide,
-    // detail: DetailSlide,
+    partnerCheck: PartnerCheckSlide,
+    detail: InstructionSlide,
   },
 };
 
