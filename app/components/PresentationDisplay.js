@@ -28,27 +28,40 @@ const PresentationDisplay = ({ presData, includedStages }) => {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      (async () => {
-        const Reveal = (await import("reveal.js")).default;
-        const Markdown = (
-          await import("reveal.js/plugin/markdown/markdown.esm.js")
-        ).default;
+    if (typeof window === "undefined") return;
+    if (deckRef.current) return; // ← guard: never init twice
 
-        const deck = new Reveal(revealRef.current, {
-          plugins: [Markdown],
-          width: 1280,
-          height: 720,
-          margin: 0,
-          center: false,
-          minScale: 0.2,
-          maxScale: 2.0,
-        });
-        await deck.initialize();
-        deckRef.current = deck;
-        deck.sync();
-      })();
-    }
+    let cancelled = false;
+
+    (async () => {
+      const Reveal = (await import("reveal.js")).default;
+      const Markdown = (
+        await import("reveal.js/plugin/markdown/markdown.esm.js")
+      ).default;
+
+      if (cancelled) return;
+
+      const deck = new Reveal(revealRef.current, {
+        plugins: [Markdown],
+        width: 1280,
+        height: 720,
+        margin: 0,
+        center: false,
+        minScale: 0.2,
+        maxScale: 2.0,
+      });
+      await deck.initialize();
+      deckRef.current = deck;
+      deck.sync();
+    })();
+
+    return () => {
+      cancelled = true;
+      if (deckRef.current) {
+        deckRef.current.destroy(); // ← clean up on unmount (kills stale listeners)
+        deckRef.current = null;
+      }
+    };
   }, []);
 
   // Re-sync whenever the slide content changes (async store hydration), so
