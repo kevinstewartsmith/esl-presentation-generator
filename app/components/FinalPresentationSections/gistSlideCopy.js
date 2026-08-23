@@ -13,4 +13,7 @@ export const GIST_SLIDE_COPY = {
   answerLabel: "Answer:",
   // Shown only if the teacher never selected a gist question.
   questionFallback: "What is the main topic?",
+  // The follow-up answer-reveal slide.
+  answerRevealLabel: "Gist Answer",
+  answerAccent: "Answer",
 };
