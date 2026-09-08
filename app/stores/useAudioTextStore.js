@@ -18,6 +18,7 @@ const initialAudioState = {
   slideOrder: [],
   gistOptions: [], // [{ question, answer }, ...]
   selectedGist: null, // the chosen { question, answer }
+  inputTexts: null, // the teacher's input texts (title, page, book, exercise, etc.)
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -27,6 +28,7 @@ const initialAudioState = {
   justHydratedImagePaths: false,
   justHydratedSlideOrder: false,
   justHydratedGist: false,
+  justHydratedInputTexts: false,
   hasAttemptedAudioHydration: false,
 };
 
@@ -114,6 +116,14 @@ export const useAudioTextStore = create(
         selectedGist: selected ?? null,
         justHydratedGist: true,
       }),
+
+    updateInputTextForKey: (key, value) =>
+      set((state) => ({
+        inputTexts: { ...(state.inputTexts ?? {}), [key]: value },
+        justHydratedInputTexts: false,
+      })),
+    setHydratedInputTexts: (obj) =>
+      set({ inputTexts: obj ?? {}, justHydratedInputTexts: true }),
   })),
 );
 
@@ -211,6 +221,12 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedGist",
     textType: "SelectedGist",
     isEmpty: (v) => v == null,
+  },
+  {
+    field: "inputTexts",
+    flag: "justHydratedInputTexts",
+    textType: "InputTexts",
+    isEmpty: (v) => v == null || Object.keys(v).length === 0,
   },
 ];
 

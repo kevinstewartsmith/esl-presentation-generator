@@ -9,7 +9,12 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TitleIcon from "@mui/icons-material/Title";
 import { useReadingStore } from "@app/stores/useReadingStore";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import {
+  listeningForGistandDetailStage,
+  readingForGistandDetailStage,
+} from "@app/utils/SectionIDs";
 
 export default function InputWithIcon({
   label,
@@ -23,22 +28,40 @@ export default function InputWithIcon({
 }) {
   const lessonID = useLessonStore((state) => state.currentLessonID);
 
+  // Discussion writes only exist on the reading store.
   const updateDiscussionText = useReadingStore(
     (state) => state.updateDiscussionText,
   );
   const discussionForms = useReadingStore((state) => state.discussionForms);
 
-  const updateInputTextForKey = useReadingStore(
+  // ---- Stage-agnostic inputTexts store selection ----
+  // Both stores expose identically-named inputTexts + updateInputTextForKey.
+  // Subscribe to all unconditionally (hook rules), then pick by stageID.
+  // Adding a stage = add its two selectors + one registry line.
+  const readingUpdateInputTextForKey = useReadingStore(
     (state) => state.updateInputTextForKey,
   );
-  const inputTexts = useReadingStore((state) => state.inputTexts);
+  const readingInputTexts = useReadingStore((state) => state.inputTexts);
 
-  console.log("INPUT ICON LESSON ID: " + lessonID);
-  console.log("INPUT ICON ID: " + id);
-  console.log("INPUT ICON INDEX: " + index);
-  console.log("INPUT ICON STAGE ID: " + stageID);
-  console.log("INPUT ICON CATEGORY: " + category);
-  console.log("INPUT ICON TEXT: " + text);
+  const audioUpdateInputTextForKey = useAudioTextStore(
+    (state) => state.updateInputTextForKey,
+  );
+  const audioInputTexts = useAudioTextStore((state) => state.inputTexts);
+
+  const INPUT_STORE_BY_STAGE = {
+    [readingForGistandDetailStage]: {
+      updateInputTextForKey: readingUpdateInputTextForKey,
+      inputTexts: readingInputTexts,
+    },
+    [listeningForGistandDetailStage]: {
+      updateInputTextForKey: audioUpdateInputTextForKey,
+      inputTexts: audioInputTexts,
+    },
+  };
+
+  const { updateInputTextForKey, inputTexts } =
+    INPUT_STORE_BY_STAGE[stageID] ??
+    INPUT_STORE_BY_STAGE[readingForGistandDetailStage];
 
   function setInput() {
     switch (input) {
@@ -77,10 +100,10 @@ export default function InputWithIcon({
         break;
       case "discussion":
         updateDiscussionText(id, index, event.target.value);
-        console.log(discussionForms);
         break;
       case "exercisePage":
         updateInputTextForKey("exercisePage", event.target.value);
+        break;
       default:
         break;
     }
@@ -89,13 +112,7 @@ export default function InputWithIcon({
   const getValue = () => {
     switch (input) {
       case "discussion":
-        console.log("Discussion input in switch");
-        console.log("######################");
-        console.log(
-          "GET VALUE: " + discussionForms?.[id]?.discussionTexts?.[index],
-        );
         return discussionForms?.[id]?.discussionTexts?.[index] || "";
-      //return JSON.stringify(discussionForms);
       default:
         return inputTexts?.[input] || "";
     }
@@ -103,7 +120,6 @@ export default function InputWithIcon({
 
   return (
     <Box sx={{ "& > :not(style)": { m: 1 } }}>
-      <h1>{lessonID}</h1>
       <Box
         sx={{
           display: "flex",

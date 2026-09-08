@@ -51,6 +51,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
     (state) => state.setHydratedSlideOrder,
   );
   const setHydratedGist = useAudioTextStore((state) => state.setHydratedGist);
+  const setHydratedInputTexts = useAudioTextStore(
+    (state) => state.setHydratedInputTexts,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -94,6 +97,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
 
       setHydratedSelectedAudioFileName(allListeningData?.audioFileName || "");
       setHasAttemptedAudioHydration(true);
+      setHydratedInputTexts(allListeningData?.inputTexts || {});
     };
     fetchListeningData();
   }, [userID, lessonID]);

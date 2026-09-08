@@ -3,16 +3,42 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useReadingStore } from "@app/stores/useReadingStore";
+import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import {
+  listeningForGistandDetailStage,
+  readingForGistandDetailStage,
+} from "@app/utils/SectionIDs";
 
-export default function FreeSoloDropDown({ label, input }) {
-  const updateInputTextForKey = useReadingStore(
+export default function FreeSoloDropDown({ label, input, stageID }) {
+  // ---- Stage-agnostic inputTexts store selection (same pattern as
+  // InputWithIcon / AddTextBook): subscribe to all, pick by stageID. ----
+  const readingUpdateInputTextForKey = useReadingStore(
     (state) => state.updateInputTextForKey,
   );
-  const inputTexts = useReadingStore((state) => state.inputTexts);
+  const readingInputTexts = useReadingStore((state) => state.inputTexts);
+
+  const audioUpdateInputTextForKey = useAudioTextStore(
+    (state) => state.updateInputTextForKey,
+  );
+  const audioInputTexts = useAudioTextStore((state) => state.inputTexts);
+
+  const INPUT_STORE_BY_STAGE = {
+    [readingForGistandDetailStage]: {
+      updateInputTextForKey: readingUpdateInputTextForKey,
+      inputTexts: readingInputTexts,
+    },
+    [listeningForGistandDetailStage]: {
+      updateInputTextForKey: audioUpdateInputTextForKey,
+      inputTexts: audioInputTexts,
+    },
+  };
+
+  const { updateInputTextForKey, inputTexts } =
+    INPUT_STORE_BY_STAGE[stageID] ??
+    INPUT_STORE_BY_STAGE[readingForGistandDetailStage];
 
   const handleChange = (event, newVal) => {
     updateInputTextForKey(input, newVal);
-    console.log("UPDATING INPUT :" + input + " WITH VALUE: " + newVal);
   };
 
   return (
@@ -21,8 +47,6 @@ export default function FreeSoloDropDown({ label, input }) {
       className="w-full h-full"
       sx={{ backgroundColor: "white", left: 0 }}
     >
-      {/* <h1>{inputTexts[input]}</h1>
-      <h1>{"INPUT" + input}</h1> */}
       <Autocomplete
         id="free-solo-demo"
         freeSolo
@@ -30,15 +54,7 @@ export default function FreeSoloDropDown({ label, input }) {
         value={inputTexts?.[input] || ""}
         onChange={handleChange}
         onInputChange={handleChange}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={label}
-            //onChange={handleChange}
-            //value={inputTexts[input]}
-            //value={"test"}
-          />
-        )}
+        renderInput={(params) => <TextField {...params} label={label} />}
       />
     </Stack>
   );

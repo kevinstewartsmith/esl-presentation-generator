@@ -1,19 +1,16 @@
 // detailSlideCopy.js
 // Wording + placeholder values for the "Listen for Detail" task-instructions
-// slide. Same rationale as the other *SlideCopy files: task wording lives here.
+// slide. Task wording lives here so copy edits don't touch the model.
 //
-// The PLACEHOLDER_* values below stand in until they're wired to real inputs:
-//   - book / page / exercise / answerLocation  -> will come from inputs beside
-//     the audio drag-drop (like the reading stage has)
-//   - grouping / talkingRule / timeLimit        -> will come from the detail
-//     stage's Configure card
-// Keeping them here (not in the model logic) means the swap later is one place.
+// Page / exercise / book now come from the teacher's inputTexts (entered beside
+// the audio drop). These placeholders are the fallback when a field is blank.
+// grouping / talkingRule / timeLimit are still placeholders pending the detail
+// Configure card.
 
 export const DETAIL_SLIDE_COPY = {
   title: "Listen for",
   titleAccent: "Detail",
 
-  // Placeholder task values (replace with store/config data later).
   placeholders: {
     exercise: "5",
     page: "100",
@@ -23,8 +20,9 @@ export const DETAIL_SLIDE_COPY = {
     timeLimit: "You have 5 minutes",
   },
 
-  // Builders — take the resolved values and produce the bullet text. Keeping the
-  // phrasing here means copy edits don't touch the model.
-  taskLine: ({ exercise, page, answerLocation }) =>
-    `Complete Exercise ${exercise} on page ${page} — write your answers ${answerLocation}`,
+  // Build the task line. `book` is optional — included only when provided.
+  taskLine: ({ exercise, page, book, answerLocation }) => {
+    const where = book ? `${book}, page ${page}` : `page ${page}`;
+    return `Complete Exercise ${exercise} on ${where} — write your answers ${answerLocation}`;
+  },
 };
