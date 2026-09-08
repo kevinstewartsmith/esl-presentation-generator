@@ -1,35 +1,26 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Grid } from "@mui/material";
 import InputWithIcon from "@app/components/PresentationPrep/AddTextButtons/InputWithIcon";
 import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/FreeSoloDropDown";
 
-const TextBookInfoEntry = ({ category, stageID }) => {
+// showTitle defaults true (reading keeps its Text Title input). Listening passes
+// showTitle={false} — listening exercises don't have a title.
+const TextBookInfoEntry = ({ category, stageID, showTitle = true }) => {
   const inputs = (category) => {
     switch (category) {
       case "BookText":
         return (
-          <Grid
-            container
-            spacing={0}
-            padding={2}
-            direction={"column"}
-            margin={0}
-            //className="flex items-center justify-center"
-            //style={{ borderColor: "red", backgroundColor: "blue" }}
-          >
-            <Grid item xs={12} sm={12} spacing={0} marginBottom={2}>
-              <FreeSoloDropDown
-                label={"Text Title"}
-                input={"title"}
-                stageID={stageID}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              //className="flex items-center justify-center"
-            >
+          <Grid container spacing={0} padding={2} direction={"column"} margin={0}>
+            {showTitle && (
+              <Grid item xs={12} sm={12} spacing={0} marginBottom={2}>
+                <FreeSoloDropDown
+                  label={"Text Title"}
+                  input={"title"}
+                  stageID={stageID}
+                />
+              </Grid>
+            )}
+            <Grid item xs={12} sm={12}>
               <Grid
                 container
                 spacing={0}
@@ -37,12 +28,7 @@ const TextBookInfoEntry = ({ category, stageID }) => {
                 direction={"row"}
                 margin={0}
               >
-                <Grid
-                  item
-                  xs={7}
-                  sm={7}
-                  //className="flex items-center justify-center"
-                >
+                <Grid item xs={7} sm={7}>
                   <FreeSoloDropDown
                     label={"Book Name"}
                     input={"book"}

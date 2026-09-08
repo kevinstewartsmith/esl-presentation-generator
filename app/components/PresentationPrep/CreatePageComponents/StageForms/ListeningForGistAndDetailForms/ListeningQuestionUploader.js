@@ -19,12 +19,14 @@ const ListeningQuestionUploader = ({ stageID }) => {
 
   return (
     <div className="flex flex-col items-center content-center ml-20 mr-20 mt-0">
-      {/* Row 1: textbook data entry (book / page / exercise), a third of the width.
-          Uses the QuestionText category fragment so it renders the exercise inputs;
-          the multipurpose inputs route to the listening store via stageID. */}
+      {/* Row 1: textbook data (book / page / exercise) — no title for listening. */}
       <Grid container spacing={0} padding={2} direction={"row"}>
         <Grid item xs={4} sm={4} padding={1}>
-          <TextBookInfoEntry category={"BookText"} stageID={stageID} />
+          <TextBookInfoEntry
+            category={"BookText"}
+            stageID={stageID}
+            showTitle={false}
+          />
           <TextBookInfoEntry category={"QuestionText"} stageID={stageID} />
         </Grid>
       </Grid>
