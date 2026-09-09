@@ -1,17 +1,19 @@
 // DetailPresSection.js
 // Container for the "Listen for Detail" stage. Parts, in order:
-//   1. The task-instructions slide (do the exercise in your book).
-//   2. Slide-by-slide answer reveal — one slide per REVIEWED question, the answer
-//      fading in on the next arrow press (reveal.js fragment). Rendered only when
-//      the teacher has "go over slide by slide" on.
-//   3. [Phase 2b] A single recap slide with all answers, when "show all answers
-//      on one slide" is on. Needs a themed AnswerListSlide — stubbed for now.
+//   1. The task-instructions slide.
+//   2. Slide-by-slide answer reveal — one slide per REVIEWED question, answer
+//      fading in on arrow. When that question's "play clip" is on, a SnippetPlayer
+//      appears with the answer. Rendered only when "go over slide by slide" is on.
+//   3. A single recap slide listing every reviewed answer, when "show all answers
+//      on one slide" is on.
 //
-// Which questions appear + which modes render come from detailConfig (Phase 2).
-// Knows Zustand (via the models). Appearance lives in the theme.
+// Which questions appear + which modes render come from detailConfig.
+// Knows Zustand; appearance is the theme's; the clip player is injected here.
 
+import { useMemo } from "react";
 import { useSlideComponent } from "@app/presentation/theme/SlideThemeProvider";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import SnippetPlayer from "@app/components/SnippetPlayer";
 import { useDetailSlideModel } from "./detailSlideModel";
 import { useDetailAnswersSlideModel } from "./detailAnswersSlideModel";
 import { DETAIL_ANSWERS_SLIDE_COPY as ANSWERS_COPY } from "./detailAnswersSlideCopy";
@@ -21,24 +23,30 @@ export default function DetailPresSection() {
   const model = useDetailSlideModel();
   const { slides: answerSlides } = useDetailAnswersSlideModel();
   const detailConfig = useAudioTextStore((s) => s.detailConfig);
+  const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
+
+  const snippetFileNames = useMemo(
+    () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
+    [comprehensionItems],
+  );
 
   const InstructionSlide = useSlideComponent("scrambleInstruction");
   const AnswerRevealSlide = useSlideComponent("answerReveal");
-  // Phase 2b: const AnswerListSlide = useSlideComponent("answerList");
+  const AnswerListSlide = useSlideComponent("answerList");
 
   if (!InstructionSlide) return null;
 
   const modes = getDetailModes(detailConfig);
 
-  // Only questions the teacher kept "review" on. answerSlides are index-aligned
-  // with comprehensionItems, so slide i maps to question index i.
-  const reviewed = answerSlides.filter(
-    (_slide, i) => getQuestionFlags(detailConfig, i).review,
-  );
+  // answerSlides are index-aligned with comprehensionItems. Keep original index
+  // (for snippet lookup) alongside each reviewed slide.
+  const reviewed = answerSlides
+    .map((slide, i) => ({ slide, index: i }))
+    .filter(({ index }) => getQuestionFlags(detailConfig, index).review);
 
   return (
     <>
-      {/* 1. The task instructions */}
+      {/* 1. Task instructions */}
       <section className="slide-full">
         <InstructionSlide
           title={model.title}
@@ -48,26 +56,43 @@ export default function DetailPresSection() {
         />
       </section>
 
-      {/* 2. Slide-by-slide reveal (only reviewed questions, only if mode on) */}
+      {/* 2. Slide-by-slide reveal */}
       {modes.showSlideBySlide &&
         AnswerRevealSlide &&
-        reviewed.map((slide) => (
-          <section key={slide.id} className="slide-full">
-            <AnswerRevealSlide
-              label={slide.label}
-              answerLabel={ANSWERS_COPY.answerAccent}
-              question={slide.question}
-              answer={slide.answer}
-            />
-          </section>
-        ))}
+        reviewed.map(({ slide, index }) => {
+          const playClip = getQuestionFlags(detailConfig, index).playClip;
+          return (
+            <section key={slide.id} className="slide-full">
+              <AnswerRevealSlide
+                label={slide.label}
+                answerLabel={ANSWERS_COPY.answerAccent}
+                question={slide.question}
+                answer={slide.answer}
+                player={
+                  playClip ? (
+                    <SnippetPlayer
+                      index={index}
+                      snippetFileNames={snippetFileNames}
+                    />
+                  ) : null
+                }
+              />
+            </section>
+          );
+        })}
 
-      {/* 3. Recap-all slide — Phase 2b (needs themed AnswerListSlide).
+      {/* 3. Recap-all slide */}
       {modes.showAllOnOneSlide && AnswerListSlide && reviewed.length > 0 && (
         <section className="slide-full">
-          <AnswerListSlide items={reviewed} />
+          <AnswerListSlide
+            items={reviewed.map(({ slide }) => ({
+              id: slide.id,
+              question: slide.question,
+              answer: slide.answer,
+            }))}
+          />
         </section>
-      )} */}
+      )}
     </>
   );
 }

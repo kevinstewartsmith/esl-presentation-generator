@@ -1,5 +1,5 @@
 import { db } from "@app/utils/firebaseAdmin";
-import { replacePlaceholderWithEmpty } from "@app/utils/replacePlaceholderWithEmpty";
+import { replacePlaceholderWithEmpty } from "@app/utils/ReplacePlaceholderWithEmpty";
 export const GET = async (request) => {
   console.log("Trying to GET Section Data");
   try {

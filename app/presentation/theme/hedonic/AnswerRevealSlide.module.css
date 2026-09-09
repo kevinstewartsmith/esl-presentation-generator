@@ -75,3 +75,9 @@
   color: var(--orange-dark);
   overflow-wrap: break-word;
 }
+
+.player {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}

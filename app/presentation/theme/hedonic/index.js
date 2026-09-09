@@ -9,6 +9,7 @@ import ScrambleRoundSlide from "./ScrambleRoundSlide";
 import StatementSlide from "./StatementSlide";
 import PartnerCheckSlide from "./PartnerCheckSlide";
 import AnswerRevealSlide from "./AnswerRevealSlide";
+import AnswerListSlide from "./AnswerListSlide";
 
 const hedonicTheme = {
   id: "hedonic",
@@ -22,6 +23,7 @@ const hedonicTheme = {
     partnerCheck: PartnerCheckSlide,
     detail: InstructionSlide,
     answerReveal: AnswerRevealSlide,
+    answerList: AnswerListSlide,
   },
 };
 

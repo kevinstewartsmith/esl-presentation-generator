@@ -24,7 +24,6 @@ const FIELD_MAP = {
   SlideOrder: "slideOrder",
   GistOptions: "gistOptions",
   SelectedGist: "selectedGist",
-  InputTexts: "inputTexts",
   DetailConfig: "detailConfig",
 };
 

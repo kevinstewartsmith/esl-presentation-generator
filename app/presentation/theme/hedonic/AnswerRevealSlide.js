@@ -3,8 +3,9 @@
 // The answer is wrapped in a reveal.js "fragment" — reveal hides it initially
 // and fades it in when the presenter advances, WITHOUT leaving the slide.
 //
-// The theme stays clean: "fragment" is a global reveal.js class, so we only add
-// a className — we don't import reveal or manage any state here.
+// Optional `player` slot (e.g. a SnippetPlayer) shown under the answer, for the
+// "play clip for feedback" option — injected by the section (audio is an app
+// capability, not a theme concern).
 //
 // Pure presentational. useFitText scales the question + answer to fit.
 
@@ -18,6 +19,7 @@ export default function AnswerRevealSlide({
   answerLabel = "Answer",
   question,
   answer,
+  player = null,
 }) {
   const { ref: qRef } = useFitText(question, { max: 60, min: 24, step: 2 });
   const { ref: aRef } = useFitText(answer, { max: 56, min: 22, step: 2 });
@@ -39,6 +41,7 @@ export default function AnswerRevealSlide({
               {answer}
             </div>
           </div>
+          {player ? <div className={styles.player}>{player}</div> : null}
         </div>
       </div>
     </SlideFrame>
