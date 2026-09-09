@@ -1,11 +1,13 @@
 // DetailCard.js
-// Phase 1: display the detail comprehension questions + answers, read-only,
-// with the snippet play button per item so the teacher can hear the clip while
-// reviewing. Styling matches ScrambleCard (teal Fraunces number, uppercase
-// tags, warm block).
+// Phase 1 + 2: display the detail comprehension questions + answers, with the
+// snippet play button per item, PER-QUESTION toggles (review this answer / play
+// clip for feedback), and STAGE-LEVEL presentation modes (all-on-one-slide
+// and/or slide-by-slide). All settings persist via detailConfig in the store.
 //
-// Later phases (see FLAGS): per-question include/audio toggles + presentation
-// mode (Phase 2), inline edit (Phase 3), CEFR difficulty rating (Phase 4).
+// Defaults: every question review:on, playClip:on; both stage modes on. Absent
+// entries mean "on" (see detailConfigHelpers) so we only store overrides.
+//
+// Later phases (see FLAGS): inline edit (Phase 3), CEFR difficulty (Phase 4).
 
 "use client";
 
@@ -13,9 +15,18 @@ import { useMemo } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import SnippetPlayer from "@app/components/SnippetPlayer";
 import CardShell from "./CardShell";
+import {
+  getDetailModes,
+  getQuestionFlags,
+} from "@app/components/FinalPresentationSections/detailConfigHelpers";
 
 export default function DetailCard({ item, position }) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
+  const detailConfig = useAudioTextStore((s) => s.detailConfig);
+  const updateDetailMode = useAudioTextStore((s) => s.updateDetailMode);
+  const updateDetailPerQuestion = useAudioTextStore(
+    (s) => s.updateDetailPerQuestion,
+  );
 
   const snippetFileNames = useMemo(
     () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
@@ -33,6 +44,7 @@ export default function DetailCard({ item, position }) {
     );
   }
 
+  const modes = getDetailModes(detailConfig);
   const count = comprehensionItems.length;
 
   return (
@@ -42,25 +54,99 @@ export default function DetailCard({ item, position }) {
       right={`${count} question${count === 1 ? "" : "s"}`}
     >
       <div style={styles.list}>
-        {comprehensionItems.map((it, index) => (
-          <div style={styles.block} key={index}>
-            <div style={styles.blockMain}>
-              <div style={styles.qRow}>
-                <span style={styles.qNum}>{index + 1}</span>
-                <span style={styles.question}>{it?.question}</span>
+        {comprehensionItems.map((it, index) => {
+          const flags = getQuestionFlags(detailConfig, index);
+          return (
+            <div
+              style={{ ...styles.block, opacity: flags.review ? 1 : 0.5 }}
+              key={index}
+            >
+              <div style={styles.blockMain}>
+                <div style={styles.qRow}>
+                  <span style={styles.qNum}>{index + 1}</span>
+                  <span style={styles.question}>{it?.question}</span>
+                </div>
+
+                <div style={styles.answer}>
+                  <span style={styles.tag}>Answer</span>
+                  {it?.answer}
+                </div>
+
+                <div style={styles.toggleRow}>
+                  <label style={styles.toggle}>
+                    <input
+                      type="checkbox"
+                      checked={flags.review}
+                      onChange={(e) =>
+                        updateDetailPerQuestion(
+                          index,
+                          "review",
+                          e.target.checked,
+                        )
+                      }
+                    />
+                    Review this answer
+                  </label>
+                  <label style={styles.toggle}>
+                    <input
+                      type="checkbox"
+                      checked={flags.playClip}
+                      onChange={(e) =>
+                        updateDetailPerQuestion(
+                          index,
+                          "playClip",
+                          e.target.checked,
+                        )
+                      }
+                    />
+                    Play clip for feedback
+                  </label>
+                </div>
               </div>
 
-              <div style={styles.answer}>
-                <span style={styles.tag}>Answer</span>
-                {it?.answer}
+              <div style={styles.playCol}>
+                <SnippetPlayer
+                  index={index}
+                  snippetFileNames={snippetFileNames}
+                />
               </div>
             </div>
+          );
+        })}
+      </div>
 
-            <div style={styles.playCol}>
-              <SnippetPlayer index={index} snippetFileNames={snippetFileNames} />
+      <div style={styles.modesHeading}>How to present answers</div>
+      <div style={styles.modes}>
+        <label style={styles.modeRow}>
+          <input
+            type="checkbox"
+            checked={modes.showSlideBySlide}
+            onChange={(e) =>
+              updateDetailMode("showSlideBySlide", e.target.checked)
+            }
+          />
+          <div>
+            <div style={styles.modeTitle}>Go over slide by slide</div>
+            <div style={styles.modeSub}>
+              One question per slide, answer revealed on click
             </div>
           </div>
-        ))}
+        </label>
+        <label style={styles.modeRow}>
+          <input
+            type="checkbox"
+            checked={modes.showAllOnOneSlide}
+            onChange={(e) =>
+              updateDetailMode("showAllOnOneSlide", e.target.checked)
+            }
+          />
+          <div>
+            <div style={styles.modeTitle}>Show all answers on one slide</div>
+            <div style={styles.modeSub}>
+              A single recap slide with every answer
+            </div>
+          </div>
+        </label>
       </div>
     </CardShell>
   );
@@ -78,6 +164,7 @@ const styles = {
     border: "1px solid #f0eee8",
     borderRadius: "10px",
     background: "#fbfaf7",
+    transition: "opacity 0.15s ease",
   },
   blockMain: { minWidth: 0, display: "flex", flexDirection: "column", gap: "8px" },
   qRow: { display: "flex", gap: "8px", alignItems: "baseline" },
@@ -98,10 +185,47 @@ const styles = {
     color: "#8a857c",
     marginRight: "6px",
   },
+  toggleRow: {
+    display: "flex",
+    gap: "16px",
+    marginTop: "4px",
+    paddingTop: "8px",
+    borderTop: "1px solid #f0eee8",
+    flexWrap: "wrap",
+  },
+  toggle: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    fontSize: "12px",
+    color: "#6f6b63",
+    cursor: "pointer",
+  },
   playCol: {
     width: "48px",
     display: "flex",
     justifyContent: "center",
     paddingTop: "2px",
   },
+  modesHeading: {
+    fontSize: "10px",
+    fontWeight: 700,
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+    color: "#8a857c",
+    margin: "18px 0 8px",
+  },
+  modes: { display: "flex", flexDirection: "column", gap: "8px" },
+  modeRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "12px 14px",
+    border: "1px solid #f0eee8",
+    borderRadius: "10px",
+    background: "#fbfaf7",
+    cursor: "pointer",
+  },
+  modeTitle: { fontSize: "14px" },
+  modeSub: { fontSize: "12px", color: "#8a857c" },
 };

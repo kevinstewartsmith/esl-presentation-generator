@@ -19,6 +19,7 @@ const initialAudioState = {
   gistOptions: [], // [{ question, answer }, ...]
   selectedGist: null, // the chosen { question, answer }
   inputTexts: null, // the teacher's input texts (title, page, book, exercise, etc.)
+  detailConfig: null, // detail stage presentation settings (modes + per-question)
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -29,6 +30,7 @@ const initialAudioState = {
   justHydratedSlideOrder: false,
   justHydratedGist: false,
   justHydratedInputTexts: false,
+  justHydratedDetailConfig: false,
   hasAttemptedAudioHydration: false,
 };
 
@@ -122,8 +124,29 @@ export const useAudioTextStore = create(
         inputTexts: { ...(state.inputTexts ?? {}), [key]: value },
         justHydratedInputTexts: false,
       })),
+
     setHydratedInputTexts: (obj) =>
       set({ inputTexts: obj ?? {}, justHydratedInputTexts: true }),
+
+    updateDetailMode: (key, value) =>
+      set((state) => ({
+        detailConfig: { ...(state.detailConfig ?? {}), [key]: value },
+        justHydratedDetailConfig: false,
+      })),
+
+    updateDetailPerQuestion: (index, field, value) =>
+      set((state) => {
+        const cfg = state.detailConfig ?? {};
+        const perQuestion = { ...(cfg.perQuestion ?? {}) };
+        perQuestion[index] = { ...(perQuestion[index] ?? {}), [field]: value };
+        return {
+          detailConfig: { ...cfg, perQuestion },
+          justHydratedDetailConfig: false,
+        };
+      }),
+
+    setHydratedDetailConfig: (obj) =>
+      set({ detailConfig: obj ?? {}, justHydratedDetailConfig: true }),
   })),
 );
 
@@ -226,6 +249,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "inputTexts",
     flag: "justHydratedInputTexts",
     textType: "InputTexts",
+    isEmpty: (v) => v == null || Object.keys(v).length === 0,
+  },
+  {
+    field: "detailConfig",
+    flag: "justHydratedDetailConfig",
+    textType: "DetailConfig",
     isEmpty: (v) => v == null || Object.keys(v).length === 0,
   },
 ];
