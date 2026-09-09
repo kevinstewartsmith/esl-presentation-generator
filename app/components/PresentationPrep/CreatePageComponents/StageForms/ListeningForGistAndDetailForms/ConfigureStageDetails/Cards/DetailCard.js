@@ -17,17 +17,23 @@ import {
   getDetailModes,
   getQuestionFlags,
 } from "@app/components/FinalPresentationSections/detailConfigHelpers";
+import { useAutoRateDifficulty } from "@app/components/FinalPresentationSections/useAutoRateDifficulty";
 
 export default function DetailCard({ item, position }) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
   const updateComprehensionItems = useAudioTextStore(
     (s) => s.updateComprehensionItems,
   );
+
   const detailConfig = useAudioTextStore((s) => s.detailConfig);
   const updateDetailMode = useAudioTextStore((s) => s.updateDetailMode);
   const updateDetailPerQuestion = useAudioTextStore(
     (s) => s.updateDetailPerQuestion,
   );
+
+  const detailRatings = useAudioTextStore((s) => s.detailRatings);
+  const clearDetailRating = useAudioTextStore((s) => s.clearDetailRating);
+  useAutoRateDifficulty(); // auto-generates when prerequisites met + not rated
 
   const snippetFileNames = useMemo(
     () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
@@ -41,6 +47,8 @@ export default function DetailCard({ item, position }) {
       i === index ? { ...it, [field]: value } : it,
     );
     updateComprehensionItems(next);
+    // rating is now stale for this question -> clear so it re-rates
+    if (field === "question" || field === "answer") clearDetailRating(index);
   };
 
   if (!comprehensionItems || comprehensionItems.length === 0) {
@@ -81,6 +89,14 @@ export default function DetailCard({ item, position }) {
                     placeholder="Question…"
                     multiline
                   />
+                  {detailRatings?.[index]?.level && (
+                    <span
+                      style={styles.cefrBadge}
+                      title={detailRatings[index].reason || ""}
+                    >
+                      {detailRatings[index].level}
+                    </span>
+                  )}
                 </div>
 
                 <div style={styles.answerRow}>
@@ -335,4 +351,15 @@ const styles = {
   },
   modeTitle: { fontSize: "14px" },
   modeSub: { fontSize: "12px", color: "#8a857c" },
+  cefrBadge: {
+    flexShrink: 0,
+    fontSize: "11px",
+    fontWeight: 700,
+    letterSpacing: "0.02em",
+    padding: "2px 8px",
+    borderRadius: "20px",
+    background: "#e6f1fb",
+    color: "#185fa5",
+    cursor: "default",
+  },
 };

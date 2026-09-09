@@ -20,6 +20,7 @@ const initialAudioState = {
   selectedGist: null, // the chosen { question, answer }
   inputTexts: null, // the teacher's input texts (title, page, book, exercise, etc.)
   detailConfig: null, // detail stage presentation settings (modes + per-question)
+  detailRatings: null, // { [index]: { level, reason } } CEFR difficulty per question
 
   justHydrated: false,
   justHydratedTranscript: false,
@@ -31,6 +32,7 @@ const initialAudioState = {
   justHydratedGist: false,
   justHydratedInputTexts: false,
   justHydratedDetailConfig: false,
+  justHydratedDetailRatings: false,
   hasAttemptedAudioHydration: false,
 };
 
@@ -147,6 +149,19 @@ export const useAudioTextStore = create(
 
     setHydratedDetailConfig: (obj) =>
       set({ detailConfig: obj ?? {}, justHydratedDetailConfig: true }),
+
+    // Replace the whole ratings map (used after a batch rate call).
+    setDetailRatings: (map) =>
+      set({ detailRatings: map ?? {}, justHydratedDetailRatings: false }),
+    // Clear one question's rating (e.g. when its text was edited -> stale).
+    clearDetailRating: (index) =>
+      set((state) => {
+        const next = { ...(state.detailRatings ?? {}) };
+        delete next[index];
+        return { detailRatings: next, justHydratedDetailRatings: false };
+      }),
+    setHydratedDetailRatings: (obj) =>
+      set({ detailRatings: obj ?? {}, justHydratedDetailRatings: true }),
   })),
 );
 
@@ -255,6 +270,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "detailConfig",
     flag: "justHydratedDetailConfig",
     textType: "DetailConfig",
+    isEmpty: (v) => v == null || Object.keys(v).length === 0,
+  },
+  {
+    field: "detailRatings",
+    flag: "justHydratedDetailRatings",
+    textType: "DetailRatings",
     isEmpty: (v) => v == null || Object.keys(v).length === 0,
   },
 ];

@@ -25,6 +25,7 @@ const FIELD_MAP = {
   GistOptions: "gistOptions",
   SelectedGist: "selectedGist",
   DetailConfig: "detailConfig",
+  DetailRatings: "detailRatings",
 };
 
 export const POST = async (request) => {
