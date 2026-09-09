@@ -1,17 +1,15 @@
 // DetailCard.js
-// Phase 1 + 2: display the detail comprehension questions + answers, with the
-// snippet play button per item, PER-QUESTION toggles (review this answer / play
-// clip for feedback), and STAGE-LEVEL presentation modes (all-on-one-slide
-// and/or slide-by-slide). All settings persist via detailConfig in the store.
+// Phases 1-3: display the detail comprehension questions + answers, with the
+// snippet play button per item, per-question toggles (review / play clip),
+// stage-level presentation modes, AND inline editing of the question + answer
+// text (Phase 3). Edits persist via updateComprehensionItems.
 //
-// Defaults: every question review:on, playClip:on; both stage modes on. Absent
-// entries mean "on" (see detailConfigHelpers) so we only store overrides.
-//
-// Later phases (see FLAGS): inline edit (Phase 3), CEFR difficulty (Phase 4).
+// Later: CEFR difficulty rating (Phase 4) — will re-rate a question when its
+// text changes here.
 
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import SnippetPlayer from "@app/components/SnippetPlayer";
 import CardShell from "./CardShell";
@@ -22,6 +20,9 @@ import {
 
 export default function DetailCard({ item, position }) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
+  const updateComprehensionItems = useAudioTextStore(
+    (s) => s.updateComprehensionItems,
+  );
   const detailConfig = useAudioTextStore((s) => s.detailConfig);
   const updateDetailMode = useAudioTextStore((s) => s.updateDetailMode);
   const updateDetailPerQuestion = useAudioTextStore(
@@ -32,6 +33,15 @@ export default function DetailCard({ item, position }) {
     () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
     [comprehensionItems],
   );
+
+  // Edit one field (question|answer) of item `index`, writing the whole array
+  // back so it persists.
+  const editField = (index, field, value) => {
+    const next = (comprehensionItems ?? []).map((it, i) =>
+      i === index ? { ...it, [field]: value } : it,
+    );
+    updateComprehensionItems(next);
+  };
 
   if (!comprehensionItems || comprehensionItems.length === 0) {
     return (
@@ -64,12 +74,24 @@ export default function DetailCard({ item, position }) {
               <div style={styles.blockMain}>
                 <div style={styles.qRow}>
                   <span style={styles.qNum}>{index + 1}</span>
-                  <span style={styles.question}>{it?.question}</span>
+                  <EditableText
+                    value={it?.question ?? ""}
+                    onCommit={(v) => editField(index, "question", v)}
+                    style={styles.question}
+                    placeholder="Question…"
+                    multiline
+                  />
                 </div>
 
-                <div style={styles.answer}>
+                <div style={styles.answerRow}>
                   <span style={styles.tag}>Answer</span>
-                  {it?.answer}
+                  <EditableText
+                    value={it?.answer ?? ""}
+                    onCommit={(v) => editField(index, "answer", v)}
+                    style={styles.answer}
+                    placeholder="Answer…"
+                    multiline
+                  />
                 </div>
 
                 <div style={styles.toggleRow}>
@@ -152,6 +174,84 @@ export default function DetailCard({ item, position }) {
   );
 }
 
+// Click-to-edit text. Shows text; on click becomes a textarea; commits on blur.
+// Controlled by the parent value, so external changes reflect immediately.
+function EditableText({ value, onCommit, style, placeholder, multiline }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!editing) setDraft(value);
+  }, [value, editing]);
+
+  useEffect(() => {
+    if (editing && ref.current) {
+      ref.current.focus();
+      // put cursor at end
+      const len = ref.current.value.length;
+      ref.current.setSelectionRange(len, len);
+    }
+  }, [editing]);
+
+  const commit = () => {
+    setEditing(false);
+    if (draft !== value) onCommit(draft);
+  };
+
+  if (editing) {
+    return (
+      <textarea
+        ref={ref}
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            commit();
+          }
+          if (e.key === "Escape") {
+            setDraft(value);
+            setEditing(false);
+          }
+        }}
+        rows={1}
+        style={{ ...style, ...editStyles.input }}
+      />
+    );
+  }
+
+  return (
+    <span
+      style={{ ...style, ...editStyles.display }}
+      onClick={() => setEditing(true)}
+      title="Click to edit"
+    >
+      {value || <span style={editStyles.placeholder}>{placeholder}</span>}
+    </span>
+  );
+}
+
+const editStyles = {
+  display: {
+    cursor: "text",
+    borderBottom: "1px dashed transparent",
+    transition: "border-color 0.15s ease",
+  },
+  input: {
+    width: "100%",
+    minWidth: "220px",
+    border: "1px solid #2f7d76",
+    borderRadius: "6px",
+    padding: "4px 8px",
+    font: "inherit",
+    resize: "vertical",
+    background: "#fff",
+  },
+  placeholder: { color: "#b8b3a8", fontStyle: "italic" },
+};
+
 const styles = {
   note: { fontSize: "14px", color: "#6f6b63", margin: 0 },
   list: { display: "flex", flexDirection: "column", gap: "14px" },
@@ -166,16 +266,23 @@ const styles = {
     background: "#fbfaf7",
     transition: "opacity 0.15s ease",
   },
-  blockMain: { minWidth: 0, display: "flex", flexDirection: "column", gap: "8px" },
+  blockMain: {
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
   qRow: { display: "flex", gap: "8px", alignItems: "baseline" },
   qNum: {
     fontFamily: "'Fraunces', Georgia, serif",
     fontSize: "15px",
     fontWeight: 600,
     color: "#2f7d76",
+    flexShrink: 0,
   },
-  question: { fontWeight: 600, fontSize: "14.5px" },
-  answer: { fontSize: "13.5px", color: "#3a3a3a" },
+  question: { fontWeight: 600, fontSize: "14.5px", flex: 1 },
+  answerRow: { display: "flex", gap: "6px", alignItems: "baseline" },
+  answer: { fontSize: "13.5px", color: "#3a3a3a", flex: 1 },
   tag: {
     display: "inline-block",
     fontSize: "10px",
@@ -183,7 +290,7 @@ const styles = {
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     color: "#8a857c",
-    marginRight: "6px",
+    flexShrink: 0,
   },
   toggleRow: {
     display: "flex",
