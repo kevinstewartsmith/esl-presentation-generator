@@ -165,13 +165,22 @@ export function splitIntoClips(audioBlob, wordArray) {
   }
 }
 
+// function getSeconds(timeObj) {
+//   //const extraTime = 500000000;
+//   const seconds =
+//     typeof timeObj.seconds === "string"
+//       ? parseInt(timeObj.seconds)
+//       : timeObj.seconds;
+//   return seconds + timeObj.nanos / 1e9;
+// }
 function getSeconds(timeObj) {
-  //const extraTime = 500000000;
+  if (!timeObj) return 0;
   const seconds =
     typeof timeObj.seconds === "string"
       ? parseInt(timeObj.seconds)
-      : timeObj.seconds;
-  return seconds + timeObj.nanos / 1e9;
+      : timeObj.seconds || 0;
+  const nanos = timeObj.nanos || 0;
+  return seconds + nanos / 1e9;
 }
 
 export const createSnippetBlob = async (
