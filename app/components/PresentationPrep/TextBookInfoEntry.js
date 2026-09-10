@@ -5,12 +5,23 @@ import FreeSoloDropDown from "@app/components/PresentationPrep/AddTextButtons/Fr
 
 // showTitle defaults true (reading keeps its Text Title input). Listening passes
 // showTitle={false} — listening exercises don't have a title.
-const TextBookInfoEntry = ({ category, stageID, showTitle = true }) => {
+const TextBookInfoEntry = ({
+  category,
+  stageID,
+  showTitle = true,
+  showExercisePage = true,
+}) => {
   const inputs = (category) => {
     switch (category) {
       case "BookText":
         return (
-          <Grid container spacing={0} padding={2} direction={"column"} margin={0}>
+          <Grid
+            container
+            spacing={0}
+            padding={2}
+            direction={"column"}
+            margin={0}
+          >
             {showTitle && (
               <Grid item xs={12} sm={12} spacing={0} marginBottom={2}>
                 <FreeSoloDropDown
@@ -58,14 +69,16 @@ const TextBookInfoEntry = ({ category, stageID, showTitle = true }) => {
                 stageID={stageID}
               />
             </Grid>
-            <Grid item xs={12}>
-              <InputWithIcon
-                label={"Exercise Page"}
-                input={"exercisePage"}
-                iconFirst={true}
-                stageID={stageID}
-              />
-            </Grid>
+            {showExercisePage && (
+              <Grid item xs={12}>
+                <InputWithIcon
+                  label={"Exercise Page"}
+                  input={"exercisePage"}
+                  iconFirst={true}
+                  stageID={stageID}
+                />
+              </Grid>
+            )}
           </Grid>
         );
       case "AnswerText":

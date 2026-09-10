@@ -27,7 +27,11 @@ const ListeningQuestionUploader = ({ stageID }) => {
             stageID={stageID}
             showTitle={false}
           />
-          <TextBookInfoEntry category={"QuestionText"} stageID={stageID} />
+          <TextBookInfoEntry
+            category={"QuestionText"}
+            stageID={stageID}
+            showExercisePage={false}
+          />
         </Grid>
       </Grid>
 
