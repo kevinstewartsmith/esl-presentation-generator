@@ -125,26 +125,81 @@ function ItemBlock({ round, item, snippetFileNames }) {
       </div>
 
       <div style={styles.playCol}>
-        <SnippetPlayer index={round.index} snippetFileNames={snippetFileNames} />
+        <SnippetPlayer
+          index={round.index}
+          snippetFileNames={snippetFileNames}
+        />
       </div>
     </div>
   );
 }
 
 const styles = {
-  note: { fontSize: "14px", color: "#6f6b63", margin: 0 },
+  note: { fontSize: "16px", color: "#6f6b63", margin: 0 },
   list: { display: "flex", flexDirection: "column", gap: "14px" },
-  block: { display: "grid", gridTemplateColumns: "1fr auto", gap: "12px", alignItems: "start", padding: "14px", border: "1px solid #f0eee8", borderRadius: "10px", background: "#fbfaf7" },
-  blockMain: { minWidth: 0, display: "flex", flexDirection: "column", gap: "8px" },
+  block: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    gap: "12px",
+    alignItems: "start",
+    padding: "14px",
+    border: "1px solid #f0eee8",
+    borderRadius: "10px",
+    background: "#fbfaf7",
+  },
+  blockMain: {
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
   qRow: { display: "flex", gap: "8px", alignItems: "baseline" },
-  qNum: { fontFamily: "'Fraunces', Georgia, serif", fontSize: "15px", fontWeight: 600, color: "#2f7d76" },
-  question: { fontWeight: 600, fontSize: "14.5px" },
-  answer: { fontSize: "13.5px", color: "#3a3a3a" },
-  passage: { fontSize: "13.5px", color: "#3a3a3a" },
+  qNum: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontSize: "18px",
+    fontWeight: 600,
+    color: "#2f7d76",
+  },
+  question: { fontWeight: 600, fontSize: "17px" },
+  answer: { fontSize: "16px", color: "#3a3a3a" },
+  passage: { fontSize: "16px", color: "#3a3a3a" },
   passageText: { fontStyle: "italic" },
-  scrambleRow: { fontSize: "14px", display: "flex", gap: "8px", alignItems: "baseline", flexWrap: "wrap" },
-  scrambleText: { fontFamily: "'Fraunces', Georgia, serif", letterSpacing: "0.01em", cursor: "text", borderBottom: "1px dashed #c9c5bc", paddingBottom: "1px" },
-  editInput: { flex: 1, minWidth: "220px", fontSize: "14px", padding: "4px 8px", border: "1px solid #2f7d76", borderRadius: "6px", fontFamily: "inherit" },
-  tag: { display: "inline-block", fontSize: "10px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a857c", marginRight: "6px" },
-  playCol: { width: "48px", display: "flex", justifyContent: "center", paddingTop: "2px" },
+  scrambleRow: {
+    fontSize: "16px",
+    display: "flex",
+    gap: "8px",
+    alignItems: "baseline",
+    flexWrap: "wrap",
+  },
+  scrambleText: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    letterSpacing: "0.01em",
+    cursor: "text",
+    borderBottom: "1px dashed #c9c5bc",
+    paddingBottom: "1px",
+  },
+  editInput: {
+    flex: 1,
+    minWidth: "220px",
+    fontSize: "16px",
+    padding: "6px 10px",
+    border: "1px solid #2f7d76",
+    borderRadius: "6px",
+    fontFamily: "inherit",
+  },
+  tag: {
+    display: "inline-block",
+    fontSize: "11px",
+    fontWeight: 700,
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+    color: "#8a857c",
+    marginRight: "6px",
+  },
+  playCol: {
+    width: "48px",
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: "2px",
+  },
 };
