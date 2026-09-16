@@ -1,16 +1,10 @@
 "use client";
 import StegaIcon from "./StegaIcon";
 import { Handjet } from "next/font/google";
-import { Anton } from "next/font/google";
 import { useLessonStore } from "@app/stores/useLessonStore";
 
-const anton = Anton({
-  weight: "400",
-  subsets: ["latin"],
-});
-
 const handjet = Handjet({
-  weight: ["400"],
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
@@ -18,65 +12,74 @@ const Nav = ({ children }) => {
   const presentationIsShowing = useLessonStore((s) => s.presentationIsShowing);
   const lessonTitle = useLessonStore((s) => s.lessonTitle);
 
-  const title = (lessonTitle) => {
-    return (
-      <>
-        <h1
-          style={{
-            color: "#3C5997",
-            marginLeft: 10,
-            fontSize: 30,
-            display: "inline",
-          }}
-          className={handjet.className}
-        >
-          {"- "}
-        </h1>
-        <h1
-          className={anton.className}
-          style={{
-            fontSize: 25,
-            marginLeft: 10,
-            color: "lightgray",
-          }}
-        >
-          {lessonTitle}
-        </h1>
-      </>
-    );
-  };
   return (
     <div>
       {!presentationIsShowing ? (
-        <div
-          style={{
-            backgroundColor: "white",
-            height: 50,
-            display: "flex",
-            alignItems: "center",
+        <header style={styles.bar}>
+          <div style={styles.brand}>
+            <span style={styles.icon}>
+              <StegaIcon />
+            </span>
+            <span className={handjet.className} style={styles.name}>
+              Lesson Generator
+            </span>
+          </div>
 
-            height: 50,
-            paddingTop: 10,
-          }}
-        >
-          <StegaIcon />{" "}
-          <h1
-            style={{
-              color: "#3C5997",
-              marginLeft: 20,
-              fontSize: 30,
-              display: "inline",
-            }}
-            className={handjet.className}
-          >
-            {"  Lesson Generator"}
-          </h1>
-          {lessonTitle ? title(lessonTitle) : null}
-        </div>
+          {lessonTitle ? (
+            <div style={styles.titleWrap}>
+              <span style={styles.divider} />
+              <span className={handjet.className} style={styles.title}>
+                {lessonTitle}
+              </span>
+            </div>
+          ) : null}
+        </header>
       ) : null}
       {children}
     </div>
   );
+};
+
+const TEAL = "#2f7d76";
+
+const styles = {
+  bar: {
+    display: "flex",
+    alignItems: "center",
+    gap: 14,
+    height: 56,
+    padding: "0 24px",
+    background: "#fff",
+    borderBottom: "1px solid #ece9e1",
+  },
+  brand: { display: "flex", alignItems: "center", gap: 10 },
+  icon: {
+    display: "inline-flex",
+    alignItems: "center",
+    color: TEAL,
+    width: 30,
+    height: 30,
+  },
+  name: {
+    color: TEAL,
+    fontSize: 26,
+    fontWeight: 500,
+    letterSpacing: "0.02em",
+    lineHeight: 1,
+  },
+  titleWrap: { display: "flex", alignItems: "center", gap: 14 },
+  divider: {
+    width: 1,
+    height: 22,
+    background: "#dcd8cf",
+    display: "inline-block",
+  },
+  title: {
+    color: "#8a857c",
+    fontSize: 22,
+    fontWeight: 400,
+    lineHeight: 1,
+  },
 };
 
 export default Nav;

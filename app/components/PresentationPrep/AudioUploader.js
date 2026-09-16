@@ -3,12 +3,9 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import DeleteIcon from "@mui/icons-material/Close";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import UploadIcon from "@mui/icons-material/Upload";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import { Switch } from "./AudioUploaderUI/switch";
 import { Button } from "./AudioUploaderUI/button";
 import { Progress } from "./AudioUploaderUI/progress";
 import { Card } from "./AudioUploaderUI/card";
@@ -70,12 +67,15 @@ const dummyArchive = [
   },
 ];
 
+const TEAL = "#2f7d76";
+const GRAY = "#8a857c";
+
 export default function AudioUploader() {
   const [mode, setMode] = useState("upload"); // "upload" or "archive"
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [archiveFiles] = useState(dummyArchive);
-  const [archiveSelected, setArchiveSelected] = useState([]); // (You can remove this if not used elsewhere)
+  const [archiveSelected, setArchiveSelected] = useState([]);
   const [selectedArchiveId, setSelectedArchiveId] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Categories");
@@ -108,21 +108,11 @@ export default function AudioUploader() {
     console.log("Bucket data in audio uploader: ", data);
 
     console.log(data);
-    //updateBucketContents(data);
     updateAudioBucketContents(data);
   }
 
   useEffect(() => {
     if (!audioBucketContents || audioBucketContents.length === 0) {
-      // async function getBucketContents() {
-      //   const response = await fetch("/api/get-audio-bucket-info");
-      //   const data = await response.json();
-      //   console.log("Bucket data in audio uploader: ", data);
-
-      //   console.log(data);
-      //   //updateBucketContents(data);
-      //   updateAudioBucketContents(data);
-      // }
       getBucketContents();
     }
   }, []);
@@ -138,9 +128,6 @@ export default function AudioUploader() {
     );
     formData.append("audio", file, file.name);
     formData.append("filePath", filePath);
-
-    // Optional: add fileName or other metadata if your API expects it
-    // formData.append("fileName", file.name);
 
     const response = await fetch(
       "/api/firestore/gc-audio-bucket/upload-to-audio-bucket",
@@ -164,25 +151,14 @@ export default function AudioUploader() {
       const file = files[0];
       setSelectedFiles([file]);
       updateSelectedAudioFileName(file.name);
-      await saveFile(file.name, file); // <-- FIXED
+      await saveFile(file.name, file);
 
-      // Simulate upload progress
       setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
-      // let progress = 0;
-      // const interval = setInterval(() => {
-      //   progress += Math.random() * 20;
-      //   setUploadProgress((prev) => ({
-      //     ...prev,
-      //     [file.name]: Math.min(100, Math.floor(progress)),
-      //   }));
-      //   if (progress >= 100) clearInterval(interval);
-      // }, 300);
       try {
         await uploadToBucket(file);
 
         setUploadProgress((prev) => ({ ...prev, [file]: 100 }));
         await getBucketContents();
-        //updateAudioBucketContents([...audioBucketContents, file.name]);
       } catch (err) {
         setUploadProgress((prev) => ({ ...prev, [file]: 0 }));
         alert("Upload failed: " + err.message);
@@ -209,7 +185,6 @@ export default function AudioUploader() {
       (file === filter && file.toLowerCase().includes(search.toLowerCase())),
   );
 
-  // Add these handlers for drag-and-drop
   const handleDrop = async (e) => {
     console.log("File dropped into audio uploader");
 
@@ -225,23 +200,10 @@ export default function AudioUploader() {
 
       setSelectedFiles([file]);
       updateSelectedAudioFileName(file.name);
-      await saveFile(file.name, file); // <-- FIXED
-      //await saveFile({ name: file.name, blob: file });
-
-      // Simulate upload progress
+      await saveFile(file.name, file);
 
       setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
-      // let progress = 0;
-      // const interval = setInterval(() => {
-      //   progress += Math.random() * 20;
-      //   setUploadProgress((prev) => ({
-      //     ...prev,
-      //     [file.name]: Math.min(100, Math.floor(progress)),
-      //   }));
-      //   if (progress >= 100) clearInterval(interval);
-      // }, 300);
 
-      // Upload to bucket
       try {
         await uploadToBucket(file);
         setUploadProgress((prev) => ({ ...prev, [file.name]: 100 }));
@@ -263,61 +225,160 @@ export default function AudioUploader() {
     setIsDragActive(false);
   };
 
+  const segBtn = (active) => ({
+    border: "none",
+    cursor: "pointer",
+    fontSize: 13,
+    fontWeight: 600,
+    padding: "5px 16px",
+    borderRadius: 6,
+    background: active ? "#fff" : "transparent",
+    color: active ? TEAL : GRAY,
+    boxShadow: active ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+  });
+
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto", padding: "2rem 0" }}>
+    <div
+      style={{
+        width: "100%",
+        boxSizing: "border-box",
+        background: "#fff",
+        border: "1px solid #e6e3db",
+        borderRadius: 14,
+        boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+        padding: "16px 20px",
+        fontFamily: "'Inter', system-ui, sans-serif",
+      }}
+    >
       <h1
         style={{
           textAlign: "center",
-          fontSize: 28,
+          fontFamily: "'Fraunces', Georgia, serif",
+          fontSize: 24,
           fontWeight: 600,
-          marginBottom: 8,
+          marginBottom: 6,
+          color: "#1c1c1e",
         }}
       >
-        Audio Manager
+        Audio
       </h1>
       <div
         style={{
           textAlign: "center",
-          color: "#717182",
-          fontSize: 15,
+          color: "#6f6b63",
+          fontSize: 14,
           marginBottom: 18,
         }}
       >
-        Upload new files or select from your archive
+        Upload a recording or pick one from your archive
       </div>
+
+      {/* Segmented Upload / Archive toggle */}
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 16,
-          marginBottom: 24,
-        }}
+        style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}
       >
-        <UploadIcon
-          fontSize="small"
-          style={{ opacity: mode === "upload" ? 1 : 0.5 }}
-        />
-        <Switch
-          checked={mode === "archive"}
-          onChange={() => setMode(mode === "upload" ? "archive" : "upload")}
-        />
-        <ArchiveIcon
-          fontSize="small"
-          style={{ opacity: mode === "archive" ? 1 : 0.5 }}
-        />
+        <div
+          style={{
+            display: "flex",
+            gap: 4,
+            background: "#f1efe8",
+            borderRadius: 8,
+            padding: 3,
+          }}
+        >
+          <button
+            onClick={() => setMode("upload")}
+            style={segBtn(mode === "upload")}
+          >
+            Upload
+          </button>
+          <button
+            onClick={() => setMode("archive")}
+            style={segBtn(mode === "archive")}
+          >
+            Archive
+          </button>
+        </div>
       </div>
+
+      {/* Selected file banner */}
+      {selectedAudioFileName ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            margin: "0 auto 18px",
+            maxWidth: 460,
+            padding: "12px 14px",
+            background: "#fff",
+            border: "1px solid #bfe5d7",
+            borderRadius: 12,
+            boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+          }}
+        >
+          <span
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              background: TEAL,
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <i
+              className="ti ti-music"
+              style={{ fontSize: 18 }}
+              aria-hidden="true"
+            />
+          </span>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#0f6e56",
+                fontWeight: 700,
+              }}
+            >
+              Selected audio
+            </div>
+            <div
+              style={{
+                fontSize: 14,
+                color: "#1c1c1e",
+                fontWeight: 600,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {selectedAudioFileName.split("/").pop()}
+            </div>
+          </div>
+          <i
+            className="ti ti-circle-check-filled"
+            style={{ fontSize: 22, color: TEAL, flexShrink: 0 }}
+            aria-hidden="true"
+          />
+        </div>
+      ) : null}
 
       {mode === "upload" ? (
         <>
           <Card
             style={{
-              border: "1.5px dashed #e0e0e0",
+              border: "1.5px dashed #9fe1cb",
               borderRadius: 16,
-              background: isDragActive ? "#f3f3f5" : "#fff",
-              padding: "2.5rem 1.5rem",
+              background: isDragActive ? "#eef7f3" : "#f4faf8",
+              padding: "1.75rem 1.5rem",
               marginBottom: 24,
-              minHeight: 260,
+              minHeight: 170,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -331,7 +392,7 @@ export default function AudioUploader() {
           >
             <div
               style={{
-                background: "#f3f3f5",
+                background: "#e1f5ee",
                 borderRadius: "50%",
                 width: 56,
                 height: 56,
@@ -341,14 +402,14 @@ export default function AudioUploader() {
                 marginBottom: 18,
               }}
             >
-              <CloudUploadIcon style={{ fontSize: 32, color: "#717182" }} />
+              <CloudUploadIcon style={{ fontSize: 30, color: "#0f6e56" }} />
             </div>
             <div style={{ fontWeight: 500, fontSize: 18, marginBottom: 6 }}>
               {isDragActive
                 ? "Drop audio files here"
                 : "Choose audio files to upload"}
             </div>
-            <div style={{ color: "#717182", fontSize: 14, marginBottom: 22 }}>
+            <div style={{ color: GRAY, fontSize: 14, marginBottom: 22 }}>
               Supports MP3 audio formats
             </div>
             <input
@@ -380,7 +441,7 @@ export default function AudioUploader() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontWeight: 500, marginBottom: 8 }}>
                 Selected Files{" "}
-                <span style={{ color: "#717182", fontWeight: 400 }}>
+                <span style={{ color: GRAY, fontWeight: 400 }}>
                   {selectedFiles.length} file
                   {selectedFiles.length > 1 ? "s" : ""}
                 </span>
@@ -423,7 +484,7 @@ export default function AudioUploader() {
         <>
           <Card
             style={{
-              border: "1.5px solid #e0e0e0",
+              border: "1px solid #e6e3db",
               borderRadius: 16,
               background: "#fff",
               padding: "1.5rem 1.5rem 1rem 1.5rem",
@@ -438,13 +499,11 @@ export default function AudioUploader() {
                 marginBottom: 18,
               }}
             >
-              <FolderOpenIcon style={{ marginRight: 8, color: "#717182" }} />
+              <FolderOpenIcon style={{ marginRight: 8, color: GRAY }} />
               <span style={{ fontWeight: 500, fontSize: 18 }}>
                 Audio Archive
               </span>
-              <span
-                style={{ marginLeft: "auto", color: "#717182", fontSize: 14 }}
-              >
+              <span style={{ marginLeft: "auto", color: GRAY, fontSize: 14 }}>
                 {audioBucketContents.length} files
               </span>
             </div>
@@ -453,7 +512,7 @@ export default function AudioUploader() {
                 placeholder="Search files..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                startAdornment={<SearchIcon style={{ color: "#717182" }} />}
+                startAdornment={<SearchIcon style={{ color: GRAY }} />}
                 style={{ flex: 1, minWidth: 0 }}
               />
               <Button
@@ -482,11 +541,11 @@ export default function AudioUploader() {
                     marginBottom: 10,
                     borderRadius: 10,
                     background:
-                      selectedAudioFileName === file ? "#e9ebef" : "#fff",
+                      selectedAudioFileName === file ? "#eef7f3" : "#fff",
                     border:
                       selectedAudioFileName === file
-                        ? "1.5px solid #1976d2"
-                        : "1.5px solid #ececf0",
+                        ? `1.5px solid ${TEAL}`
+                        : "1px solid #ececf0",
                     cursor: "pointer",
                   }}
                 >
@@ -495,19 +554,17 @@ export default function AudioUploader() {
                     checked={selectedAudioFileName === file}
                     readOnly
                     style={{
-                      accentColor: "#1976d2",
+                      accentColor: TEAL,
                       marginRight: 8,
                       pointerEvents: "none",
                     }}
                   />
-                  <AudiotrackIcon style={{ fontSize: 24, color: "#717182" }} />
+                  <AudiotrackIcon style={{ fontSize: 24, color: GRAY }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 500 }}>
                       {takeAwayFilePath(file)}
                     </div>
-                    {/* If you want to display more info, you'll need to parse it from the string or fetch metadata */}
                   </div>
-                  {/* ...other UI elements... */}
                 </Card>
               ))}
             </div>
@@ -518,10 +575,10 @@ export default function AudioUploader() {
                 Selected File
               </div>
               <Card key={selectedArchiveId}>
-                <AudiotrackIcon style={{ fontSize: 28, color: "#717182" }} />
+                <AudiotrackIcon style={{ fontSize: 28, color: GRAY }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 500 }}>{selectedArchiveId}</div>
-                  <div style={{ color: "#717182", fontSize: 13 }}>
+                  <div style={{ color: GRAY, fontSize: 13 }}>
                     {selectedArchiveId}
                   </div>
                 </div>
@@ -543,7 +600,7 @@ export default function AudioUploader() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontWeight: 500, marginBottom: 8 }}>
                 Selected Files{" "}
-                <span style={{ color: "#717182", fontWeight: 400 }}>
+                <span style={{ color: GRAY, fontWeight: 400 }}>
                   {archiveSelected.length} file
                   {archiveSelected.length > 1 ? "s" : ""}
                 </span>
@@ -562,18 +619,14 @@ export default function AudioUploader() {
                       borderRadius: 12,
                     }}
                   >
-                    <AudiotrackIcon
-                      style={{ fontSize: 28, color: "#717182" }}
-                    />
+                    <AudiotrackIcon style={{ fontSize: 28, color: GRAY }} />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 500 }}>{file}</div>
-                      <div style={{ color: "#717182", fontSize: 13 }}>
-                        {file}
-                      </div>
+                      <div style={{ color: GRAY, fontSize: 13 }}>{file}</div>
                     </div>
                     <Button
                       variant="text"
-                      onClick={() => handleArchiveSelect(`file-${index}`)}
+                      onClick={() => handleArchiveSelect(file)}
                       style={{
                         minWidth: 32,
                         minHeight: 32,

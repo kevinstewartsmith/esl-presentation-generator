@@ -1,37 +1,35 @@
 import React from "react";
-import { Grid } from "@mui/material";
-//import AudioTable from "@app/components/AudioTable";
-import { Button } from "@mui/material";
-
 import GetAudioTranscript from "@app/components/GetAudioTranscript";
-import AudioUploadCard from "@app/components/PresentationPrep/AudioUploadCard";
 import AudioUploader from "@app/components/PresentationPrep/AudioUploader";
+
+// Vertical flow: audio (the action) on top, transcript (the result) below —
+// both full width, on the warm cream surface. Replaces the old side-by-side
+// Grid (and removes the stray orange debug border).
+
 const ListeningUploadandTranscribeAudio = () => {
   return (
-    <>
-      {/* <h1>ListeningUploadandTranscribeAudio Component </h1> */}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        style={{ border: "1px solid orange" }}
-        //make vertical
-        direction="row"
-      >
-        {/* <Grid item>ListeningUploadandTranscribeAudio Component</Grid> */}
-        {/* <Grid item xs={6}>
-          {" "}
-          <AudioTable />{" "}
-        </Grid> */}
-        <Grid item xs={6}>
-          <GetAudioTranscript />
-        </Grid>
-        <Grid item xs={6}>
-          <AudioUploader />
-        </Grid>
-      </Grid>
-    </>
+    <div style={styles.page}>
+      <div style={styles.stack}>
+        <AudioUploader />
+        <GetAudioTranscript />
+      </div>
+    </div>
   );
+};
+
+const styles = {
+  page: {
+    background: "#fbf9f4",
+    minHeight: "100%",
+    padding: "24px 4px 40px",
+  },
+  stack: {
+    maxWidth: "min(920px, 94vw)",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: 18,
+  },
 };
 
 export default ListeningUploadandTranscribeAudio;
