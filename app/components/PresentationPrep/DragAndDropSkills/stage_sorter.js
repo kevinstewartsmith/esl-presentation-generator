@@ -16,8 +16,8 @@ import { useStageOrderStore } from "@app/stores/useStageOrderStore";
 const wrapperStyle = {
   display: "flex",
   flexDirection: "row",
-  marginLeft: 200,
-  marginRight: 200,
+  gap: 8,
+  alignItems: "flex-start",
 };
 
 const defaultAnnouncements = {
@@ -70,8 +70,18 @@ export default function StageSorter() {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <Container id="root" items={items.root} />
-        <Container id="container1" items={items.container1} />
+        <Container
+          id="root"
+          items={items.root}
+          title="Your lesson"
+          variant="lesson"
+        />
+        <Container
+          id="container1"
+          items={items.container1}
+          title="Available stages"
+          variant="palette"
+        />
 
         <DragOverlay>{activeId ? <Item id={activeId} /> : null}</DragOverlay>
       </DndContext>
