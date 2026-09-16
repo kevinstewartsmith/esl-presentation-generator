@@ -136,16 +136,20 @@ const CreatePageComponent = ({ params }) => {
   const numberOfStageForms = itemsArray.length;
 
   return (
-    <div className="test-border">
-      <Head style={{ backgroundColor: "red" }}>
-        <title style={{ font: "white" }}>Lesson generator</title>
+    <div>
+      <Head>
+        <title>Lesson generator</title>
       </Head>
 
       {presentationIsShowing ? (
         <PresentationDisplay includedStages={includedStages} />
       ) : (
         <div
-          style={{ backgroundColor: "white", height: "100vh", width: "100vw" }}
+          style={{
+            backgroundColor: "#fbf9f4",
+            minHeight: "100vh",
+            width: "100%",
+          }}
         >
           {renderComponent()}
 
@@ -158,7 +162,8 @@ const CreatePageComponent = ({ params }) => {
           currentStageFormIdx < includedStages.length - 1 ? (
             <button
               onClick={() => arrowClick("right")}
-              className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-left pl-3"
+              className="flex items-center justify-center w-14 h-14 rounded-full arrows arrow-left pl-3"
+              style={{ backgroundColor: "#2f7d76", color: "#fff" }}
             >
               <ArrowForwardIosIcon />
             </button>
@@ -167,9 +172,10 @@ const CreatePageComponent = ({ params }) => {
           {sectionNumber === 0 && currentStageFormIdx === 0 ? null : (
             <button
               onClick={() => arrowClick("left")}
-              className="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full arrows arrow-right pl-4"
+              className="flex items-center justify-center w-14 h-14 rounded-full arrows arrow-right pl-4"
+              style={{ backgroundColor: "#2f7d76", color: "#fff" }}
             >
-              <ArrowBackIosIcon sx={{}} />
+              <ArrowBackIosIcon />
             </button>
           )}
         </div>
