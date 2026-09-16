@@ -1,6 +1,8 @@
 "use client";
-import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
-import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
+// import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
+// import PauseCircleFilled from "@mui/icons-material/PauseCircleFilled";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import { useEffect, useRef } from "react";
 import { getFile } from "@app/utils/indexedDBWrapper";
 import { combinedTranscript } from "@app/utils/transcript";
@@ -167,25 +169,70 @@ function SnippetPlayer({ index, snippetFileNames }) {
     return array.filter((item) => item !== "");
   }
 
+  // return (
+  //   <div
+  //     style={{
+  //       backgroundColor: "transparent",
+  //       width: "100px",
+  //       height: "100%",
+  //       display: "flex",
+  //       alignItems: "center",
+  //       justifyContent: "center",
+  //     }}
+  //     onClick={playSnippetClicked}
+  //     value={index}
+  //   >
+  //     {snippetFileNames[index] == null ? (
+  //       <span style={{ color: "#888", fontSize: "1rem" }}>No Audio</span>
+  //     ) : playing ? (
+  //       <PauseCircleFilled style={{ width: "100%", height: "100%" }} />
+  //     ) : (
+  //       <PlayCircleFilledWhiteIcon style={{ width: "100%", height: "100%" }} />
+  //     )}
+  //   </div>
+  // );
   return (
     <div
+      onClick={playSnippetClicked}
+      value={index}
       style={{
-        backgroundColor: "transparent",
-        width: "100px",
-        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        cursor: snippetFileNames[index] == null ? "default" : "pointer",
       }}
-      onClick={playSnippetClicked}
-      value={index}
     >
       {snippetFileNames[index] == null ? (
-        <span style={{ color: "#888", fontSize: "1rem" }}>No Audio</span>
-      ) : playing ? (
-        <PauseCircleFilled style={{ width: "100%", height: "100%" }} />
+        <span
+          style={{
+            fontSize: "12px",
+            fontStyle: "italic",
+            color: "#b8b3a8",
+            whiteSpace: "nowrap",
+          }}
+        >
+          No audio
+        </span>
       ) : (
-        <PlayCircleFilledWhiteIcon style={{ width: "100%", height: "100%" }} />
+        <span
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: playing ? "#e1f5ee" : "#2f7d76",
+            color: playing ? "#0f6e56" : "#fff",
+            transition: "background 0.15s ease",
+          }}
+        >
+          {playing ? (
+            <PauseIcon style={{ fontSize: 24 }} />
+          ) : (
+            <PlayArrowIcon style={{ fontSize: 24, marginLeft: 1 }} />
+          )}
+        </span>
       )}
     </div>
   );
