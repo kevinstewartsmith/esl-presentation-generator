@@ -701,6 +701,7 @@ const st = {
   },
   presetBtn: {
     width: "100%",
+    boxSizing: "border-box",
     background: INK,
     color: "#fff",
     border: "none",
@@ -708,7 +709,12 @@ const st = {
     padding: "10px",
     fontSize: "13px",
     fontWeight: 600,
+    textAlign: "center",
+    margin: 0,
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   presetNote: { fontSize: "11.5px", color: MUTE, marginTop: "8px" },
   overlayCard: {
