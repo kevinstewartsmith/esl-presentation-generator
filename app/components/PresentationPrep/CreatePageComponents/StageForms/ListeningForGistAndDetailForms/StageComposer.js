@@ -169,7 +169,14 @@ function TrickItem({ trick }) {
   };
   return (
     <button ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <span style={st.trickPlus}>⋮⋮</span>
+      <span style={st.trickHandle}>
+        <span style={st.dot} />
+        <span style={st.dot} />
+        <span style={st.dot} />
+        <span style={st.dot} />
+        <span style={st.dot} />
+        <span style={st.dot} />
+      </span>
       <span>
         <span style={st.trickLabel}>{trick.label}</span>
         <span style={st.trickBlurb}>{trick.blurb}</span>
@@ -375,7 +382,14 @@ export default function StageComposer() {
           {activeDrag ? (
             activeDrag.fromBag ? (
               <div style={{ ...st.trick, ...st.overlayTrick }}>
-                <span style={st.trickPlus}>⋮⋮</span>
+                <span style={st.trickHandle}>
+                  <span style={st.dot} />
+                  <span style={st.dot} />
+                  <span style={st.dot} />
+                  <span style={st.dot} />
+                  <span style={st.dot} />
+                  <span style={st.dot} />
+                </span>
                 <span>
                   <span style={st.trickLabel}>
                     {CATALOG_BY_TYPE[activeDrag.type]?.label}
@@ -566,6 +580,10 @@ const st = {
     fontSize: "16px",
     lineHeight: 1,
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
   },
   empty: {
     padding: "28px",
@@ -633,11 +651,20 @@ const st = {
     touchAction: "none",
   },
   trickPlus: {
-    fontSize: "12px",
-    color: TEAL,
-    fontWeight: 700,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "14px",
+    color: MUTE,
     lineHeight: 1,
-    letterSpacing: "-2px",
+    letterSpacing: "normal",
+  },
+  trickHandle: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 4px)",
+    gap: "3px",
+    alignSelf: "center",
+    flexShrink: 0,
   },
   trickLabel: { display: "block", fontWeight: 600, fontSize: "13.5px" },
   trickBlurb: {
