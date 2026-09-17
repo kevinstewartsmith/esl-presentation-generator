@@ -648,6 +648,8 @@ const st = {
     padding: "10px 12px",
     cursor: "grab",
     width: "100%",
+    boxSizing: "border-box",
+    margin: 0,
     touchAction: "none",
   },
   trickPlus: {
@@ -663,6 +665,7 @@ const st = {
     display: "grid",
     gridTemplateColumns: "repeat(2, 4px)",
     gap: "3px",
+    padding: "4px",
     alignSelf: "center",
     flexShrink: 0,
   },
