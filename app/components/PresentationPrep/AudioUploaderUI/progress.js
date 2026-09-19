@@ -1,6 +1,4 @@
-import React from "react";
-
-export function Progress({ value }) {
+export function Progress({ value, animate = true }) {
   return (
     <div
       style={{
@@ -13,10 +11,10 @@ export function Progress({ value }) {
     >
       <div
         style={{
-          width: `${value}%`,
+          width: `${value || 0}%`,
           height: "100%",
-          background: "#1976d2",
-          transition: "width 0.3s",
+          background: "#2f7d76",
+          transition: animate ? "width 400ms ease" : "none",
         }}
       />
     </div>

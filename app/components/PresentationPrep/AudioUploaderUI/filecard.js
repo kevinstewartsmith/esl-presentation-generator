@@ -12,6 +12,16 @@ export default function FileCard({ file, uploadProgress, onRemove }) {
   const [audioDuration, setAudioDuration] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
   const audioRef = useRef();
+  const [justUploaded, setJustUploaded] = useState(false);
+
+  useEffect(() => {
+    if (uploadProgress >= 100) {
+      setJustUploaded(true);
+      const t = setTimeout(() => setJustUploaded(false), 700);
+      return () => clearTimeout(t);
+    }
+    setJustUploaded(false);
+  }, [uploadProgress]);
 
   // Create object URL only once per file
   useEffect(() => {
@@ -51,19 +61,26 @@ export default function FileCard({ file, uploadProgress, onRemove }) {
           {(file.size / (1024 * 1024)).toFixed(2)} MB
         </div>
         <div style={{ marginTop: 6 }}>
-          {uploadProgress < 100 ? (
-            <Progress value={uploadProgress} />
-          ) : (
-            <Progress
-              value={audioDuration ? (audioProgress / audioDuration) * 100 : 0}
-            />
-          )}
+          <Progress
+            value={
+              uploadProgress < 100
+                ? uploadProgress
+                : justUploaded
+                  ? 100
+                  : isPlaying && audioDuration
+                    ? (audioProgress / audioDuration) * 100
+                    : 0
+            }
+            animate={uploadProgress < 100 || justUploaded}
+          />
           <div style={{ fontSize: 12, color: "#717182", marginTop: 2 }}>
             {uploadProgress < 100
               ? `Uploading... ${uploadProgress || 0}%`
-              : `${Math.floor(audioProgress)} / ${Math.floor(
-                  audioDuration
-                )} sec`}
+              : justUploaded
+                ? "Uploaded ✓"
+                : audioDuration
+                  ? `${Math.floor(audioProgress)} / ${Math.floor(audioDuration)} sec`
+                  : "Ready to play"}
           </div>
         </div>
       </div>
