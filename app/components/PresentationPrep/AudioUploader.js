@@ -1,15 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
-import DeleteIcon from "@mui/icons-material/Close";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Button } from "./AudioUploaderUI/button";
-import { Progress } from "./AudioUploaderUI/progress";
 import { Card } from "./AudioUploaderUI/card";
-import { Badge } from "./AudioUploaderUI/badge";
 import { Input } from "./AudioUploaderUI/input";
 import { saveFile } from "@app/utils/indexedDBWrapper";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
@@ -23,14 +19,13 @@ const TEAL = "#2f7d76";
 const GRAY = "#8a857c";
 
 export default function AudioUploader() {
-  const [mode, setMode] = useState("upload"); // "upload" or "archive"
+  const [mode, setMode] = useState("upload"); // "upload" or "archive menu in uploader"
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
-  const [archiveSelected, setArchiveSelected] = useState([]);
-  const [selectedArchiveId, setSelectedArchiveId] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Categories");
   const [isDragActive, setIsDragActive] = useState(false);
+
   const selectedAudioFileName = useAudioTextStore(
     (state) => state.selectedAudioFileName,
   );
@@ -44,8 +39,11 @@ export default function AudioUploader() {
   const handleBrowseClick = () => {
     inputRef.current.click();
   };
+  //User and lesson IDs for file pathing in bucket
   const currentUserID = useLessonStore((state) => state.currentUserID);
   const currentLessonID = useLessonStore((state) => state.currentLessonID);
+
+  //Audio bucket contents for archive mode
   const updateAudioBucketContents = useAudioTextStore(
     (state) => state.updateAudioBucketContents,
   );
@@ -53,6 +51,7 @@ export default function AudioUploader() {
     (state) => state.audioBucketContents,
   );
 
+  // Fetch the contents of the audio bucket from the server
   async function getBucketContents() {
     const response = await fetch("/api/get-audio-bucket-info");
     const data = await response.json();
@@ -67,14 +66,22 @@ export default function AudioUploader() {
     }
   }, []);
 
-  async function uploadToBucket(file, onProgress) {
-    const formData = new FormData();
+  async function ingestAudioFile(file) {
     const filePath = addFilePath(
       file.name,
       currentUserID,
       currentLessonID,
       listeningForGistandDetailStage,
     );
+    await saveFile(filePath, file); // saveds audio to local cache
+    await uploadToBucket(file, filePath); // uploads audio to bucket
+    updateSelectedAudioFileName(filePath); // canonical key into store
+    return filePath;
+  }
+
+  async function uploadToBucket(file, filePath) {
+    const formData = new FormData();
+
     formData.append("audio", file, file.name);
     formData.append("filePath", filePath);
 
@@ -89,9 +96,10 @@ export default function AudioUploader() {
     if (!response.ok) {
       throw new Error("Upload failed");
     }
+
     return await response.json();
   }
-
+  //Handle file selection from file input (clicking "Browse Files" button and selecting a file )
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files).filter((f) =>
       f.type.startsWith("audio/"),
@@ -99,13 +107,12 @@ export default function AudioUploader() {
     if (files.length > 0) {
       const file = files[0];
       setSelectedFiles([file]);
-      updateSelectedAudioFileName(file.name);
-      await saveFile(file.name, file);
 
       // on upload start — a visible starting value so the bar appears "in progress"
       setUploadProgress((prev) => ({ ...prev, [file.name]: 15 }));
       try {
-        await uploadToBucket(file);
+        //await uploadToBucket(file);
+        await ingestAudioFile(file);
         setUploadProgress((prev) => ({ ...prev, [file.name]: 100 })); // success → fill to 100
         await getBucketContents();
       } catch (err) {
@@ -127,7 +134,7 @@ export default function AudioUploader() {
   const handleArchiveSelect = (fileName) => {
     updateSelectedAudioFileName(fileName);
   };
-
+  //Handles drag and drop of audio files into the uploader
   const handleDrop = async (e) => {
     console.log("File dropped into audio uploader");
     e.preventDefault();
@@ -137,17 +144,10 @@ export default function AudioUploader() {
     );
     if (files.length > 0) {
       const file = files[0];
-      console.log("Dropped file: ", file);
-      console.log("file name: ", file.name);
-
       setSelectedFiles([file]);
-      updateSelectedAudioFileName(file.name);
-      await saveFile(file.name, file);
-
-      // on upload start — a visible starting value so the bar appears "in progress"
       setUploadProgress((prev) => ({ ...prev, [file.name]: 15 }));
       try {
-        await uploadToBucket(file);
+        await ingestAudioFile(file);
         setUploadProgress((prev) => ({ ...prev, [file.name]: 100 })); // success → fill to 100
         await getBucketContents();
       } catch (err) {

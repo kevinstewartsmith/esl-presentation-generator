@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { useLessonStore } from "@app/stores/useLessonStore";
 
 // Transcript panel: a "Get transcript" button (with a generating spinner) and
 // the transcript in a contained, scrollable box. The transcription logic
@@ -26,6 +27,7 @@ const GetAudioTranscript = () => {
     if (!selectedAudioFileName) return;
     setError(false);
     setLoading(true);
+    console.log("Fetching transcript for file: ", selectedAudioFileName);
     try {
       const response = await fetch(
         `/api/google-api-s2t?name=${selectedAudioFileName}`,
@@ -56,7 +58,11 @@ const GetAudioTranscript = () => {
     <div style={styles.card}>
       <div style={styles.head}>
         <span style={styles.chip}>
-          <i className="ti ti-file-text" style={{ fontSize: 14 }} aria-hidden="true" />
+          <i
+            className="ti ti-file-text"
+            style={{ fontSize: 14 }}
+            aria-hidden="true"
+          />
         </span>
         <span style={styles.label}>Transcript</span>
         <button
@@ -75,7 +81,11 @@ const GetAudioTranscript = () => {
             </>
           ) : (
             <>
-              <i className="ti ti-file-text" style={{ fontSize: 14 }} aria-hidden="true" />
+              <i
+                className="ti ti-file-text"
+                style={{ fontSize: 14 }}
+                aria-hidden="true"
+              />
               {s2tTranscript ? "Regenerate" : "Get transcript"}
             </>
           )}
@@ -90,7 +100,8 @@ const GetAudioTranscript = () => {
           </div>
         ) : error ? (
           <div style={styles.errorRow}>
-            Couldn&rsquo;t generate the transcript. Check the audio and try again.
+            Couldn&rsquo;t generate the transcript. Check the audio and try
+            again.
           </div>
         ) : s2tTranscript ? (
           <p style={styles.transcript}>{s2tTranscript}</p>
@@ -119,38 +130,68 @@ const styles = {
   },
   head: { display: "flex", alignItems: "center", gap: 8, marginBottom: 12 },
   chip: {
-    width: 24, height: 24, borderRadius: "50%",
-    background: "#e1f5ee", color: "#0f6e56",
-    display: "flex", alignItems: "center", justifyContent: "center",
+    width: 24,
+    height: 24,
+    borderRadius: "50%",
+    background: "#e1f5ee",
+    color: "#0f6e56",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     flexShrink: 0,
   },
   label: { fontWeight: 600, fontSize: 15, color: "#1c1c1e" },
   btn: {
     marginLeft: "auto",
-    display: "inline-flex", alignItems: "center", gap: 6,
-    background: "#2f7d76", color: "#fff",
-    border: "none", borderRadius: 9,
-    padding: "7px 14px", fontSize: 13, fontWeight: 600,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    background: "#2f7d76",
+    color: "#fff",
+    border: "none",
+    borderRadius: 9,
+    padding: "7px 14px",
+    fontSize: 13,
+    fontWeight: 600,
   },
   body: {
-    fontSize: 13, color: "#3a3a3a", lineHeight: 1.6,
-    maxHeight: 300, overflowY: "auto",
-    background: "#fbfaf7", border: "0.5px solid #f0eee8",
-    borderRadius: 10, padding: "12px 14px",
+    fontSize: 13,
+    color: "#3a3a3a",
+    lineHeight: 1.6,
+    maxHeight: 300,
+    overflowY: "auto",
+    background: "#fbfaf7",
+    border: "0.5px solid #f0eee8",
+    borderRadius: 10,
+    padding: "12px 14px",
   },
   transcript: { margin: 0 },
-  stateRow: { display: "flex", alignItems: "center", gap: 10, color: "#6f6b63", fontStyle: "italic" },
+  stateRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    color: "#6f6b63",
+    fontStyle: "italic",
+  },
   emptyRow: { color: "#b8b3a8", fontStyle: "italic" },
   errorRow: { color: "#b4462f" },
   spinner: {
-    width: 13, height: 13, borderRadius: "50%",
-    border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff",
-    display: "inline-block", animation: "gtspin 0.7s linear infinite",
+    width: 13,
+    height: 13,
+    borderRadius: "50%",
+    border: "2px solid rgba(255,255,255,0.4)",
+    borderTopColor: "#fff",
+    display: "inline-block",
+    animation: "gtspin 0.7s linear infinite",
   },
   spinnerDark: {
-    width: 15, height: 15, borderRadius: "50%",
-    border: "2px solid #d8d4cb", borderTopColor: "#2f7d76",
-    display: "inline-block", animation: "gtspin 0.7s linear infinite",
+    width: 15,
+    height: 15,
+    borderRadius: "50%",
+    border: "2px solid #d8d4cb",
+    borderTopColor: "#2f7d76",
+    display: "inline-block",
+    animation: "gtspin 0.7s linear infinite",
     flexShrink: 0,
   },
 };
