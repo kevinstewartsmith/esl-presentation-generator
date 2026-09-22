@@ -60,6 +60,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const setHydratedDetailRatings = useAudioTextStore(
     (state) => state.setHydratedDetailRatings,
   );
+  const setHydratedScrambleConfig = useAudioTextStore(
+    (state) => state.setHydratedScrambleConfig,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -95,6 +98,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
       setHydratedSlideOrder(allListeningData?.slideOrder || []);
       setHydratedDetailConfig(allListeningData?.detailConfig || {});
       setHydratedDetailRatings(allListeningData?.detailRatings || {});
+      setHydratedScrambleConfig(allListeningData?.scrambleConfig || {});
 
       const savedImagePaths = allListeningData?.imagePathsByCategory || {};
       setHydratedImagePaths(savedImagePaths);

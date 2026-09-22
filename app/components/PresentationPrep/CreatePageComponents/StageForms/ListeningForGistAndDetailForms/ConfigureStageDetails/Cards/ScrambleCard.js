@@ -1,39 +1,46 @@
 // ScrambleCard.js
-// The real card for the decode/unscramble stage. ONE card that contains a
-// block per comprehension item: question, answer, snippet play button, passage,
-// and (if available) the scramble.
+// The configure card for the decode/unscramble stage. ONE card with a block per
+// comprehension item: the ANSWER as the header, then each supporting passage as
+// its own SELECTABLE row (tick to include, untick to exclude) with a play button.
 //
-// For today, scrambles are DERIVED from the comprehension items in-card via
-// buildScrambleRounds (Option A). [FLAG for later: Option B — read a persisted
-// item.variations.scramble instead of re-deriving, so the shuffle is stable and
-// edits persist.]
+// Selection is per-passage and persists in scrambleConfig (via
+// updateScramblePassage). The scramble SLIDES read the same selection, one slide
+// per included passage. Passages under 3 words aren't scramble-able, so they
+// don't appear here.
 //
-// Click-to-edit: the passage and the scrambled text can be clicked to edit
-// inline (basic edit for now — the sophisticated transcript-highlight re-cut is
-// a separate day's work).
+// [FLAG for later] inline edit of the passage/scramble text (Option B:
+// item.variations.scramble) — parked; this card is select-only for now.
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { buildScrambleRounds } from "@app/utils/scramblePassage";
+import { getScramblePassageFlag } from "@app/components/FinalPresentationSections/scrambleConfigHelpers";
 import SnippetPlayer from "@app/components/SnippetPlayer";
 import CardShell from "./CardShell";
 
 export default function ScrambleCard({ item, position }) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
-
-  // Derive the rounds from the items (Option A). Memoized so the random shuffle
-  // is stable across re-renders within this mount.
-  const rounds = useMemo(
-    () => buildScrambleRounds(comprehensionItems ?? []),
-    [comprehensionItems],
+  const scrambleConfig = useAudioTextStore((s) => s.scrambleConfig);
+  const updateScramblePassage = useAudioTextStore(
+    (s) => s.updateScramblePassage,
   );
 
-  const snippetFileNames = useMemo(
-    () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
-    [comprehensionItems],
-  );
+  // Every scramble-able passage, grouped under its question.
+  const groups = useMemo(() => {
+    const rounds = buildScrambleRounds(comprehensionItems ?? []);
+    const byQuestion = new Map();
+    rounds.forEach((r) => {
+      if (!byQuestion.has(r.questionIndex)) byQuestion.set(r.questionIndex, []);
+      byQuestion.get(r.questionIndex).push(r);
+    });
+    return Array.from(byQuestion.entries()).map(([questionIndex, rows]) => ({
+      questionIndex,
+      answer: rows[0]?.questionAnswer ?? "",
+      rows,
+    }));
+  }, [comprehensionItems]);
 
   if (!comprehensionItems || comprehensionItems.length === 0) {
     return (
@@ -46,7 +53,7 @@ export default function ScrambleCard({ item, position }) {
     );
   }
 
-  if (rounds.length === 0) {
+  if (groups.length === 0) {
     return (
       <CardShell position={position} label="Decode &amp; Unscramble">
         <p style={styles.note}>
@@ -57,80 +64,90 @@ export default function ScrambleCard({ item, position }) {
     );
   }
 
-  const includedCount = rounds.length;
+  const selectedCount = groups.reduce(
+    (n, g) =>
+      n +
+      g.rows.filter(
+        (r) =>
+          getScramblePassageFlag(scrambleConfig, r.questionIndex, r.passageIndex)
+            .include,
+      ).length,
+    0,
+  );
 
   return (
     <CardShell
       position={position}
       label="Decode &amp; Unscramble"
-      right={`${includedCount} scramble${includedCount === 1 ? "" : "s"}`}
+      right={`${selectedCount} selected`}
     >
       <div style={styles.list}>
-        {rounds.map((round) => (
-          <ItemBlock
-            key={round.index}
-            round={round}
-            item={comprehensionItems[round.index]}
-            snippetFileNames={snippetFileNames}
-          />
+        {groups.map((g) => (
+          <div key={g.questionIndex} style={styles.block}>
+            <div style={styles.answerHeader}>
+              <span style={styles.tag}>Answer</span>
+              <span style={styles.answerText}>{g.answer}</span>
+            </div>
+
+            <div style={styles.passages}>
+              {g.rows.map((r) => {
+                const included = getScramblePassageFlag(
+                  scrambleConfig,
+                  r.questionIndex,
+                  r.passageIndex,
+                ).include;
+                const hasClip =
+                  r.snippetFileName && r.snippetFileName !== "No Audio";
+
+                return (
+                  <div
+                    key={r.passageIndex}
+                    style={{ ...styles.passageRow, opacity: included ? 1 : 0.5 }}
+                  >
+                    {/* Clicking anywhere in this area toggles inclusion. The
+                        checkbox is visual (readOnly) so the whole area is one
+                        target; the play button sits OUTSIDE it so playing a clip
+                        doesn't also toggle selection. */}
+                    <div
+                      style={styles.selectArea}
+                      onClick={() =>
+                        updateScramblePassage(
+                          r.questionIndex,
+                          r.passageIndex,
+                          !included,
+                        )
+                      }
+                      title={included ? "Click to exclude" : "Click to include"}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={included}
+                        readOnly
+                        style={styles.checkbox}
+                      />
+                      <span style={styles.passageText}>
+                        &ldquo;{r.passage}&rdquo;
+                      </span>
+                    </div>
+
+                    <span style={styles.play}>
+                      {hasClip ? (
+                        <SnippetPlayer
+                          index={0}
+                          snippetFileNames={[r.snippetFileName]}
+                        />
+                      ) : (
+                        <span style={styles.noAudio}>No audio</span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         ))}
       </div>
     </CardShell>
-  );
-}
-
-// One comprehension item, shown as a block with its scramble.
-function ItemBlock({ round, item, snippetFileNames }) {
-  const [editing, setEditing] = useState(false);
-  const [scrambleText, setScrambleText] = useState(round.scrambled);
-
-  return (
-    <div style={styles.block}>
-      <div style={styles.blockMain}>
-        <div style={styles.qRow}>
-          <span style={styles.qNum}>{round.index + 1}</span>
-          <span style={styles.question}>{item?.question}</span>
-        </div>
-
-        <div style={styles.answer}>
-          <span style={styles.tag}>Answer</span>
-          {item?.answer}
-        </div>
-
-        <div style={styles.passage}>
-          <span style={styles.tag}>Passage</span>
-          <span style={styles.passageText}>&ldquo;{round.passage}&rdquo;</span>
-        </div>
-
-        <div style={styles.scrambleRow}>
-          <span style={styles.tag}>Scramble</span>
-          {editing ? (
-            <input
-              value={scrambleText}
-              onChange={(e) => setScrambleText(e.target.value)}
-              onBlur={() => setEditing(false)}
-              autoFocus
-              style={styles.editInput}
-            />
-          ) : (
-            <span
-              style={styles.scrambleText}
-              onClick={() => setEditing(true)}
-              title="Click to edit"
-            >
-              {scrambleText}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div style={styles.playCol}>
-        <SnippetPlayer
-          index={round.index}
-          snippetFileNames={snippetFileNames}
-        />
-      </div>
-    </div>
   );
 }
 
@@ -138,54 +155,56 @@ const styles = {
   note: { fontSize: "16px", color: "#6f6b63", margin: 0 },
   list: { display: "flex", flexDirection: "column", gap: "14px" },
   block: {
-    display: "grid",
-    gridTemplateColumns: "1fr auto",
-    gap: "12px",
-    alignItems: "start",
     padding: "14px",
     border: "1px solid #f0eee8",
     borderRadius: "10px",
     background: "#fbfaf7",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
   },
-  blockMain: {
-    minWidth: 0,
+  answerHeader: {
+    display: "flex",
+    alignItems: "baseline",
+    gap: "8px",
+    flexWrap: "wrap",
+  },
+  answerText: { fontWeight: 600, fontSize: "17px", color: "#1c1c1e" },
+  passages: {
     display: "flex",
     flexDirection: "column",
     gap: "8px",
+    borderTop: "1px solid #f0eee8",
+    paddingTop: "10px",
   },
-  qRow: { display: "flex", gap: "8px", alignItems: "baseline" },
-  qNum: {
-    fontFamily: "'Fraunces', Georgia, serif",
-    fontSize: "18px",
-    fontWeight: 600,
-    color: "#2f7d76",
+  passageRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    alignItems: "center",
+    gap: "10px",
+    transition: "opacity 0.15s ease",
   },
-  question: { fontWeight: 600, fontSize: "17px" },
-  answer: { fontSize: "16px", color: "#3a3a3a" },
-  passage: { fontSize: "16px", color: "#3a3a3a" },
-  passageText: { fontStyle: "italic" },
-  scrambleRow: {
-    fontSize: "16px",
+  selectArea: {
     display: "flex",
-    gap: "8px",
-    alignItems: "baseline",
-    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "10px",
+    minWidth: 0,
+    cursor: "pointer",
   },
-  scrambleText: {
-    fontFamily: "'Fraunces', Georgia, serif",
-    letterSpacing: "0.01em",
-    cursor: "text",
-    borderBottom: "1px dashed #c9c5bc",
-    paddingBottom: "1px",
-  },
-  editInput: {
-    flex: 1,
-    minWidth: "220px",
+  checkbox: { flexShrink: 0, cursor: "pointer", width: "16px", height: "16px" },
+  passageText: {
     fontSize: "16px",
-    padding: "6px 10px",
-    border: "1px solid #2f7d76",
-    borderRadius: "6px",
-    fontFamily: "inherit",
+    fontStyle: "italic",
+    color: "#3a3a3a",
+    lineHeight: 1.5,
+    minWidth: 0,
+  },
+  play: { display: "flex", alignItems: "center", justifyContent: "center" },
+  noAudio: {
+    fontSize: "12px",
+    fontStyle: "italic",
+    color: "#b8b3a8",
+    whiteSpace: "nowrap",
   },
   tag: {
     display: "inline-block",
@@ -194,12 +213,6 @@ const styles = {
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     color: "#8a857c",
-    marginRight: "6px",
-  },
-  playCol: {
-    width: "48px",
-    display: "flex",
-    justifyContent: "center",
-    paddingTop: "2px",
+    flexShrink: 0,
   },
 };

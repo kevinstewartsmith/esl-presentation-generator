@@ -47,24 +47,51 @@ export function scramblePassage(passage) {
   };
 }
 
-// Convenience: given the comprehension items (each with a `.passage`), build the
-// list of scramble rounds for the game, skipping passages too short to be worth
-// unscrambling. `minWords` defaults to 3 (a 1-2 word scramble is trivial).
-export function buildScrambleRounds(comprehensionItems, minWords = 3) {
+// Build the scramble rounds from the comprehension items.
+//
+// MULTI-PASSAGE: a question can have several supporting passages, and each
+// scramble-able passage is its OWN round (one slide per passage) — not one round
+// per question. Rounds are emitted in item order, then passage order (which is
+// chronological, since passages are sorted by transcript position upstream).
+//
+// options:
+//   minWords   - passages shorter than this aren't worth unscrambling (default 3)
+//   isSelected - optional (questionIndex, passageIndex) => boolean. When given,
+//                only passages it returns true for become rounds (the scramble
+//                slides pass this from scrambleConfig; the config card omits it to
+//                show every passage).
+//
+// Each round:
+//   { questionIndex, passageIndex, questionAnswer, passage, answer, scrambled,
+//     wordCount, snippetFileName, indices }
+export function buildScrambleRounds(comprehensionItems, options = {}) {
+  const { minWords = 3, isSelected } = options;
   if (!Array.isArray(comprehensionItems)) return [];
 
-  return comprehensionItems
-    .map((item, index) => {
-      const passage = item?.passage ?? "";
-      const { answer, scrambled, wordCount } = scramblePassage(passage);
-      return {
-        index, // which comprehension item this came from
-        passage,
-        answer,
+  const rounds = [];
+
+  comprehensionItems.forEach((item, questionIndex) => {
+    const passages = Array.isArray(item?.passages) ? item.passages : [];
+
+    passages.forEach((p, passageIndex) => {
+      if (isSelected && !isSelected(questionIndex, passageIndex)) return;
+
+      const { answer, scrambled, wordCount } = scramblePassage(p?.text ?? "");
+      if (wordCount < minWords) return;
+
+      rounds.push({
+        questionIndex, // which comprehension item
+        passageIndex, // which passage within that item
+        questionAnswer: item?.answer ?? "", // the comprehension answer (header)
+        passage: p?.text ?? "",
+        answer, // original order, slash-joined (the unscramble solution)
         scrambled,
         wordCount,
-        snippetFileNames: item?.snippetFileNames ?? [], // audio for the play button
-      };
-    })
-    .filter((round) => round.wordCount >= minWords);
+        snippetFileName: p?.snippetFileName ?? null, // this passage's own clip
+        indices: p?.indices ?? null,
+      });
+    });
+  });
+
+  return rounds;
 }
