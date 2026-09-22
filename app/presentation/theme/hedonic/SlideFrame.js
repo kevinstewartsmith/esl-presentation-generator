@@ -11,6 +11,10 @@
 //                        styling) — used for dyslexia-friendlier headers
 //   inlineIcon         - when true, the icon sits inline beside the title instead
 //                        of above it (Partner Check style)
+//   titleAccessory     - optional element rendered to the RIGHT of the title in
+//                        the title row (e.g. a full-audio play/pause button on
+//                        the detail/gist instructions slide). Opt-in; slides that
+//                        don't pass one are unaffected.
 
 import styles from "./SlideFrame.module.css";
 import { MiniWaveform } from "./icons";
@@ -22,6 +26,7 @@ export default function SlideFrame({
   icon,
   plainTitle = false,
   inlineIcon = false,
+  titleAccessory = null,
   children,
 }) {
   const titleBlock = (
@@ -35,6 +40,18 @@ export default function SlideFrame({
         {titleAccent ? <span> {titleAccent}</span> : null}
       </h1>
       {!inlineIcon ? <MiniWaveform className={styles.miniWaveform} /> : null}
+      {titleAccessory ? (
+        <span
+          className={styles.titleAccessory}
+          style={{
+            marginLeft: "16px",
+            display: "inline-flex",
+            alignItems: "center",
+          }}
+        >
+          {titleAccessory}
+        </span>
+      ) : null}
     </div>
   );
 

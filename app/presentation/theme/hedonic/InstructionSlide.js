@@ -5,6 +5,10 @@
 // The card stack is wrapped in a scale-to-fit box (useFitScale) so ANY number
 // of cards (2, 3, 4, 5) shrinks uniformly to fit the slide body — no per-count
 // tuning, and it can never overflow into the header.
+//
+// `titleAccessory` (optional) is forwarded to SlideFrame and renders to the
+// right of the title — used for the full-audio player on the detail/gist
+// instructions slides. Slides that don't pass one are unchanged.
 
 import SlideFrame from "./SlideFrame";
 import InstructionCard from "./InstructionCard";
@@ -25,12 +29,18 @@ export default function InstructionSlide({
   numbered = true,
   allPrimary = false,
   compact = false,
+  titleAccessory = null,
 }) {
   const hasLines = lines && lines.length > 0;
   const { ref } = useFitScale(lines.length, { max: 1, min: 0.4 });
 
   return (
-    <SlideFrame title={title} titleAccent={titleAccent} icon={<HeadphonesIcon />}>
+    <SlideFrame
+      title={title}
+      titleAccent={titleAccent}
+      icon={<HeadphonesIcon />}
+      titleAccessory={titleAccessory}
+    >
       {hasLines ? (
         <div className={styles.fitBox}>
           <div ref={ref} className={styles.stack}>

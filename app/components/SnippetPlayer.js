@@ -71,40 +71,62 @@ function SnippetPlayer({ index, snippetFileNames }) {
   // ]);
 
   async function playSnippetClicked() {
-    // If already playing, ignore the click (prevents overlap)
-    if (playing) return;
-
     const snippetName = snippetFileNames[index];
     if (!snippetName || snippetName === "No Audio") {
       console.warn("No snippet available for this question.");
       return;
     }
 
+    // Toggle: if an audio element already exists for this player, pause or
+    // resume it instead of starting a new one. (This is what makes the pause
+    // button actually pause — important for the long full-audio file, where the
+    // old "ignore click while playing" guard left no way to stop playback.)
+    const existing = currentAudioRef.current;
+    if (existing) {
+      if (playing) {
+        existing.pause();
+        setPlaying(false);
+      } else {
+        existing
+          .play()
+          .then(() => setPlaying(true))
+          .catch((err) => {
+            console.error("Playback failed:", err);
+            setPlaying(false);
+          });
+      }
+      return;
+    }
+
+    // First play: load the blob and create the audio element.
     const blob = await getAudioBlob(snippetName);
     if (!(blob instanceof Blob) || blob.size === 0) {
       console.error("No valid audio blob for:", snippetName);
       return;
     }
 
-    const audioURL = URL.createObjectURL(blob);
-    const audio = new Audio(audioURL);
+    const objectURL = URL.createObjectURL(blob);
+    const audio = new Audio(objectURL);
     currentAudioRef.current = audio;
 
     setPlaying(true);
 
     audio.onended = () => {
       setPlaying(false);
-      URL.revokeObjectURL(audioURL); // clean up
+      URL.revokeObjectURL(objectURL); // clean up
       currentAudioRef.current = null;
     };
     audio.onerror = () => {
       setPlaying(false);
+      URL.revokeObjectURL(objectURL);
       currentAudioRef.current = null;
     };
 
     audio.play().catch((err) => {
       console.error("Playback failed:", err);
       setPlaying(false);
+      URL.revokeObjectURL(objectURL);
+      currentAudioRef.current = null;
     });
   }
   function getTimeStamp(data) {

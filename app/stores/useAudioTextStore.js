@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { debounce } from "@app/utils/debounce";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { normalizeComprehensionItems } from "@app/utils/normalizeComprehensionItems";
 
 const STAGE_ID = "Listening for Gist and Detail";
 
@@ -84,7 +85,10 @@ export const useAudioTextStore = create(
         justHydratedComprehension: false,
       }),
     setHydratedComprehensionItems: (items) =>
-      set({ comprehensionItems: items ?? [], justHydratedComprehension: true }),
+      set({
+        comprehensionItems: normalizeComprehensionItems(items),
+        justHydratedComprehension: true,
+      }),
 
     // slideOrder (the StageComposer arrangement)
     updateSlideOrder: (order) =>
