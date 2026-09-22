@@ -7,20 +7,9 @@ export const splitAudioFile = async (
   questionsAndAnswers,
 ) => {
   console.log("Splitting audio file...", audioFileName);
-  console.log(
-    "Complete Listening Stage Data Questions and Answers in the CLIP UTIL:",
-    questionsAndAnswers,
-  );
   const audioContext = new AudioContext();
-  const keys = await listFiles(); // or your version of listing
-  console.log("Keys in DB:", keys);
 
-  console.log("Looking for:", audioFileName);
-  console.log("Available keys:", keys);
-  // Check if audio file name and keys[0] match
-  console.log("Keys[0] === audioFileName:", keys[0] === audioFileName);
-
-  // Retrieve the binarized audio file from IndexedDB
+  // Retrieve the binarized audio file from IndexedDB (or bucket fallback).
   const audioBlob = await getAudioBlob(audioFileName);
   if (!audioBlob) {
     console.error("Audio file not found.");
@@ -28,16 +17,20 @@ export const splitAudioFile = async (
   }
 
   const decodedAudioBuffer = await decodeAudioFile(audioBlob, audioContext);
-  const snippets = await splitAudioFileIntoMultipleClips(
+  const clipsByQuestion = await splitAudioFileIntoMultipleClips(
     decodedAudioBuffer,
     audioFileName,
     wordArray,
     questionsAndAnswers,
     audioContext,
   );
-  return snippets;
+  return clipsByQuestion;
 };
 
+// Returns clipsByQuestion: an array aligned to questionsAndAnswers, where
+// clipsByQuestion[i] is an array aligned to that question's passages[]. Each
+// entry is a saved clip filename, or "No Audio" when the passage couldn't be
+// located / timed.
 async function splitAudioFileIntoMultipleClips(
   audioBuffer,
   audioFileName,
@@ -45,134 +38,80 @@ async function splitAudioFileIntoMultipleClips(
   questionsAndAnswers,
   audioContext,
 ) {
-  const snippets = [];
-  const indices = questionsAndAnswers.map((qa) => qa.indices || "no indices");
+  const clipsByQuestion = [];
 
-  console.log("Indices for snippets:", indices);
+  for (let i = 0; i < questionsAndAnswers.length; i++) {
+    const passages = questionsAndAnswers[i]?.passages ?? [];
+    const clipsForQuestion = [];
 
-  for (let i = 0; i < indices.length; i++) {
-    try {
-      const currentIndex = indices[i];
+    for (let j = 0; j < passages.length; j++) {
+      const currentIndex = passages[j]?.indices;
 
-      if (
-        !currentIndex ||
-        currentIndex === "no indices" ||
-        !wordArray ||
-        !wordArray[currentIndex.start] ||
-        !wordArray[currentIndex.end]
-      ) {
-        console.warn(
-          `Skipping snippet creation for question ${i}. Missing indices or word data.`,
-        );
-        snippets.push("No Audio");
-        continue;
-      }
+      try {
+        if (
+          !currentIndex ||
+          !wordArray ||
+          !wordArray[currentIndex.start] ||
+          !wordArray[currentIndex.end]
+        ) {
+          console.warn(
+            `Skipping clip for Q${i} P${j}: missing indices or word data.`,
+          );
+          clipsForQuestion.push("No Audio");
+          continue;
+        }
 
-      const { start: startIndex, end: endIndex } = currentIndex;
+        const { start: startIndex, end: endIndex } = currentIndex;
 
-      const start = wordArray[startIndex]?.startTime
-        ? getSeconds(wordArray[startIndex].startTime)
-        : NaN;
-      const end = wordArray[endIndex]?.endTime
-        ? getSeconds(wordArray[endIndex].endTime) + 0.5
-        : NaN;
+        const start = wordArray[startIndex]?.startTime
+          ? getSeconds(wordArray[startIndex].startTime)
+          : NaN;
+        const end = wordArray[endIndex]?.endTime
+          ? getSeconds(wordArray[endIndex].endTime) + 0.5
+          : NaN;
 
-      console.log(`Start: ${start}, End: ${end} for question ${i}`);
+        if (isNaN(start) || isNaN(end) || end <= start) {
+          console.warn(`Invalid start/end for Q${i} P${j}:`, { start, end });
+          clipsForQuestion.push("No Audio");
+          continue;
+        }
 
-      if (isNaN(start) || isNaN(end) || end <= start) {
-        console.warn(`Invalid start or end time for question ${i}:`, {
+        const snippetBlob = await createSnippetBlob(
+          audioContext,
+          audioBuffer,
           start,
           end,
-        });
-        snippets.push("No Audio");
-        continue;
-      }
+        );
 
-      const snippetBlob = await createSnippetBlob(
-        audioContext,
-        audioBuffer,
-        start,
-        end,
-      );
-
-      if (snippetBlob) {
-        snippets.push(`${audioFileName}_snippet_${i}.wav`);
-        await saveFile(`${audioFileName}_snippet_${i}.wav`, snippetBlob);
-      } else {
-        snippets.push("No Audio");
+        if (snippetBlob) {
+          // _i_j keeps each passage's clip unique (was _i, which collided when
+          // a question had more than one passage).
+          const name = `${audioFileName}_snippet_${i}_${j}.wav`;
+          clipsForQuestion.push(name);
+          await saveFile(name, snippetBlob);
+        } else {
+          clipsForQuestion.push("No Audio");
+        }
+      } catch (err) {
+        console.error(`Error processing Q${i} P${j}:`, err);
+        clipsForQuestion.push("No Audio");
       }
-    } catch (err) {
-      console.error(`Error processing question ${i}:`, err);
-      snippets.push("No Audio");
     }
+
+    clipsByQuestion.push(clipsForQuestion);
   }
 
-  console.log("Final snippets array:", snippets);
-  return snippets;
+  console.log("Final clipsByQuestion:", clipsByQuestion);
+  return clipsByQuestion;
 }
-
-// //Retrieve audio blob from IndexedDB
-// async function getAudioBlob(fileName) {
-//   if (!fileName) {
-//     console.warn("getAudioBlob called with no fileName.");
-//     return null;
-//   }
-
-//   // 1. Local cache first — IndexedDB
-//   try {
-//     const fileBlob = await getFile(fileName);
-//     if (fileBlob) {
-//       console.log(`File ${fileName} retrieved from IndexedDB.`);
-//       return fileBlob;
-//     }
-//   } catch (error) {
-//     // Not in IndexedDB (getFile throws on a missing key) — fall through to the bucket.
-//   }
-
-//   // 2. Fall back to the bucket, then cache locally so next time is a local hit.
-//   try {
-//     console.log(`File ${fileName} not in IndexedDB — fetching from bucket.`);
-//     const response = await fetch(
-//       `/api/audio?name=${encodeURIComponent(fileName)}`,
-//     );
-//     if (!response.ok) {
-//       throw new Error(`Bucket fetch failed for ${fileName}`);
-//     }
-
-//     const blob = await response.blob();
-//     await saveFile(fileName, blob);
-//     console.log(`File ${fileName} downloaded from bucket and cached.`);
-//     return blob;
-//   } catch (error) {
-//     console.error(`File ${fileName} not found in IndexedDB or bucket.`, error);
-//     return null;
-//   }
-// }
 
 //Decode the audio file
 async function decodeAudioFile(audioBlob, audioContext) {
-  //const audioContext = new AudioContext();
   const arrayBuffer = await audioBlob.arrayBuffer();
   const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
   return audioBuffer;
 }
 
-export function splitIntoClips(audioBlob, wordArray) {
-  if (!audioBlob || !wordArray || wordArray.length === 0) {
-    console.error("Invalid audio blob or word array.");
-    return [];
-  }
-}
-
-// function getSeconds(timeObj) {
-//   //const extraTime = 500000000;
-//   const seconds =
-//     typeof timeObj.seconds === "string"
-//       ? parseInt(timeObj.seconds)
-//       : timeObj.seconds;
-//   return seconds + timeObj.nanos / 1e9;
-// }
 function getSeconds(timeObj) {
   if (!timeObj) return 0;
   const seconds =
@@ -227,37 +166,6 @@ export const createSnippetBlob = async (
     return null;
   }
 };
-
-function playAudioBuffer(audioBuffer) {
-  const audioContext = new AudioContext(); // ✅ define it here
-  const source = audioContext.createBufferSource();
-  source.buffer = audioBuffer;
-  source.connect(audioContext.destination);
-  source.start(0);
-}
-
-async function createSnippetWavBlob(audioBuffer, start, end) {
-  const sampleRate = audioBuffer.sampleRate;
-  const startSample = Math.floor(start * sampleRate);
-  const endSample = Math.floor(end * sampleRate);
-  const frameCount = endSample - startSample;
-
-  const snippetBuffer = new AudioContext().createBuffer(
-    audioBuffer.numberOfChannels,
-    frameCount,
-    sampleRate,
-  );
-
-  for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
-    const sourceData = audioBuffer.getChannelData(channel);
-    const targetData = snippetBuffer.getChannelData(channel);
-    for (let i = 0; i < frameCount; i++) {
-      targetData[i] = sourceData[startSample + i];
-    }
-  }
-
-  return audioBufferToWavBlob(snippetBuffer);
-}
 
 function audioBufferToWavBlob(buffer) {
   const numChannels = buffer.numberOfChannels;
@@ -321,7 +229,6 @@ function audioBufferToWavBlob(buffer) {
 }
 
 export async function playFromIndexedDB(fileName) {
-  listFiles().then(console.log);
   const blob = await getFile(fileName);
 
   if (!(blob instanceof Blob) || blob.size === 0) {
