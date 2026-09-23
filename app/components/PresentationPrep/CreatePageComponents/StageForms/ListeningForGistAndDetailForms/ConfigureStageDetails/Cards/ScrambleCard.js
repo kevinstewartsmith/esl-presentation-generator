@@ -85,6 +85,7 @@ export default function ScrambleCard({ item, position }) {
         {groups.map((g) => (
           <div key={g.questionIndex} style={styles.block}>
             <div style={styles.answerHeader}>
+              <span style={styles.qNum}>{g.questionIndex + 1}</span>
               <span style={styles.tag}>Answer</span>
               <span style={styles.answerText}>{g.answer}</span>
             </div>
@@ -125,9 +126,15 @@ export default function ScrambleCard({ item, position }) {
                         readOnly
                         style={styles.checkbox}
                       />
-                      <span style={styles.passageText}>
-                        &ldquo;{r.passage}&rdquo;
-                      </span>
+                      <div style={styles.textCol}>
+                        <span style={styles.passageText}>
+                          &ldquo;{r.passage}&rdquo;
+                        </span>
+                        <span style={styles.scrambleLine}>
+                          <span style={styles.tag}>Scramble</span>
+                          <span style={styles.scrambleText}>{r.scrambled}</span>
+                        </span>
+                      </div>
                     </div>
 
                     <span style={styles.play}>
@@ -169,6 +176,13 @@ const styles = {
     gap: "8px",
     flexWrap: "wrap",
   },
+  qNum: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontSize: "18px",
+    fontWeight: 600,
+    color: "#2f7d76",
+    flexShrink: 0,
+  },
   answerText: { fontWeight: 600, fontSize: "17px", color: "#1c1c1e" },
   passages: {
     display: "flex",
@@ -186,10 +200,28 @@ const styles = {
   },
   selectArea: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: "10px",
     minWidth: 0,
     cursor: "pointer",
+  },
+  textCol: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    minWidth: 0,
+  },
+  scrambleLine: {
+    display: "flex",
+    alignItems: "baseline",
+    gap: "6px",
+    flexWrap: "wrap",
+  },
+  scrambleText: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontSize: "15px",
+    letterSpacing: "0.01em",
+    color: "#5a5a5a",
   },
   checkbox: { flexShrink: 0, cursor: "pointer", width: "16px", height: "16px" },
   passageText: {
