@@ -1,12 +1,27 @@
 /* GistSlide.module.css — fixed px against the 1280x720 canvas. */
 
+/* The available box the stack must fit into: fills the slide body, centers the
+   (scaled) stack, and clips nothing because the stack is scaled to fit. Its
+   height is what useFitScale measures against. */
+.fitBox {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
 .instructions {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 26px;
+  gap: 15px;
 
   width: 100%;
   max-width: 1136px;
   margin: 0 auto;
+
+  /* Scaled by useFitScale; keep the shrink centered in the fit box. */
+  transform-origin: center center;
 }

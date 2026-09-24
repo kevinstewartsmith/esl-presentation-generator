@@ -3,6 +3,10 @@
 // contract. Unlike gist (one slide), scramble is a SEQUENCE, so the model
 // returns an ORDERED ARRAY of slide view-models.
 //
+// MULTI-PASSAGE: one round per SELECTED passage (from scrambleConfig), not one
+// per question. Each round carries its OWN clip filename, so the section plays
+// the right passage's audio.
+//
 // VIEW MODEL CONTRACT (scramble): an array of slides, each:
 //   {
 //     id:    string
@@ -13,28 +17,30 @@
 //     scrambled?:   string             // question slide
 //     passage?:     string             // answer slide
 //     hint?:        string             // question slide
-//     snippetIndex?: number            // which snippet this round plays
+//     snippetFileName?: string | null  // the clip this round plays
 //   }
 //
-// `kind` is SEMANTIC. The theme decides what each kind looks like. Snippet
-// filenames are passed alongside the model (audio is an app capability, not a
-// theme concern) — see ScramblePresSection.
+// `kind` is SEMANTIC. The theme decides what each kind looks like. The clip
+// filename rides on the slide; the section builds the player — see
+// ScramblePresSection.
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { buildScrambleRounds } from "@app/utils/scramblePassage";
+import { getScramblePassageFlag } from "./scrambleConfigHelpers";
 import { SCRAMBLE_SLIDE_COPY as COPY } from "./scrambleSlideCopy";
 
 export function useScrambleSlideModel({ showEnding = true } = {}) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
-  const rounds = buildScrambleRounds(comprehensionItems ?? []);
+  const scrambleConfig = useAudioTextStore((s) => s.scrambleConfig);
+
+  const rounds = buildScrambleRounds(comprehensionItems ?? [], {
+    isSelected: (q, p) =>
+      getScramblePassageFlag(scrambleConfig, q, p).include,
+  });
 
   if (rounds.length === 0) {
-    return { slides: [], allSnippetFileNames: [] };
+    return { slides: [] };
   }
-
-  const allSnippetFileNames = (comprehensionItems ?? []).map(
-    (item) => item.snippetFileNames,
-  );
 
   const slides = [];
 
@@ -51,28 +57,29 @@ export function useScrambleSlideModel({ showEnding = true } = {}) {
   rounds.forEach((round, i) => {
     const isLast = i === rounds.length - 1;
     const label = COPY.roundLabel(i + 1);
+    const key = `${round.questionIndex}-${round.passageIndex}`;
 
     slides.push({
-      id: `q-${round.index}`,
+      id: `q-${key}`,
       kind: "question",
       title: label,
       scrambled: round.scrambled,
       hint: COPY.unscrambleHint,
-      snippetIndex: round.index,
+      snippetFileName: round.snippetFileName,
     });
 
     slides.push({
-      id: `a-${round.index}`,
+      id: `a-${key}`,
       kind: "answer",
       title: label,
       titleAccent: COPY.answerAccent,
       passage: round.passage,
-      snippetIndex: round.index,
+      snippetFileName: round.snippetFileName,
     });
 
     if (!isLast) {
       slides.push({
-        id: `pass-${round.index}`,
+        id: `pass-${key}`,
         kind: "pass",
         title: COPY.passLabel,
       });
@@ -89,5 +96,5 @@ export function useScrambleSlideModel({ showEnding = true } = {}) {
     });
   }
 
-  return { slides, allSnippetFileNames };
+  return { slides };
 }

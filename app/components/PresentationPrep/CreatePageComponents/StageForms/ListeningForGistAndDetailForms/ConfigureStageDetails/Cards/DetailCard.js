@@ -35,8 +35,12 @@ export default function DetailCard({ item, position }) {
   const clearDetailRating = useAudioTextStore((s) => s.clearDetailRating);
   useAutoRateDifficulty(); // auto-generates when prerequisites met + not rated
 
+  // Detail plays SNIPPET #1 (the primary passage's clip) per question.
   const snippetFileNames = useMemo(
-    () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
+    () =>
+      (comprehensionItems ?? []).map(
+        (it) => it.passages?.[0]?.snippetFileName ?? null,
+      ),
     [comprehensionItems],
   );
 

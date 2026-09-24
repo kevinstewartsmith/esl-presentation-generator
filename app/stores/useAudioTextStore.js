@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { debounce } from "@app/utils/debounce";
 import { useLessonStore } from "@app/stores/useLessonStore";
+import { normalizeComprehensionItems } from "@app/utils/normalizeComprehensionItems";
 
 const STAGE_ID = "Listening for Gist and Detail";
 
@@ -21,7 +22,9 @@ const initialAudioState = {
   inputTexts: null, // the teacher's input texts (title, page, book, exercise, etc.)
   detailConfig: null, // detail stage presentation settings (modes + per-question)
   detailRatings: null, // { [index]: { level, reason } } CEFR difficulty per question
+  scrambleConfig: null,
 
+  justHydratedScrambleConfig: false,
   justHydrated: false,
   justHydratedTranscript: false,
   justHydratedOcr: false,
@@ -84,7 +87,10 @@ export const useAudioTextStore = create(
         justHydratedComprehension: false,
       }),
     setHydratedComprehensionItems: (items) =>
-      set({ comprehensionItems: items ?? [], justHydratedComprehension: true }),
+      set({
+        comprehensionItems: normalizeComprehensionItems(items),
+        justHydratedComprehension: true,
+      }),
 
     // slideOrder (the StageComposer arrangement)
     updateSlideOrder: (order) =>
@@ -162,6 +168,22 @@ export const useAudioTextStore = create(
       }),
     setHydratedDetailRatings: (obj) =>
       set({ detailRatings: obj ?? {}, justHydratedDetailRatings: true }),
+
+    updateScramblePassage: (questionIndex, passageIndex, value) =>
+      set((state) => {
+        const cfg = state.scrambleConfig ?? {};
+        const perPassage = { ...(cfg.perPassage ?? {}) };
+        const forQ = { ...(perPassage[questionIndex] ?? {}) };
+        forQ[passageIndex] = { ...(forQ[passageIndex] ?? {}), include: value };
+        perPassage[questionIndex] = forQ;
+        return {
+          scrambleConfig: { ...cfg, perPassage },
+          justHydratedScrambleConfig: false,
+        };
+      }),
+
+    setHydratedScrambleConfig: (obj) =>
+      set({ scrambleConfig: obj ?? {}, justHydratedScrambleConfig: true }),
   })),
 );
 
@@ -276,6 +298,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "detailRatings",
     flag: "justHydratedDetailRatings",
     textType: "DetailRatings",
+    isEmpty: (v) => v == null || Object.keys(v).length === 0,
+  },
+  {
+    field: "scrambleConfig",
+    flag: "justHydratedScrambleConfig",
+    textType: "ScrambleConfig",
     isEmpty: (v) => v == null || Object.keys(v).length === 0,
   },
 ];

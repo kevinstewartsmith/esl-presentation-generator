@@ -4,7 +4,8 @@
 // renders each in its own reveal <section>.
 //
 // Knows Zustand + the SnippetPlayer (app capabilities). Does NOT know what any
-// slide looks like — the theme owns appearance.
+// slide looks like — the theme owns appearance. Each round's own clip filename
+// rides on the slide (multi-passage), so the player is built per slide.
 
 import { useSlideComponent } from "@app/presentation/theme/SlideThemeProvider";
 import { useScrambleSlideModel } from "./scrambleSlideModel";
@@ -13,7 +14,7 @@ import SnippetPlayer from "@app/components/SnippetPlayer";
 const ScramblePresSection = () => {
   import("@styles/reveal-hedonic.css");
 
-  const { slides, allSnippetFileNames } = useScrambleSlideModel();
+  const { slides } = useScrambleSlideModel();
 
   const InstructionSlide = useSlideComponent("scrambleInstruction");
   const RoundSlide = useSlideComponent("scrambleRound");
@@ -67,8 +68,8 @@ const ScramblePresSection = () => {
                   hint={slide.hint}
                   player={
                     <SnippetPlayer
-                      index={slide.snippetIndex}
-                      snippetFileNames={allSnippetFileNames}
+                      index={0}
+                      snippetFileNames={[slide.snippetFileName]}
                     />
                   }
                 />
@@ -85,8 +86,8 @@ const ScramblePresSection = () => {
                   text={slide.passage}
                   player={
                     <SnippetPlayer
-                      index={slide.snippetIndex}
-                      snippetFileNames={allSnippetFileNames}
+                      index={0}
+                      snippetFileNames={[slide.snippetFileName]}
                     />
                   }
                 />

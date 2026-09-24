@@ -4,7 +4,8 @@ import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import {
   mergeItems,
   addPassagesToQuestions,
-  findBatchPassageIndices,
+  addExplanationsToQuestions,
+  addIndicesToPassages,
   addSnippetsFileNamesToQuestions,
 } from "@app/utils/CreateAudioSnippetsUtil";
 import {
@@ -48,19 +49,6 @@ const CreateAudioSnippets = () => {
 
   useEffect(() => {
     console.log("First useEffect in CreateAudioSnippets.");
-
-    console.log(
-      "Q:",
-      audioQuestionObj.length,
-      "A:",
-      audioAnswerObj.length,
-      "T:",
-      s2tTranscript.length,
-    );
-    console.log("hasAttemptedAudioHydration:", hasAttemptedAudioHydration);
-    console.log("comprehensionItemsExist:", comprehensionItemsExist);
-    console.log("audioQuestions:", audioQuestions);
-    console.log("audioAnswers:", audioAnswers);
     if (!hasAttemptedAudioHydration) return;
     if (!comprehensionItemsExist) {
       getAudioQuestionParts("question");
@@ -70,17 +58,6 @@ const CreateAudioSnippets = () => {
 
   useEffect(() => {
     console.log("Second useEffect in CreateAudioSnippets.");
-
-    console.log(
-      "Q:",
-      audioQuestionObj.length,
-      "A:",
-      audioAnswerObj.length,
-      "T:",
-      s2tTranscript.length,
-    );
-    console.log("audioQuestions: ", audioQuestions);
-    console.log("audioAnswers: ", audioAnswers);
 
     if (
       audioQuestionObj.length > 0 &&
@@ -93,105 +70,93 @@ const CreateAudioSnippets = () => {
     }
   }, [audioQuestionObj, audioAnswerObj]);
 
-  // Call snippet api to get answer passages
-  // Takes comprehensionItems and s2tTranscript as input, returns updated comprehensionItems with passages
-
+  // 3. Two independent Gemini calls, in parallel:
+  //    - passages:     { results: [{ number, passages: ["text", ...] }] }
+  //    - explanations: { results: [{ number, explanation }] }
+  //    Kept as separate routes (one concern each, so either can be regenerated
+  //    alone) but merged into ONE store update here so they don't clobber each
+  //    other's field. Explanation needs no word times, so it lands now.
   useEffect(() => {
     console.log("Third useEffect in CreateAudioSnippets.");
-
-    console.log(
-      "Q:",
-      audioQuestionObj.length,
-      "A:",
-      audioAnswerObj.length,
-      "T:",
-      s2tTranscript.length,
-    );
 
     if (!readyForSnippets) return;
     if (!s2tTranscript) return;
     if (!comprehensionItemsExist) return;
 
-    async function fetchPassages() {
+    async function fetchPassagesAndExplanations() {
       try {
-        const qa = JSON.stringify(comprehensionItems);
-
-        const response = await fetch("/api/get-audio-snippets-codes", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            questionsAndAnswers: qa,
-            transcript: s2tTranscript,
+        const [passageRes, explanationRes] = await Promise.all([
+          fetch("/api/get-audio-snippets-codes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              questionsAndAnswers: comprehensionItems, // the array itself, not stringified
+              transcript: s2tTranscript,
+              // maxPassages: 3, // optional per-lesson override of the route's MAX_PASSAGES knob
+            }),
           }),
-        });
+          fetch("/api/get-answer-explanation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              questionsAndAnswers: comprehensionItems,
+              transcript: s2tTranscript,
+            }),
+          }),
+        ]);
 
-        if (!response.ok) throw new Error("Failed to fetch passages");
+        if (!passageRes.ok) throw new Error("Failed to fetch passages");
+        if (!explanationRes.ok) throw new Error("Failed to fetch explanations");
 
-        const data = await response.json();
+        const passageData = await passageRes.json();
+        const explanationData = await explanationRes.json();
 
-        const updated = addPassagesToQuestions(comprehensionItems, data);
+        // Apply both to one base snapshot → single atomic update.
+        let updated = addPassagesToQuestions(
+          comprehensionItems,
+          passageData.results,
+        );
+        updated = addExplanationsToQuestions(updated, explanationData.results);
+
         updateComprehensionItems(updated);
         setReadyForWordTimeData(true);
       } catch (error) {
-        console.error("Error fetching passages:", error);
+        console.error("Error fetching passages/explanations:", error);
       }
     }
 
-    fetchPassages();
+    fetchPassagesAndExplanations();
   }, [readyForSnippets]);
 
-  //SO NOT DONE
+  // 4. Resolve each passage's word-index range against the transcript word array.
   useEffect(() => {
     if (!readyForWordTimeData) return;
     if (!comprehensionItemsExist) return;
     if (!wordTimeArray || wordTimeArray.length === 0) return;
 
-    console.log(
-      "PASSAGES:",
-      comprehensionItems.map((i) => i.passage),
-    );
-    console.log("WTA length:", wordTimeArray.length);
-    console.log("WTA sample:", wordTimeArray.slice(0, 3));
-
-    const indices = findBatchPassageIndices(
-      comprehensionItems.map((qa) => qa.passage),
-      wordTimeArray,
-    );
-
-    const snippets = indices.map((index) => {
-      if (index) {
-        return wordTimeArray.slice(index.start, index.end + 1);
-      }
-      return [];
-    });
-
-    const updated = comprehensionItems.map((qa, i) => ({
-      ...qa,
-      snippet: snippets[i] || [],
-      indices: indices[i] || null,
-    }));
-
+    const updated = addIndicesToPassages(comprehensionItems, wordTimeArray);
     updateComprehensionItems(updated);
 
-    updated.length > 0
-      ? setReadyForAudioClips(true)
-      : setReadyForAudioClips(false);
+    setReadyForAudioClips(updated.length > 0);
   }, [readyForWordTimeData]);
 
+  // 5. Cut an audio clip for each passage, then attach the filenames.
   useEffect(() => {
     if (!readyForAudioClips || !comprehensionItemsExist) {
       return;
     }
 
     const fetchSnippets = async () => {
-      const splitAudioFileArray = await splitAudioFile(
+      // clipsByQuestion[i] is an array of clip filenames aligned to
+      // comprehensionItems[i].passages (same order).
+      const clipsByQuestion = await splitAudioFile(
         audioFileName,
         wordTimeArray,
         comprehensionItems,
       );
       const updated = addSnippetsFileNamesToQuestions(
         comprehensionItems,
-        splitAudioFileArray,
+        clipsByQuestion,
       );
       updateComprehensionItems(updated);
       setReadyForAudioClips(true);
@@ -211,14 +176,6 @@ const CreateAudioSnippets = () => {
 
     if (!response.ok) throw new Error("make-question-json failed");
     const data = await response.json();
-    console.log(
-      "getAudioQuestionParts type:",
-      type,
-      "response.ok:",
-      response.ok,
-      "data:",
-      data,
-    );
 
     if (type === "question") {
       setAudioQuestionObj(data);

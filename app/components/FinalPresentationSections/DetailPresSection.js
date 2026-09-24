@@ -1,9 +1,11 @@
 // DetailPresSection.js
 // Container for the "Listen for Detail" stage. Parts, in order:
-//   1. The task-instructions slide.
+//   1. The task-instructions slide — now with the FULL audio file playable from
+//      a play/pause button right of the title (titleAccessory).
 //   2. Slide-by-slide answer reveal — one slide per REVIEWED question, answer
 //      fading in on arrow. When that question's "play clip" is on, a SnippetPlayer
-//      appears with the answer. Rendered only when "go over slide by slide" is on.
+//      appears with SNIPPET #1 (passages[0]) for that answer. Rendered only when
+//      "go over slide by slide" is on.
 //   3. A single recap slide listing every reviewed answer, when "show all answers
 //      on one slide" is on.
 //
@@ -24,9 +26,14 @@ export default function DetailPresSection() {
   const { slides: answerSlides } = useDetailAnswersSlideModel();
   const detailConfig = useAudioTextStore((s) => s.detailConfig);
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
+  const fullAudioFileName = useAudioTextStore((s) => s.selectedAudioFileName);
 
+  // Detail answer slides play SNIPPET #1 (the primary passage's clip) per answer.
   const snippetFileNames = useMemo(
-    () => (comprehensionItems ?? []).map((it) => it.snippetFileNames),
+    () =>
+      (comprehensionItems ?? []).map(
+        (it) => it.passages?.[0]?.snippetFileName ?? null,
+      ),
     [comprehensionItems],
   );
 
@@ -38,6 +45,12 @@ export default function DetailPresSection() {
 
   const modes = getDetailModes(detailConfig);
 
+  // Full audio, playable from the instructions slide (play/pause toggle is
+  // built into SnippetPlayer). Only render when we actually have a file.
+  const fullAudioPlayer = fullAudioFileName ? (
+    <SnippetPlayer index={0} snippetFileNames={[fullAudioFileName]} />
+  ) : null;
+
   // answerSlides are index-aligned with comprehensionItems. Keep original index
   // (for snippet lookup) alongside each reviewed slide.
   const reviewed = answerSlides
@@ -46,12 +59,13 @@ export default function DetailPresSection() {
 
   return (
     <>
-      {/* 1. Task instructions */}
+      {/* 1. Task instructions + full-audio player right of the title */}
       <section className="slide-full">
         <InstructionSlide
           title={model.title}
           titleAccent={model.titleAccent}
           lines={model.lines}
+          titleAccessory={fullAudioPlayer}
           compact
         />
       </section>
