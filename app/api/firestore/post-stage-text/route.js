@@ -28,6 +28,7 @@ const FIELD_MAP = {
   DetailRatings: "detailRatings",
   DetailRatings: "detailRatings",
   ScrambleConfig: "scrambleConfig",
+  StageActivities: "stageActivities",
 };
 
 export const POST = async (request) => {

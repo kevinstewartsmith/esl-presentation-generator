@@ -23,7 +23,9 @@ const initialAudioState = {
   detailConfig: null, // detail stage presentation settings (modes + per-question)
   detailRatings: null, // { [index]: { level, reason } } CEFR difficulty per question
   scrambleConfig: null,
+  stageActivities: {},
 
+  justHydratedStageActivities: false,
   justHydratedScrambleConfig: false,
   justHydrated: false,
   justHydratedTranscript: false,
@@ -184,6 +186,34 @@ export const useAudioTextStore = create(
 
     setHydratedScrambleConfig: (obj) =>
       set({ scrambleConfig: obj ?? {}, justHydratedScrambleConfig: true }),
+
+    setStageActivityType: (stageId, activityType) =>
+      set((state) => {
+        const prev = state.stageActivities?.[stageId] ?? {};
+        return {
+          stageActivities: {
+            ...(state.stageActivities ?? {}),
+            [stageId]: { ...prev, activityType, config: prev.config ?? {} },
+          },
+          justHydratedStageActivities: false,
+        };
+      }),
+    updateStageActivityConfig: (stageId, patch) =>
+      set((state) => {
+        const prev = state.stageActivities?.[stageId] ?? {};
+        return {
+          stageActivities: {
+            ...(state.stageActivities ?? {}),
+            [stageId]: {
+              ...prev,
+              config: { ...(prev.config ?? {}), ...patch },
+            },
+          },
+          justHydratedStageActivities: false,
+        };
+      }),
+    setHydratedStageActivities: (obj) =>
+      set({ stageActivities: obj ?? {}, justHydratedStageActivities: true }),
   })),
 );
 
@@ -304,6 +334,12 @@ const FIELD_SUBSCRIPTIONS = [
     field: "scrambleConfig",
     flag: "justHydratedScrambleConfig",
     textType: "ScrambleConfig",
+    isEmpty: (v) => v == null || Object.keys(v).length === 0,
+  },
+  {
+    field: "stageActivities",
+    flag: "justHydratedStageActivities",
+    textType: "StageActivities",
     isEmpty: (v) => v == null || Object.keys(v).length === 0,
   },
 ];

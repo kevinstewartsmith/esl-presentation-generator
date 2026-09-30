@@ -67,6 +67,13 @@ const CATALOG = [
     skills: ["listening", "reading"],
     requires: [],
   },
+  {
+    type: "warmUp",
+    label: "Warm-up",
+    blurb: "Activate students, ease into English",
+    skills: ["listening", "reading", "speaking", "writing"],
+    requires: [],
+  },
 ];
 const CATALOG_BY_TYPE = Object.fromEntries(CATALOG.map((c) => [c.type, c]));
 const REDUCED_PRESET = ["gist", "scramble", "detail"];

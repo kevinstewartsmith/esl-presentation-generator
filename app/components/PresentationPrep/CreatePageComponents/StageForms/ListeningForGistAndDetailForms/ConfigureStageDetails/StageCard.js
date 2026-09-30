@@ -9,11 +9,14 @@ import ScrambleCard from "./cards/ScrambleCard";
 import GistCard from "./cards/GistCard";
 import DetailCard from "./cards/DetailCard";
 import PlaceholderCard from "./cards/PlaceholderCard";
+import WarmupActivityCard from "./cards/WarmupActivityCard";
 
 const CARD_BY_TYPE = {
   scramble: ScrambleCard,
   gist: GistCard,
   detail: DetailCard,
+  warmUp: WarmupActivityCard,
+  leadIn: WarmupActivityCard,
 };
 
 export default function StageCard({ item, position }) {
