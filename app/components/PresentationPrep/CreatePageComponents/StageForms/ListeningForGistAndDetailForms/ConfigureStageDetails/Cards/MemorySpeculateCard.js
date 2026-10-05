@@ -7,15 +7,14 @@
 // config shape:
 //   { A: { image, cefrMin, cefrMax, stems: [{level,text}] },
 //     B: { ... },
-//     keywords?: [...] }   // keywords filled by a later stage
-//   image: { url, source: "unsplash"|"link", credit: { name, profileUrl, photoUrl } | null }
+//     keywords?: [...] }
+//   image: { url, source: "unsplash"|"link", credit: {name, profileUrl, photoUrl}|null }
 //
-// STATUS: stems fully functional. Images: Unsplash picker (gallery + credit
-// capture + download-trigger) and paste-link work. Upload + the ✦ AI keyword
-// chips come in later stages.
+// AI (opt-in buttons):
+//   - ✦ Suggest keywords: lesson content -> image-search keywords (fills picker chips)
+//   - ✦ Get stem suggestions: Gemini vision reads a partner's image -> graded stems
 //
-// NOTE: the CEFR stem sets below are PLACEHOLDER content — the real curated
-// A1–C2 library is task 16.
+// NOTE: the fallback CEFR stem sets below are PLACEHOLDER content (task 16).
 
 "use client";
 
@@ -59,12 +58,16 @@ function defaultPartner() {
 
 export default function MemorySpeculateCard({ stageId }) {
   const stageActivities = useAudioTextStore((s) => s.stageActivities);
-  const updateStageActivityConfig = useAudioTextStore(
-    (s) => s.updateStageActivityConfig,
-  );
+  const updateStageActivityConfig = useAudioTextStore((s) => s.updateStageActivityConfig);
+  // Lesson content for AI keyword suggestions.
+  const s2tTranscript = useAudioTextStore((s) => s.s2tTranscript);
+  const selectedGist = useAudioTextStore((s) => s.selectedGist);
+  const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
 
   const config = stageActivities?.[stageId]?.config ?? {};
+  const keywords = config.keywords ?? [];
   const [picker, setPicker] = useState(null); // { side, query } | null
+  const [kwLoading, setKwLoading] = useState(false);
 
   useEffect(() => {
     const hasA = config.A?.stems?.length;
@@ -78,6 +81,29 @@ export default function MemorySpeculateCard({ stageId }) {
   const partners = ["A", "B"];
   const setP = (p, patch) => setPartner(config, stageId, updateStageActivityConfig, p, patch);
 
+  async function suggestKeywords() {
+    setKwLoading(true);
+    try {
+      const res = await fetch("/api/get-image-keywords", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transcript: s2tTranscript,
+          gist: selectedGist,
+          questionsAndAnswers: comprehensionItems,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.keywords)) {
+        updateStageActivityConfig(stageId, { keywords: data.keywords });
+      }
+    } catch (e) {
+      console.error("suggestKeywords failed", e);
+    } finally {
+      setKwLoading(false);
+    }
+  }
+
   return (
     <div>
       <div style={styles.instructionsNote}>
@@ -86,9 +112,20 @@ export default function MemorySpeculateCard({ stageId }) {
       </div>
 
       {/* IMAGES */}
-      <div style={styles.sectionLabel}>
-        Images <span style={styles.hint}>— left = Partner A, right = Partner B</span>
+      <div style={styles.imagesHead}>
+        <div style={styles.sectionLabel}>
+          Images <span style={styles.hint}>— left = Partner A, right = Partner B</span>
+        </div>
+        <button style={styles.kwBtn} onClick={suggestKeywords} disabled={kwLoading}>
+          ✦ {kwLoading ? "Finding keywords…" : "Suggest keywords"}
+        </button>
       </div>
+      {keywords.length > 0 && (
+        <div style={styles.kwReady}>
+          {keywords.length} keyword{keywords.length === 1 ? "" : "s"} ready — open an
+          image search to use them as chips.
+        </div>
+      )}
       <div style={styles.duo}>
         {partners.map((p) => (
           <ImageSlot
@@ -114,6 +151,7 @@ export default function MemorySpeculateCard({ stageId }) {
       <UnsplashPicker
         open={!!picker}
         initialQuery={picker?.query || ""}
+        keywords={keywords}
         onPick={(image) => { if (picker) setP(picker.side, { image }); setPicker(null); }}
         onClose={() => setPicker(null)}
       />
@@ -170,7 +208,7 @@ function ImageSlot({ side, data, onSet, onSearch }) {
             <button type="button" style={styles.btnSubtle} onClick={() => onSearch("")}>Browse</button>
             <PasteLink onAdd={(url) => onSet({ url, source: "link", credit: null })} />
           </div>
-          <div style={styles.stubNote}>Upload &amp; ✦ AI keyword suggestions come next.</div>
+          <div style={styles.stubNote}>Upload comes next.</div>
         </div>
       )}
     </div>
@@ -196,6 +234,8 @@ function StemColumn({ side, data, update }) {
   const min = data.cefrMin ?? DEFAULTS.cefrMin;
   const max = data.cefrMax ?? DEFAULTS.cefrMax;
   const single = min === max;
+  const hasImage = !!data.image;
+  const [genLoading, setGenLoading] = useState(false);
 
   const regen = (nextMin, nextMax, count) => {
     const pool = stemPool(nextMin, nextMax);
@@ -220,6 +260,24 @@ function StemColumn({ side, data, update }) {
     next.splice(to, 0, next.splice(from, 1)[0]);
     update({ stems: next });
   };
+
+  async function generate() {
+    if (!hasImage) return;
+    setGenLoading(true);
+    try {
+      const res = await fetch("/api/get-image-stems", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: data.image.url, cefrMin: min, cefrMax: max, count: stems.length || DEFAULTS.count }),
+      });
+      const d = await res.json();
+      if (res.ok && Array.isArray(d.stems) && d.stems.length) update({ stems: d.stems });
+    } catch (e) {
+      console.error("get-image-stems failed", e);
+    } finally {
+      setGenLoading(false);
+    }
+  }
 
   return (
     <div style={styles.slot}>
@@ -259,9 +317,15 @@ function StemColumn({ side, data, update }) {
         ))}
       </div>
 
-      <button style={styles.aiBtn} disabled title="Wired in the next step">
-        ✦ Get stem suggestions
+      <button
+        style={{ ...styles.aiBtn, ...(hasImage && !genLoading ? styles.aiBtnOn : {}) }}
+        onClick={generate}
+        disabled={!hasImage || genLoading}
+        title={hasImage ? "Write stems from this image" : "Pick this partner's image first"}
+      >
+        ✦ {genLoading ? "Thinking…" : "Get stem suggestions"}
       </button>
+      {!hasImage && <div style={styles.stubNote}>Pick this partner's image to enable image-based stems.</div>}
     </div>
   );
 }
@@ -288,9 +352,12 @@ function StemRow({ index, stem, showLevel, isFirst, isLast, canDelete, onEdit, o
 
 const styles = {
   instructionsNote: { fontSize: "14px", color: "#6f6b63", marginBottom: "16px" },
-  sectionLabel: { fontSize: "11px", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#8a857c", marginBottom: "12px" },
+  imagesHead: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", marginBottom: "6px", flexWrap: "wrap" },
+  sectionLabel: { fontSize: "11px", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#8a857c" },
   hint: { fontWeight: 500, letterSpacing: 0, textTransform: "none", color: "#b8b3a8", fontSize: "12px" },
-  duo: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" },
+  kwReady: { fontSize: "12px", color: "#0f6e56", marginBottom: "12px" },
+  kwBtn: { border: "1px dashed #2f7d76", background: "transparent", color: "#0f6e56", fontWeight: 600, font: "inherit", fontSize: "12px", borderRadius: "8px", padding: "6px 11px", cursor: "pointer" },
+  duo: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginTop: "6px" },
   slot: { border: "1px solid #e6e3db", borderRadius: "12px", background: "#fbfaf7", padding: "14px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 },
   slotHead: { display: "flex", alignItems: "center", gap: "8px" },
   sideBadge: { fontFamily: "'Fraunces', Georgia, serif", fontWeight: 700, fontSize: "13px", color: "#fff", background: "#2f7d76", width: "26px", height: "26px", borderRadius: "7px", display: "grid", placeItems: "center", flexShrink: 0 },
@@ -323,5 +390,6 @@ const styles = {
   stemInput: { flex: 1, minWidth: 0, border: "1px solid transparent", background: "transparent", borderRadius: "6px", padding: "4px 6px", font: "inherit", fontSize: "13px", color: "#3a3a3a" },
   iconBtn: { border: "1px solid #e6e3db", background: "#fff", color: "#6f6b63", borderRadius: "6px", width: "22px", height: "22px", fontSize: "12px", lineHeight: 1, cursor: "pointer", flexShrink: 0, padding: 0 },
   del: { border: "0", background: "transparent", color: "#b8b3a8", fontSize: "16px", lineHeight: 1, cursor: "pointer", padding: "0 2px", flexShrink: 0 },
-  aiBtn: { alignSelf: "flex-start", border: "1px dashed #2f7d76", background: "transparent", color: "#0f6e56", fontWeight: 600, font: "inherit", fontSize: "13px", borderRadius: "8px", padding: "8px 12px", cursor: "not-allowed", opacity: 0.55, marginTop: "4px" },
+  aiBtn: { alignSelf: "flex-start", border: "1px dashed #cfcbc2", background: "transparent", color: "#b8b3a8", fontWeight: 600, font: "inherit", fontSize: "13px", borderRadius: "8px", padding: "8px 12px", cursor: "not-allowed", marginTop: "4px" },
+  aiBtnOn: { border: "1px dashed #2f7d76", color: "#0f6e56", cursor: "pointer" },
 };
