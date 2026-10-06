@@ -74,7 +74,7 @@ const styles = {
   page: {
     fontFamily: "'Inter', system-ui, sans-serif",
     color: "#1c1c1e",
-    maxWidth: "min(1240px, 94vw)",
+    maxWidth: "min(1500px, calc(100vw - 240px))",
     margin: "0 auto",
     padding: "8px 4px 48px",
   },

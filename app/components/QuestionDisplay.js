@@ -28,8 +28,8 @@ function QuestionDisplay() {
         <h1 style={styles.title}>Answer snippets</h1>
         <p style={styles.sub}>
           Each question with its answer and the passages from the audio that
-          support it, in the order they&rsquo;re spoken. Play a clip to check the
-          snippet.
+          support it, in the order they&rsquo;re spoken. Play a clip to check
+          the snippet.
         </p>
       </header>
 
@@ -40,9 +40,7 @@ function QuestionDisplay() {
       ) : (
         <div style={styles.list}>
           {items.map((item, index) => {
-            const passages = Array.isArray(item.passages)
-              ? item.passages
-              : [];
+            const passages = Array.isArray(item.passages) ? item.passages : [];
 
             return (
               <div key={index} style={styles.card}>
@@ -69,8 +67,7 @@ function QuestionDisplay() {
                   <div style={styles.passages}>
                     {passages.map((p, pIndex) => {
                       const hasClip =
-                        p.snippetFileName &&
-                        p.snippetFileName !== "No Audio";
+                        p.snippetFileName && p.snippetFileName !== "No Audio";
 
                       return (
                         <div key={pIndex} style={styles.passageRow}>
@@ -114,7 +111,7 @@ const styles = {
   page: {
     fontFamily: "'Inter', system-ui, sans-serif",
     color: "#1c1c1e",
-    maxWidth: "min(1000px, 94vw)",
+    maxWidth: "min(1500px, calc(100vw - 240px))",
     margin: "0 auto",
     padding: "8px 4px 48px",
   },

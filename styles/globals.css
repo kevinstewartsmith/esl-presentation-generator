@@ -117,20 +117,15 @@ button {
 
 .arrows {
   color: white;
-  background-color: #3c5997;
+  background-color: #2f7d76;
   position: fixed;
   z-index: 2;
-  /* right: 40px; */
-  bottom: 40%;
-  font-size: 80;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
 }
-.arrow-left {
-  right: 20px;
-}
-
-.arrow-right {
-  left: 20px;
-}
+.arrow-left  { right: 24px; }
+.arrow-right { left: 24px; }
 
 .add-button {
   color: white;

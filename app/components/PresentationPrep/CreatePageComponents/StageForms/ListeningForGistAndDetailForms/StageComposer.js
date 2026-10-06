@@ -444,7 +444,7 @@ const st = {
     display: "grid",
     gridTemplateColumns: "minmax(0,1fr) 300px",
     gap: "28px",
-    maxWidth: "980px",
+    maxWidth: "min(1500px, calc(100vw - 240px))",
     margin: "0 auto",
     alignItems: "start",
   },

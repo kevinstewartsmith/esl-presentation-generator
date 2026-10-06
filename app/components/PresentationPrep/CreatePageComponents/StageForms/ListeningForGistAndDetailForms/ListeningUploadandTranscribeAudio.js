@@ -31,7 +31,7 @@ const styles = {
     padding: "24px 4px 40px",
   },
   stack: {
-    maxWidth: "min(920px, 94vw)",
+    maxWidth: "min(1500px, calc(100vw - 240px))",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
