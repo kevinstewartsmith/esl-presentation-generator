@@ -80,17 +80,29 @@ export default function UnsplashPicker({
   return (
     <div
       style={s.overlay}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <div style={s.modal} role="dialog" aria-modal="true" aria-label="Choose an image">
+      <div
+        style={s.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Choose an image"
+      >
         <div style={s.head}>
           <div style={s.top}>
             <h2 style={s.h2}>Choose an image</h2>
-            <button style={s.x} onClick={onClose} aria-label="Close">×</button>
+            <button style={s.x} onClick={onClose} aria-label="Close">
+              ×
+            </button>
           </div>
           <form
             style={s.searchRow}
-            onSubmit={(e) => { e.preventDefault(); runSearch(); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              runSearch();
+            }}
           >
             <input
               value={query}
@@ -98,8 +110,13 @@ export default function UnsplashPicker({
               placeholder="Search a term…"
               style={s.input}
               autoFocus
+              autoComplete="off"
+              name="unsplash-image-search"
+              spellCheck={false}
             />
-            <button type="submit" style={s.btn}>Search</button>
+            <button type="submit" style={s.btn}>
+              Search
+            </button>
           </form>
           {keywords.length > 0 && (
             <div style={s.chips}>
@@ -107,7 +124,10 @@ export default function UnsplashPicker({
                 <button
                   key={k}
                   style={s.chip}
-                  onClick={() => { setQuery(k); runSearch(k); }}
+                  onClick={() => {
+                    setQuery(k);
+                    runSearch(k);
+                  }}
                 >
                   {k}
                 </button>
@@ -149,29 +169,111 @@ export default function UnsplashPicker({
 
 const s = {
   overlay: {
-    position: "fixed", inset: 0, background: "rgba(20,18,14,.55)",
-    display: "grid", placeItems: "center", padding: "16px", zIndex: 1000,
+    position: "fixed",
+    inset: 0,
+    background: "rgba(20,18,14,.55)",
+    display: "grid",
+    placeItems: "center",
+    padding: "16px",
+    zIndex: 1000,
   },
   modal: {
-    background: "#fff", border: "1px solid #e6e3db", borderRadius: "16px",
-    boxShadow: "0 8px 40px rgba(0,0,0,.22)", width: "min(680px, 100%)",
-    maxHeight: "88vh", overflow: "hidden", display: "flex", flexDirection: "column",
+    background: "#fff",
+    border: "1px solid #e6e3db",
+    borderRadius: "16px",
+    boxShadow: "0 8px 40px rgba(0,0,0,.22)",
+    width: "min(680px, 100%)",
+    maxHeight: "88vh",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
     fontFamily: "'Inter', system-ui, sans-serif",
   },
-  head: { padding: "16px 18px", borderBottom: "1px solid #f0eee8", display: "flex", flexDirection: "column", gap: "10px" },
+  head: {
+    padding: "16px 18px",
+    borderBottom: "1px solid #f0eee8",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
   top: { display: "flex", alignItems: "center", gap: "10px" },
-  h2: { fontFamily: "'Fraunces', Georgia, serif", fontSize: "17px", fontWeight: 600, margin: 0, flex: 1, color: "#1c1c1e" },
-  x: { border: 0, background: "transparent", fontSize: "20px", color: "#6f6b63", cursor: "pointer", lineHeight: 1, padding: "2px 6px", borderRadius: "6px" },
+  h2: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontSize: "17px",
+    fontWeight: 600,
+    margin: 0,
+    flex: 1,
+    color: "#1c1c1e",
+  },
+  x: {
+    border: 0,
+    background: "transparent",
+    fontSize: "20px",
+    color: "#6f6b63",
+    cursor: "pointer",
+    lineHeight: 1,
+    padding: "2px 6px",
+    borderRadius: "6px",
+  },
   searchRow: { display: "flex", gap: "8px", margin: 0 },
-  input: { flex: 1, minWidth: 0, border: "1px solid #e6e3db", borderRadius: "8px", padding: "8px 11px", font: "inherit", fontSize: "13px", color: "#1c1c1e", background: "#fff" },
-  btn: { font: "inherit", fontSize: "13px", fontWeight: 600, borderRadius: "8px", padding: "8px 14px", cursor: "pointer", border: "1px solid #2f7d76", background: "#2f7d76", color: "#fff", whiteSpace: "nowrap" },
+  input: {
+    flex: 1,
+    minWidth: 0,
+    border: "1px solid #e6e3db",
+    borderRadius: "8px",
+    padding: "8px 11px",
+    font: "inherit",
+    fontSize: "13px",
+    color: "#1c1c1e",
+    background: "#fff",
+  },
+  btn: {
+    font: "inherit",
+    fontSize: "13px",
+    fontWeight: 600,
+    borderRadius: "8px",
+    padding: "8px 14px",
+    cursor: "pointer",
+    border: "1px solid #2f7d76",
+    background: "#2f7d76",
+    color: "#fff",
+    whiteSpace: "nowrap",
+  },
   chips: { display: "flex", flexWrap: "wrap", gap: "6px" },
-  chip: { font: "inherit", fontSize: "12px", cursor: "pointer", border: "1px solid #e6e3db", background: "#fff", color: "#3a3a3a", borderRadius: "20px", padding: "4px 11px" },
+  chip: {
+    font: "inherit",
+    fontSize: "12px",
+    cursor: "pointer",
+    border: "1px solid #e6e3db",
+    background: "#fff",
+    color: "#3a3a3a",
+    borderRadius: "20px",
+    padding: "4px 11px",
+  },
   body: { padding: "16px 18px", overflowY: "auto" },
   msg: { fontSize: "13px", color: "#8a857c", padding: "8px 0" },
   grid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" },
-  tile: { border: 0, padding: 0, cursor: "pointer", borderRadius: "9px", overflow: "hidden", background: "#fbfaf7", position: "relative" },
-  tileImg: { width: "100%", aspectRatio: "3 / 2", objectFit: "cover", display: "block" },
-  tileCredit: { display: "block", fontSize: "10px", color: "#8a857c", padding: "4px 6px", textAlign: "left" },
+  tile: {
+    border: 0,
+    padding: 0,
+    cursor: "pointer",
+    borderRadius: "9px",
+    overflow: "hidden",
+    background: "#fbfaf7",
+    position: "relative",
+  },
+  tileImg: {
+    width: "100%",
+    aspectRatio: "3 / 2",
+    objectFit: "cover",
+    display: "block",
+  },
+  tileCredit: {
+    display: "block",
+    fontSize: "10px",
+    color: "#8a857c",
+    padding: "4px 6px",
+    textAlign: "left",
+  },
   note: { fontSize: "12px", color: "#b8b3a8", marginTop: "12px" },
 };

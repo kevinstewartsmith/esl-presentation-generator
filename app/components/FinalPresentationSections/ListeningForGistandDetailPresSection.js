@@ -18,6 +18,7 @@ import { SlideThemeProvider } from "@app/presentation/theme/SlideThemeProvider";
 import ScramblePresSection from "./ScramblePresSection";
 import PeerCheckPresSection from "./PeerCheckPresSection"; // ← ADD this line (line 19)
 import DetailAnswersPresSection from "./DetailAnswersPresSection";
+import WarmupActivityPresSection from "./WarmupActivityPresSection";
 // activity type -> the section that renders its slides
 
 const SECTION_BY_TYPE = {
@@ -25,6 +26,8 @@ const SECTION_BY_TYPE = {
   gist: GistPresSection,
   detail: DetailPresSection,
   peerCheck: PeerCheckPresSection,
+  warmUp: WarmupActivityPresSection,
+  leadIn: WarmupActivityPresSection,
 };
 
 const ListeningForGistandDetailPresSection = () => {
