@@ -104,17 +104,23 @@ function StemsSlide({ side, stems }) {
 
   return (
     <SlideFrame title={`Student ${side}`} subtitle="Speak for 40 seconds">
-      <div style={st.fitBox}>
-        <div ref={ref} style={st.stemsWrap}>
-          {list.length ? (
-            list.map((s, i) => (
-              <div key={i} style={st.stemLine}>
-                {s.text}
-              </div>
-            ))
-          ) : (
-            <div style={st.imgPlaceholder}>No stems yet</div>
-          )}
+      <div style={st.stemsBody}>
+        <div style={st.linkHint}>
+          Use <strong style={st.linkStrong}>long answers</strong> — link your
+          ideas with <span style={st.linkWords}>and · but · because · so</span>
+        </div>
+        <div style={st.fitBox}>
+          <div ref={ref} style={st.stemsWrap}>
+            {list.length ? (
+              list.map((s, i) => (
+                <div key={i} style={st.stemLine}>
+                  {s.text}
+                </div>
+              ))
+            ) : (
+              <div style={st.imgPlaceholder}>No stems yet</div>
+            )}
+          </div>
         </div>
       </div>
     </SlideFrame>
@@ -185,10 +191,33 @@ const st = {
     fontSize: "22px",
     fontStyle: "italic",
   },
-  // Fit box: fills the slide body; the stem stack is scaled to fit inside it.
-  fitBox: {
+  // Column body: a fixed instruction strip on top, stems fill the rest.
+  stemsBody: {
     width: "100%",
     height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
+  },
+  linkHint: {
+    fontFamily: "'Inter', system-ui, sans-serif",
+    fontSize: "30px",
+    lineHeight: 1.3,
+    color: "#4b4b4b",
+    textAlign: "center",
+  },
+  linkStrong: { color: TEAL, fontWeight: 700 },
+  linkWords: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontWeight: 600,
+    color: "#c98a2b",
+    whiteSpace: "nowrap",
+  },
+  // Fit box: fills the remaining slide body; the stem stack scales to fit inside.
+  fitBox: {
+    width: "100%",
+    flex: 1,
+    minHeight: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

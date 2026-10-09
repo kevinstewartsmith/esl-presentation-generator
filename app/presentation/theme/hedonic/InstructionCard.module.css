@@ -1,19 +1,24 @@
-/* InstructionCard.module.css — fixed px against the 1280x720 canvas. */
+/* InstructionCard.module.css — fixed px against the 1280x720 canvas.
+   SHORT, WIDE, one-line cards. The icon column and paddings are lean and the
+   heading is 44px — small enough that the longest instruction stays on ONE line
+   at full width, so useFitScale doesn't have to shrink the stack (scale stays
+   1.0). Wide boxes, no wrap, no vertical cutoff.
+   Verified by headless render of the real stack + useFitScale (D3). */
 
 .card {
   position: relative;
   box-sizing: border-box;
 
   display: grid;
-  grid-template-columns: 208px minmax(0, 1fr);
+  grid-template-columns: 80px minmax(0, 1fr);
   align-items: center;
 
-  min-height: 198px;
-  padding: 28px 34px;
+  min-height: 90px;
+  padding: 12px 22px;
 
   overflow: hidden;
   border: 2px solid;
-  border-radius: 36px;
+  border-radius: 26px;
 
   box-shadow:
     0 12px 24px rgb(67 89 120 / 7%),
@@ -46,14 +51,14 @@
 
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 16px;
 
   height: 100%;
 }
 
 .iconCircle {
   box-sizing: border-box;
-  width: 136px;
+  width: 56px;
   aspect-ratio: 1;
 
   display: grid;
@@ -63,7 +68,7 @@
   padding: 12%;
 
   color: white;
-  border: 8px solid white;
+  border: 5px solid white;
   border-radius: 50%;
 
   box-shadow: 0 10px 17px rgb(56 79 110 / 18%);
@@ -84,8 +89,8 @@
 
 .divider {
   width: 2px;
-  height: 70%;
-  min-height: 96px;
+  height: 66%;
+  min-height: 44px;
   border-radius: 10px;
   background: currentColor;
   opacity: 0.7;
@@ -100,7 +105,7 @@
   justify-content: center;
 
   min-width: 0;
-  padding-left: 32px;
+  padding-left: 20px;
 }
 
 .instructionHeading {
@@ -108,9 +113,9 @@
   align-items: baseline;
   gap: 0.22em;
 
-  font-size: 64px;
+  font-size: 44px;
   font-weight: 700;
-  line-height: 1.06;
+  line-height: 1.08;
 }
 
 .number {
@@ -130,17 +135,17 @@
 }
 
 .question {
-  margin-top: 12px;
+  margin-top: 8px;
 
   color: var(--text);
-  font-size: 46px;
+  font-size: 34px;
   font-weight: 500;
   line-height: 1.18;
 }
 
 /* Keep long generated questions clear of the bubble decoration. */
 .accentCard .cardContent {
-  padding-right: 210px;
+  padding-right: 140px;
 }
 
 .cardDecoration {
@@ -149,7 +154,7 @@
   right: 3.5%;
   top: 50%;
 
-  width: 260px;
+  width: 150px;
 
   color: currentColor;
   opacity: 0.14;
@@ -164,33 +169,33 @@
 
 
 .compact {
-  min-height: 150px;
-  padding: 20px 30px;
-  border-radius: 30px;
+  min-height: 84px;
+  padding: 12px 22px;
+  border-radius: 22px;
 }
 
 .compact .iconCircle {
-  width: 104px;
-  border-width: 6px;
+  width: 56px;
+  border-width: 5px;
 }
 
 .compact .iconArea {
-  gap: 20px;
+  gap: 14px;
 }
 
 .compact .divider {
-  min-height: 70px;
+  min-height: 40px;
 }
 
 .compact .cardContent {
-  padding-left: 24px;
+  padding-left: 18px;
 }
 
 .compact .instructionHeading {
-  font-size: 46px;
+  font-size: 38px;
 }
 
 .compact .question {
-  margin-top: 8px;
-  font-size: 34px;
+  margin-top: 6px;
+  font-size: 28px;
 }

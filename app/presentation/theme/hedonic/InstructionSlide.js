@@ -32,7 +32,7 @@ export default function InstructionSlide({
   titleAccessory = null,
 }) {
   const hasLines = lines && lines.length > 0;
-  const { ref } = useFitScale(lines.length, { max: 1, min: 0.4 });
+  const { ref } = useFitScale(lines.length, { max: 1.15, min: 0.4 });
 
   return (
     <SlideFrame
@@ -45,7 +45,9 @@ export default function InstructionSlide({
         <div className={styles.fitBox}>
           <div ref={ref} className={styles.stack}>
             {lines.map((line, i) => {
-              const tone = allPrimary ? "primary" : TONE_CYCLE[i] ?? "primary";
+              const tone = allPrimary
+                ? "primary"
+                : (TONE_CYCLE[i] ?? "primary");
               return (
                 <InstructionCard
                   key={i}
