@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { skillTokenFor, kickerFor } from "@app/utils/sectionLabels";
 import {
   DndContext,
   DragOverlay,
@@ -22,14 +23,14 @@ const CATALOG = [
     type: "leadIn",
     label: "Lead-in",
     blurb: "Generate interest, set the topic",
-    skills: ["listening", "reading"],
+    skills: ["listening", "reading", "speaking", "writing", "vocabulary"],
     requires: [],
   },
   {
     type: "preTeach",
     label: "Pre-teach vocabulary",
     blurb: "Unblock key words for the task",
-    skills: ["listening", "reading"],
+    skills: ["listening", "reading", "vocabulary"],
     requires: [],
   },
   {
@@ -57,26 +58,40 @@ const CATALOG = [
     type: "peerCheck",
     label: "Peer check",
     blurb: "Compare answers with a partner",
-    skills: ["listening", "reading", "speaking"],
+    skills: ["listening", "reading", "speaking", "vocabulary"],
     requires: [],
   },
   {
     type: "productive",
     label: "Productive task",
     blurb: "Personal response to the text",
-    skills: ["listening", "reading"],
+    skills: ["listening", "reading", "vocabulary"],
+    requires: [],
+  },
+  {
+    type: "hotSeat",
+    label: "Hot Seat",
+    blurb: "Fast describe-the-word team game",
+    skills: ["vocabulary", "speaking"],
     requires: [],
   },
   {
     type: "warmUp",
     label: "Warm-up",
     blurb: "Activate students, ease into English",
-    skills: ["listening", "reading", "speaking", "writing"],
+    skills: ["listening", "reading", "speaking", "writing", "vocabulary"],
     requires: [],
   },
 ];
 const CATALOG_BY_TYPE = Object.fromEntries(CATALOG.map((c) => [c.type, c]));
+
 const REDUCED_PRESET = ["gist", "scramble", "detail"];
+// Which stages a brand-new lesson is seeded with, PER SKILL. A skill not listed
+// here starts empty, so the teacher builds the run from the Bag of tricks
+// instead of inheriting listening's gist/decode/detail.
+const PRESET_BY_SKILL = {
+  listening: REDUCED_PRESET,
+};
 
 let _id = 0;
 const makeId = () => `stage_${Date.now()}_${_id++}`;
@@ -207,6 +222,15 @@ function ListDropZone({ children }) {
 export default function StageComposer() {
   const slideOrder = useAudioTextStore((s) => s.slideOrder);
   const updateSlideOrder = useAudioTextStore((s) => s.updateSlideOrder);
+  const currentSectionId = useAudioTextStore((s) => s.currentSectionId);
+
+  // Only show stages that belong to the skill being edited (default: show all
+  // if the section id is unknown, so nothing ever disappears unexpectedly).
+  const skillToken = skillTokenFor(currentSectionId);
+  const visibleCatalog = CATALOG.filter(
+    (c) => !c.skills || c.skills.includes(skillToken),
+  );
+  const presetTypes = PRESET_BY_SKILL[skillToken] ?? [];
 
   // The store is the source of truth. `items` is just a readable alias.
   const items = slideOrder;
@@ -214,7 +238,7 @@ export default function StageComposer() {
   // Seed from the preset ONCE, only if the store is empty (new lesson).
   useEffect(() => {
     if (!slideOrder || slideOrder.length === 0) {
-      updateSlideOrder(seedFromPreset(REDUCED_PRESET));
+      if (presetTypes.length) updateSlideOrder(seedFromPreset(presetTypes));
     }
     // run only on mount / when store identity changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -324,7 +348,7 @@ export default function StageComposer() {
           <section style={st.listCol}>
             <header style={st.listHeader}>
               <div>
-                <div style={st.eyebrow}>Listening · Gist &amp; Detail</div>
+                <div style={st.eyebrow}>{kickerFor(currentSectionId)}</div>
                 <h1 style={st.title}>Arrange slides</h1>
               </div>
               <div style={st.count}>
@@ -368,20 +392,24 @@ export default function StageComposer() {
               <span style={st.bagHint}>drag to add</span>
             </div>
             <div style={st.bagList}>
-              {CATALOG.map((c) => (
+              {visibleCatalog.map((c) => (
                 <TrickItem key={c.type} trick={c} />
               ))}
             </div>
-            <div style={st.presetBox}>
-              <div style={st.presetLabel}>Preset</div>
-              <button
-                onClick={() => setItems(seedFromPreset(REDUCED_PRESET))}
-                style={st.presetBtn}
-              >
-                Receptive skills (reduced)
-              </button>
-              <div style={st.presetNote}>Resets to gist → decode → detail.</div>
-            </div>
+            {presetTypes.length > 0 && (
+              <div style={st.presetBox}>
+                <div style={st.presetLabel}>Preset</div>
+                <button
+                  onClick={() => setItems(seedFromPreset(presetTypes))}
+                  style={st.presetBtn}
+                >
+                  Receptive skills (reduced)
+                </button>
+                <div style={st.presetNote}>
+                  Resets to gist → decode → detail.
+                </div>
+              </div>
+            )}
           </aside>
         </div>
 

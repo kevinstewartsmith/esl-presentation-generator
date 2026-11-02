@@ -14,12 +14,20 @@
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import CardShell from "./CardShell";
 import MemorySpeculateCard from "./MemorySpeculateCard";
+import HotSeatCard from "./HotSeatCard";
 
 const ACTIVITY_REGISTRY = {
   memorySpeculate: {
     label: "Memory & Speculate",
-    blurb: "Two images — each partner memorises one, then describes & speculates.",
+    blurb:
+      "Two images — each partner memorises one, then describes & speculates.",
     Card: MemorySpeculateCard,
+  },
+  hotSeat: {
+    label: "Hot Seat",
+    blurb:
+      "Describe-and-guess race — one partner faces away, the other describes 6 words against the clock.",
+    Card: HotSeatCard,
   },
   // add more warm-up / lead-in activities here
 };
@@ -30,9 +38,7 @@ const ACTIVITIES = Object.entries(ACTIVITY_REGISTRY).map(([id, a]) => ({
 
 export default function WarmupActivityCard({ item, position }) {
   const stageActivities = useAudioTextStore((s) => s.stageActivities);
-  const setStageActivityType = useAudioTextStore(
-    (s) => s.setStageActivityType,
-  );
+  const setStageActivityType = useAudioTextStore((s) => s.setStageActivityType);
 
   const label = item.type === "leadIn" ? "Lead-in" : "Warm-up";
   const chosen = stageActivities?.[item.id]?.activityType ?? null;

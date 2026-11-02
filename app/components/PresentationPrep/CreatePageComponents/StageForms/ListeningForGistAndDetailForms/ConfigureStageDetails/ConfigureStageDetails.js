@@ -9,6 +9,7 @@
 "use client";
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { kickerFor } from "@app/utils/sectionLabels";
 import StageCard from "./StageCard";
 import StageSidebar from "./StageSidebar";
 
@@ -16,13 +17,14 @@ const anchorId = (id) => `stage-${id}`;
 
 export default function ConfigureStageDetails() {
   const slideOrder = useAudioTextStore((s) => s.slideOrder);
+  const currentSectionId = useAudioTextStore((s) => s.currentSectionId);
 
   const included = (slideOrder ?? []).filter((it) => it.included);
 
   return (
     <div style={styles.page}>
       <header style={styles.header}>
-        <div style={styles.eyebrow}>Listening · Gist &amp; Detail</div>
+        <div style={styles.eyebrow}>{kickerFor(currentSectionId)}</div>
         <h1 style={styles.title}>Configure stage details</h1>
         <p style={styles.sub}>
           Review and edit each stage in the order you arranged. Play snippets,

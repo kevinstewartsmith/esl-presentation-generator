@@ -29,6 +29,7 @@ import WarmUpBoardRace from "@app/components/PresentationPrep/CreatePageComponen
 import Brainstorming from "@app/components/PresentationPrep/CreatePageComponents/StageForms/Brainstorming";
 import ThinkPairShare from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ThinkPairShare";
 import StartPresentation from "@app/components/PresentationPrep/CreatePageComponents/StartPresentation";
+import VocabularySection from "@app/components/PresentationPrep/CreatePageComponents/StageForms/VocabularyForms/VocabularySection";
 
 const ComponentMap = {
   "Class Rules": ClassRules,
@@ -45,7 +46,7 @@ const ComponentMap = {
   "Warm-Up: Board Race": WarmUpBoardRace,
   Brainstorming: Brainstorming,
   "Think - Pair - Share": ThinkPairShare,
-  Vocabulary: null,
+  Vocabulary: VocabularySection,
   "Start Presentation": StartPresentation,
 };
 

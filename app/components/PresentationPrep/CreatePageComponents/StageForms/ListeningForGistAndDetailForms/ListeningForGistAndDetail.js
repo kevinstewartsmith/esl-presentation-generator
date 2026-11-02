@@ -66,6 +66,9 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const setHydratedStageActivities = useAudioTextStore(
     (state) => state.setHydratedStageActivities,
   );
+  const setCurrentSectionId = useAudioTextStore(
+    (state) => state.setCurrentSectionId,
+  );
 
   const sections = [
     <ListeningQuestionUploader stageID={listeningForGistandDetailStage} />,
@@ -87,6 +90,7 @@ const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   useEffect(() => {
     const fetchListeningData = async () => {
       resetAudioStore();
+      setCurrentSectionId(listeningForGistandDetailStage);
       const allListeningData = await getCompleteListeningStageDataFromDB(
         userID,
         lessonID,

@@ -10,9 +10,11 @@
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import MemorySpeculatePresSection from "./MemorySpeculatePresSection";
+import HotSeatPresSection from "./HotSeatPresSection";
 
 const ACTIVITY_PRES_BY_TYPE = {
   memorySpeculate: MemorySpeculatePresSection,
+  hotSeat: HotSeatPresSection,
 };
 
 export default function WarmupActivityPresSection({ item }) {

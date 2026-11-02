@@ -44,6 +44,12 @@ const initialAudioState = {
 export const useAudioTextStore = create(
   subscribeWithSelector((set) => ({
     ...initialAudioState,
+    // The section (skill) this store is currently editing. Every save stamps its
+    // POST with this id, so a skill's data lands in its own section doc. Set by
+    // each skill on mount; intentionally NOT in initialAudioState, so it survives
+    // resetAudioStore().
+    currentSectionId: STAGE_ID,
+    setCurrentSectionId: (id) => set({ currentSectionId: id || STAGE_ID }),
 
     resetAudioStore: () => set({ ...initialAudioState }),
 
@@ -220,9 +226,9 @@ export const useAudioTextStore = create(
 // ---- Persistence: one saver factory + one config table ----
 
 function makeFieldSaver(textType) {
-  return debounce(async (data) => {
+  return debounce(async (data, sectionId) => {
     const { currentUserID, currentLessonID } = useLessonStore.getState();
-    if (!currentUserID || !currentLessonID) return;
+    if (!currentUserID || !currentLessonID || !sectionId) return;
     try {
       await fetch("/api/firestore/post-stage-text", {
         method: "POST",
@@ -349,9 +355,10 @@ FIELD_SUBSCRIPTIONS.forEach(({ field, flag, textType, isEmpty }) => {
   useAudioTextStore.subscribe(
     (state) => state[field],
     (value) => {
-      if (useAudioTextStore.getState()[flag]) return;
+      const state = useAudioTextStore.getState();
+      if (state[flag]) return;
       if (isEmpty(value)) return;
-      saver(value);
+      saver(value, state.currentSectionId);
     },
   );
 });

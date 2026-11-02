@@ -19,6 +19,7 @@ import ScramblePresSection from "./ScramblePresSection";
 import PeerCheckPresSection from "./PeerCheckPresSection"; // ← ADD this line (line 19)
 import DetailAnswersPresSection from "./DetailAnswersPresSection";
 import WarmupActivityPresSection from "./WarmupActivityPresSection";
+import HotSeatPresSection from "./HotSeatPresSection";
 // activity type -> the section that renders its slides
 
 const SECTION_BY_TYPE = {
@@ -28,6 +29,7 @@ const SECTION_BY_TYPE = {
   peerCheck: PeerCheckPresSection,
   warmUp: WarmupActivityPresSection,
   leadIn: WarmupActivityPresSection,
+  hotSeat: HotSeatPresSection,
 };
 
 const ListeningForGistandDetailPresSection = () => {

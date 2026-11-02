@@ -1,5 +1,6 @@
 import { listeningForGistandDetailStage } from "./SectionIDs";
 import { readingForGistandDetailStage } from "./SectionIDs";
+import { vocabularyStage } from "./SectionIDs";
 
 // Shared helper: build URL, fetch, safe-parse, return null on any failure.
 async function fetchStageData(endpoint, params) {
@@ -31,4 +32,14 @@ export const getReadingTextDataFromDB = (currentUserID, currentLessonID) =>
     userID: currentUserID,
     lessonID: currentLessonID,
     stageID: "Reading for Gist and Detail",
+  });
+
+export const getCompleteVocabStageDataFromDB = (
+  currentUserID,
+  currentLessonID,
+) =>
+  fetchStageData("section-data/get-section-data", {
+    userID: currentUserID,
+    lessonID: currentLessonID,
+    stageID: vocabularyStage,
   });

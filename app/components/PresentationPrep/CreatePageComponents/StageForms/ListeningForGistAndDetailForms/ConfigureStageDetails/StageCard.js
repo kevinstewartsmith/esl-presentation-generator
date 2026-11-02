@@ -10,6 +10,7 @@ import GistCard from "./cards/GistCard";
 import DetailCard from "./cards/DetailCard";
 import PlaceholderCard from "./cards/PlaceholderCard";
 import WarmupActivityCard from "./cards/WarmupActivityCard";
+import StandaloneHotSeatCard from "./cards/StandaloneHotSeatCard";
 
 const CARD_BY_TYPE = {
   scramble: ScrambleCard,
@@ -17,6 +18,7 @@ const CARD_BY_TYPE = {
   detail: DetailCard,
   warmUp: WarmupActivityCard,
   leadIn: WarmupActivityCard,
+  hotSeat: StandaloneHotSeatCard,
 };
 
 export default function StageCard({ item, position }) {
