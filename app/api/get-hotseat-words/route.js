@@ -31,6 +31,7 @@ export const POST = async (req) => {
       questionsAndAnswers = [],
       mode = "words",
       existingWords = [],
+      vocabScreenshotWords = [],
     } = await req.json();
 
     ensureGcpCredentials();
@@ -74,6 +75,15 @@ export const POST = async (req) => {
           .slice(0, 4000)}`
       : "";
 
+    // Vocab screenshots source: the teacher's own extracted target vocabulary.
+    const vocabWordsStr = Array.isArray(vocabScreenshotWords)
+      ? vocabScreenshotWords.filter(Boolean).join(", ")
+      : "";
+    const useVocabScreens = !!sources.vocabScreenshots && !!vocabWordsStr;
+    const vocabCtx = useVocabScreens
+      ? `\n\nTARGET VOCABULARY (the teacher's own words from their coursebook screenshots — build the set from THESE words where possible, choosing the most describable and grading them EASY → HARD):\n${vocabWordsStr.slice(0, 2000)}`
+      : "";
+
     const themeLine = theme
       ? `on the theme "${theme}"`
       : useLesson
@@ -96,7 +106,7 @@ export const POST = async (req) => {
           }.`
         : "";
 
-    const prompt = `You are an ESL teacher building a "Hot Seat" describe-and-guess vocabulary game for ${lvl} students. Produce ${n} single words or short noun/verb phrases ${themeLine} that a student can DESCRIBE out loud to a partner (concrete and describable — not abstract grammar words, not proper nouns). Order them EASY → HARD: most common / most concrete first, least common / most abstract last. ${sourceLine}${modeLine}${ctx}\n\nReturn ONLY a JSON object: {"theme": "<short theme name>", "words": ["w1", …, "w${n}"]}. No other text.`;
+    const prompt = `You are an ESL teacher building a "Hot Seat" describe-and-guess vocabulary game for ${lvl} students. Produce ${n} single words or short noun/verb phrases ${themeLine} that a student can DESCRIBE out loud to a partner (concrete and describable — not abstract grammar words, not proper nouns). Order them EASY → HARD: most common / most concrete first, least common / most abstract last. ${sourceLine}${modeLine}${ctx}${vocabCtx}\n\nReturn ONLY a JSON object: {"theme": "<short theme name>", "words": ["w1", …, "w${n}"]}. No other text.`;
 
     const response = await ai.models.generateContent({
       model,

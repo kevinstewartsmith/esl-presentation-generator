@@ -8,10 +8,12 @@ import { deleteFile, getFile } from "@app/utils/indexedDBWrapper";
 import {
   listeningForGistandDetailStage,
   readingForGistandDetailStage,
+  vocabularyStage,
 } from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useReadingStore } from "@app/stores/useReadingStore";
+import { useVocabStore } from "@app/stores/useVocabStore";
 
 import {
   saveImageToIndexedDB,
@@ -29,7 +31,7 @@ import {
   img,
 } from "@app/utils/AddTextBookUtil_CSS";
 
-function AddTextBook({ category, stageID }) {
+function AddTextBook({ category, stageID, autoExtract = true }) {
   const textbook = useReadingStore((state) => state.textbook);
   const questions = useReadingStore((state) => state.questions);
   const answers = useReadingStore((state) => state.answers);
@@ -66,6 +68,10 @@ function AddTextBook({ category, stageID }) {
   const readingUpdateImagePath = useReadingStore(
     (s) => s.updateImagePathForCategory,
   );
+  const vocabImagePaths = useVocabStore((s) => s.imagePathsByCategory);
+  const vocabUpdateImagePath = useVocabStore(
+    (s) => s.updateImagePathForCategory,
+  );
 
   const IMAGE_STORE_BY_STAGE = {
     [listeningForGistandDetailStage]: {
@@ -75,6 +81,10 @@ function AddTextBook({ category, stageID }) {
     [readingForGistandDetailStage]: {
       paths: readingImagePaths,
       update: readingUpdateImagePath,
+    },
+    [vocabularyStage]: {
+      paths: vocabImagePaths,
+      update: vocabUpdateImagePath,
     },
   };
   const { paths: imagePathsByCategory, update: updateImagePathForCategory } =
@@ -192,7 +202,7 @@ function AddTextBook({ category, stageID }) {
           const reader = new FileReader();
           reader.onload = () => {
             //handleReadText(reader.result, file);
-            handleExtractText(reader.result, file);
+            if (autoExtract) handleExtractText(reader.result, file);
           };
           reader.readAsDataURL(file);
 

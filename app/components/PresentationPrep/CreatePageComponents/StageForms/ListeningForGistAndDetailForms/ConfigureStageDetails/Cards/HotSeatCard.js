@@ -17,6 +17,7 @@
 
 import { useEffect, useState } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { useVocabStore } from "@app/stores/useVocabStore";
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -57,6 +58,8 @@ export default function HotSeatCard({ stageId }) {
   const s2tTranscript = useAudioTextStore((s) => s.s2tTranscript);
   const selectedGist = useAudioTextStore((s) => s.selectedGist);
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);
+  // Vocab screenshots source: the teacher's extracted target vocabulary.
+  const vocabScreenshotWords = useVocabStore((s) => s.screenshotWords);
   const [busy, setBusy] = useState(null); // set index | "ext" | null
 
   const config = stageActivities?.[stageId]?.config ?? {};
@@ -111,6 +114,7 @@ export default function HotSeatCard({ stageId }) {
         transcript: s2tTranscript,
         gist: selectedGist,
         questionsAndAnswers: comprehensionItems,
+        vocabScreenshotWords,
         ...body,
       }),
     });

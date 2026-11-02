@@ -38,6 +38,10 @@ const VocabularySection = ({ getSectionsLength, section }) => {
   // Vocab's own source store
   const resetVocabStore = useVocabStore((s) => s.resetVocabStore);
   const setHydratedVocabInputs = useVocabStore((s) => s.setHydratedVocabInputs);
+  const setHydratedImagePaths = useVocabStore((s) => s.setHydratedImagePaths);
+  const setHydratedScreenshotWords = useVocabStore(
+    (s) => s.setHydratedScreenshotWords,
+  );
 
   const sections = [
     <VocabSourcePage key="source" />,
@@ -64,6 +68,8 @@ const VocabularySection = ({ getSectionsLength, section }) => {
       setHydratedScrambleConfig(data?.scrambleConfig || {});
       // Vocab's own source
       setHydratedVocabInputs(data?.vocabInputs || {});
+      setHydratedImagePaths(data?.imagePathsByCategory || {});
+      setHydratedScreenshotWords(data?.screenshotWords || []);
     };
     fetchVocabData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -30,6 +30,7 @@ const FIELD_MAP = {
   ScrambleConfig: "scrambleConfig",
   StageActivities: "stageActivities",
   VocabInputs: "vocabInputs",
+  VocabScreenshotWords: "screenshotWords",
 };
 
 export const POST = async (request) => {
