@@ -1,14 +1,22 @@
 "use client";
 // useVocabStore.js
 // Vocabulary's OWN source store (sibling of useReadingStore). Holds:
-//   - vocabInputs:         the book reference { book, unit, page, exercise }
-//   - imagePathsByCategory:screenshot preview paths — the SHARED AddTextBook
-//                          component reads/writes these (same shape as reading).
-//   - screenshotWords:     vocabulary Gemini extracted from the screenshots,
-//                          teacher-editable; feeds Hot Seat's vocab-screenshots.
+//   - vocabInputs:          the book reference { book, unit, page, exercise }
+//   - imagePathsByCategory: screenshot preview paths — the SHARED AddTextBook
+//                           component reads/writes these (same shape as reading).
+//   - vocabQuestions / vocabAnswers:
+//                           the STRUCTURED exercise that extract-textbook (Gemini
+//                           vision) returns for the questions / answers screenshot,
+//                           stored as a JSON string (same pattern as listening's
+//                           audioQuestions). Shape of the questions payload:
+//                           { instructions, questions:[{number,text,type,options,answer}],
+//                             targetVocab:[...] }.
+//   - screenshotWords:      the target-vocab list (seeded from the questions'
+//                           targetVocab, teacher-editable); feeds Hot Seat.
 // All persist to the Vocabulary section doc via the generic post-stage-text route.
 //   FIELD_MAP needs: VocabInputs->vocabInputs, ImagePaths->imagePathsByCategory
-//   (already present, shared), VocabScreenshotWords->screenshotWords.
+//   (shared), VocabQuestions->vocabQuestions, VocabAnswers->vocabAnswers,
+//   VocabScreenshotWords->screenshotWords.
 
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -19,9 +27,13 @@ import { vocabularyStage } from "@app/utils/SectionIDs";
 const initialState = {
   vocabInputs: {}, // { book, unit, page, exercise }
   imagePathsByCategory: {}, // { vocabQuestions: path, vocabAnswers: path }
-  screenshotWords: [], // extracted vocab, teacher-editable
+  vocabQuestions: "", // JSON string of the parsed questions exercise
+  vocabAnswers: "", // JSON string of the parsed answer key
+  screenshotWords: [], // target vocab, teacher-editable
   justHydratedVocabInputs: false,
   justHydratedImagePaths: false,
+  justHydratedVocabQuestions: false,
+  justHydratedVocabAnswers: false,
   justHydratedScreenshotWords: false,
 };
 
@@ -39,8 +51,7 @@ export const useVocabStore = create(
     setHydratedVocabInputs: (obj) =>
       set({ vocabInputs: obj ?? {}, justHydratedVocabInputs: true }),
 
-    // Screenshot preview paths — the shared AddTextBook reads/writes these,
-    // identical to useReadingStore / useAudioTextStore.
+    // Screenshot preview paths — the shared AddTextBook reads/writes these.
     updateImagePathForCategory: (category, path) =>
       set((s) => ({
         imagePathsByCategory: {
@@ -52,7 +63,17 @@ export const useVocabStore = create(
     setHydratedImagePaths: (obj) =>
       set({ imagePathsByCategory: obj ?? {}, justHydratedImagePaths: true }),
 
-    // Extracted vocabulary — set by the extract route, edited by the teacher.
+    // Structured exercise from extract-textbook (JSON strings).
+    setVocabQuestions: (str) =>
+      set({ vocabQuestions: str ?? "", justHydratedVocabQuestions: false }),
+    setHydratedVocabQuestions: (str) =>
+      set({ vocabQuestions: str ?? "", justHydratedVocabQuestions: true }),
+    setVocabAnswers: (str) =>
+      set({ vocabAnswers: str ?? "", justHydratedVocabAnswers: false }),
+    setHydratedVocabAnswers: (str) =>
+      set({ vocabAnswers: str ?? "", justHydratedVocabAnswers: true }),
+
+    // Target vocabulary — seeded from the exercise, edited by the teacher.
     setScreenshotWords: (arr) =>
       set({
         screenshotWords: Array.isArray(arr) ? arr : [],
@@ -91,31 +112,47 @@ function makeSaver(textType) {
 
 const saveVocabInputs = makeSaver("VocabInputs");
 const saveImagePaths = makeSaver("ImagePaths");
+const saveVocabQuestions = makeSaver("VocabQuestions");
+const saveVocabAnswers = makeSaver("VocabAnswers");
 const saveScreenshotWords = makeSaver("VocabScreenshotWords");
 
 useVocabStore.subscribe(
-  (state) => state.vocabInputs,
-  (value) => {
+  (s) => s.vocabInputs,
+  (v) => {
     if (useVocabStore.getState().justHydratedVocabInputs) return;
-    if (!value || Object.keys(value).length === 0) return;
-    saveVocabInputs(value);
+    if (!v || Object.keys(v).length === 0) return;
+    saveVocabInputs(v);
   },
 );
-
 useVocabStore.subscribe(
-  (state) => state.imagePathsByCategory,
-  (value) => {
+  (s) => s.imagePathsByCategory,
+  (v) => {
     if (useVocabStore.getState().justHydratedImagePaths) return;
-    if (!value || Object.keys(value).length === 0) return;
-    saveImagePaths(value);
+    if (!v || Object.keys(v).length === 0) return;
+    saveImagePaths(v);
   },
 );
-
 useVocabStore.subscribe(
-  (state) => state.screenshotWords,
-  (value) => {
+  (s) => s.vocabQuestions,
+  (v) => {
+    if (useVocabStore.getState().justHydratedVocabQuestions) return;
+    if (!v) return;
+    saveVocabQuestions(v);
+  },
+);
+useVocabStore.subscribe(
+  (s) => s.vocabAnswers,
+  (v) => {
+    if (useVocabStore.getState().justHydratedVocabAnswers) return;
+    if (!v) return;
+    saveVocabAnswers(v);
+  },
+);
+useVocabStore.subscribe(
+  (s) => s.screenshotWords,
+  (v) => {
     if (useVocabStore.getState().justHydratedScreenshotWords) return;
-    if (!Array.isArray(value) || value.length === 0) return;
-    saveScreenshotWords(value);
+    if (!Array.isArray(v) || v.length === 0) return;
+    saveScreenshotWords(v);
   },
 );

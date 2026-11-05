@@ -30,6 +30,8 @@ const FIELD_MAP = {
   ScrambleConfig: "scrambleConfig",
   StageActivities: "stageActivities",
   VocabInputs: "vocabInputs",
+  VocabQuestions: "vocabQuestions",
+  VocabAnswers: "vocabAnswers",
   VocabScreenshotWords: "screenshotWords",
 };
 

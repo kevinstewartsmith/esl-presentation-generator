@@ -75,7 +75,19 @@ Ignore the questions shape above. Instead return:
 }
 Transcribe faithfully in order. Do not invent speaker labels that are not shown. Return ONLY the JSON.`;
 
+const VOCAB_QUESTIONS_FRAGMENT = `This image shows a VOCABULARY exercise from a coursebook (e.g. matching, gap-fill, a word bank, definitions, or collocations).
+
+Extract every item using the questions shape above: classify each item's "type", capture any printed "options" (e.g. a word bank) in "options", and leave "answer" as "" unless the answer is actually printed.
+
+ADDITIONALLY include a top-level "targetVocab" field: an array of the TARGET vocabulary words or short fixed phrases this exercise is teaching — the items a student is meant to learn (the words that would go on flashcards). Transcribe them exactly, deduplicate, and EXCLUDE instruction text, exercise numbers, and example sentences.
+
+Return an object with "instructions", "questions" (as specified above), AND "targetVocab": string[]. Return ONLY the JSON.`;
+
 export const CATEGORY_PROMPTS = {
+  // Vocabulary (own fragment: questions container + targetVocab list)
+  vocabQuestions: VOCAB_QUESTIONS_FRAGMENT,
+  vocabAnswers: ANSWERS_FRAGMENT,
+
   // Questions (reading + listening share the same extraction)
   QuestionText: QUESTIONS_FRAGMENT,
   ListeningQuestionText: QUESTIONS_FRAGMENT,

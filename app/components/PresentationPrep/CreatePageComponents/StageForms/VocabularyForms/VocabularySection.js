@@ -30,10 +30,18 @@ const VocabularySection = ({ getSectionsLength, section }) => {
   // Shared stage store
   const resetAudioStore = useAudioTextStore((s) => s.resetAudioStore);
   const setCurrentSectionId = useAudioTextStore((s) => s.setCurrentSectionId);
-  const setHydratedSlideOrder = useAudioTextStore((s) => s.setHydratedSlideOrder);
-  const setHydratedStageActivities = useAudioTextStore((s) => s.setHydratedStageActivities);
-  const setHydratedDetailConfig = useAudioTextStore((s) => s.setHydratedDetailConfig);
-  const setHydratedScrambleConfig = useAudioTextStore((s) => s.setHydratedScrambleConfig);
+  const setHydratedSlideOrder = useAudioTextStore(
+    (s) => s.setHydratedSlideOrder,
+  );
+  const setHydratedStageActivities = useAudioTextStore(
+    (s) => s.setHydratedStageActivities,
+  );
+  const setHydratedDetailConfig = useAudioTextStore(
+    (s) => s.setHydratedDetailConfig,
+  );
+  const setHydratedScrambleConfig = useAudioTextStore(
+    (s) => s.setHydratedScrambleConfig,
+  );
 
   // Vocab's own source store
   const resetVocabStore = useVocabStore((s) => s.resetVocabStore);
@@ -41,6 +49,12 @@ const VocabularySection = ({ getSectionsLength, section }) => {
   const setHydratedImagePaths = useVocabStore((s) => s.setHydratedImagePaths);
   const setHydratedScreenshotWords = useVocabStore(
     (s) => s.setHydratedScreenshotWords,
+  );
+  const setHydratedVocabQuestions = useVocabStore(
+    (s) => s.setHydratedVocabQuestions,
+  );
+  const setHydratedVocabAnswers = useVocabStore(
+    (s) => s.setHydratedVocabAnswers,
   );
 
   const sections = [
@@ -70,6 +84,8 @@ const VocabularySection = ({ getSectionsLength, section }) => {
       setHydratedVocabInputs(data?.vocabInputs || {});
       setHydratedImagePaths(data?.imagePathsByCategory || {});
       setHydratedScreenshotWords(data?.screenshotWords || []);
+      setHydratedVocabQuestions(data?.vocabQuestions || "");
+      setHydratedVocabAnswers(data?.vocabAnswers || "");
     };
     fetchVocabData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

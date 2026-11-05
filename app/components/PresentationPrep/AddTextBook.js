@@ -72,6 +72,8 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
   const vocabUpdateImagePath = useVocabStore(
     (s) => s.updateImagePathForCategory,
   );
+  const setVocabQuestions = useVocabStore((s) => s.setVocabQuestions);
+  const setVocabAnswers = useVocabStore((s) => s.setVocabAnswers);
 
   const IMAGE_STORE_BY_STAGE = {
     [listeningForGistandDetailStage]: {
@@ -175,6 +177,12 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
         return null;
       case "ListeningTranscript":
         updateAudioTranscript(text);
+        return null;
+      case "vocabQuestions":
+        setVocabQuestions(text);
+        return null;
+      case "vocabAnswers":
+        setVocabAnswers(text);
         return null;
       default:
         console.log("No category selected");
