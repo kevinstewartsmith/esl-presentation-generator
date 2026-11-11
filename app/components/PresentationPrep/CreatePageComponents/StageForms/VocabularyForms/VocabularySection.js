@@ -13,8 +13,8 @@
 
 import React, { useEffect } from "react";
 
-import StageComposer from "../ListeningForGistAndDetailForms/StageComposer";
-import ConfigureStageDetails from "../ListeningForGistAndDetailForms/ConfigureStageDetails/ConfigureStageDetails";
+import StageComposer from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/StageComposer";
+import ConfigureStageDetails from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/ConfigureStageDetails";
 import VocabSourcePage from "./VocabSourcePage";
 
 import { vocabularyStage } from "@app/utils/SectionIDs";

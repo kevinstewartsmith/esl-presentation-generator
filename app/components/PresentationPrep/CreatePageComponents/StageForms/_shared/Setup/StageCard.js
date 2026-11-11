@@ -5,12 +5,12 @@
 
 "use client";
 
-import ScrambleCard from "./cards/ScrambleCard";
-import GistCard from "./cards/GistCard";
-import DetailCard from "./cards/DetailCard";
-import PlaceholderCard from "./cards/PlaceholderCard";
-import WarmupActivityCard from "./cards/WarmupActivityCard";
-import StandaloneHotSeatCard from "./cards/StandaloneHotSeatCard";
+import ScrambleCard from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/StageCards/ScrambleCard";
+import GistCard from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/StageCards/GistCard";
+import DetailCard from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/StageCards/DetailCard";
+import PlaceholderCard from "./Cards/PlaceholderCard";
+import WarmupActivityCard from "./Cards/WarmupActivityCard";
+import StandaloneHotSeatCard from "./Cards/StandaloneHotSeatCard";
 
 const CARD_BY_TYPE = {
   scramble: ScrambleCard,

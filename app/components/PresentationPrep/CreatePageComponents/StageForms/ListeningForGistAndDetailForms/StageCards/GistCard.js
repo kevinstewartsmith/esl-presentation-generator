@@ -16,7 +16,7 @@
 
 import { useEffect, useState } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
-import CardShell from "./CardShell";
+import CardShell from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/Cards/CardShell";
 
 export default function GistCard({ item, position }) {
   const s2tTranscript = useAudioTextStore((s) => s.s2tTranscript);

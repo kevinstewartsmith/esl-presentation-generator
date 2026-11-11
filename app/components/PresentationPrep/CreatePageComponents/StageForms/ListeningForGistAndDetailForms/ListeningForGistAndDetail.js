@@ -7,8 +7,8 @@ import CreateAudioSnippets from "./CreateAudioSnippets";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { getCompleteListeningStageDataFromDB } from "@app/utils/GetStageData";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
-import StageComposer from "./StageComposer";
-import ConfigureStageDetails from "./ConfigureStageDetails/ConfigureStageDetails";
+import StageComposer from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/StageComposer";
+import ConfigureStageDetails from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/ConfigureStageDetails";
 
 const ListeningForGistAndDetail = ({ getSectionsLength, section }) => {
   const userID = useLessonStore((state) => state.currentUserID);

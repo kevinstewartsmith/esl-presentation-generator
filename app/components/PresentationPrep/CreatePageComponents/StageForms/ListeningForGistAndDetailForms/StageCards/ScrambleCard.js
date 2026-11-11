@@ -18,7 +18,7 @@ import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { buildScrambleRounds } from "@app/utils/scramblePassage";
 import { getScramblePassageFlag } from "@app/components/FinalPresentationSections/scrambleConfigHelpers";
 import SnippetPlayer from "@app/components/SnippetPlayer";
-import CardShell from "./CardShell";
+import CardShell from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/Cards/CardShell";
 
 export default function ScrambleCard({ item, position }) {
   const comprehensionItems = useAudioTextStore((s) => s.comprehensionItems);

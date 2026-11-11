@@ -12,7 +12,7 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import SnippetPlayer from "@app/components/SnippetPlayer";
-import CardShell from "./CardShell";
+import CardShell from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/Cards/CardShell";
 import {
   getDetailModes,
   getQuestionFlags,
