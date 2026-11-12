@@ -236,7 +236,7 @@ function makeFieldSaver(textType) {
         body: JSON.stringify({
           userID: currentUserID,
           lessonID: currentLessonID,
-          stageID: STAGE_ID,
+          stageID: sectionId, // section-aware: save to the skill being edited, not always listening
           textType,
           data,
         }),
