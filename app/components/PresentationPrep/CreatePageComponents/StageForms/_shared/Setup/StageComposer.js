@@ -20,6 +20,13 @@ import { CSS } from "@dnd-kit/utilities";
 
 const CATALOG = [
   {
+    type: "gistReading",
+    label: "Reading for gist",
+    blurb: "Read quickly for the main idea",
+    skills: ["reading"],
+    requires: [],
+  },
+  {
     type: "leadIn",
     label: "Lead-in",
     blurb: "Generate interest, set the topic",

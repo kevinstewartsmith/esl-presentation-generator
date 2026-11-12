@@ -9,6 +9,7 @@ import ScrambleCard from "@app/components/PresentationPrep/CreatePageComponents/
 import GistCard from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/StageCards/GistCard";
 import DetailCard from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/StageCards/DetailCard";
 import PlaceholderCard from "./Cards/PlaceholderCard";
+import { getRegisteredStageCard } from "./stageRegistry";
 import WarmupActivityCard from "./Cards/WarmupActivityCard";
 import StandaloneHotSeatCard from "./Cards/StandaloneHotSeatCard";
 
@@ -22,6 +23,7 @@ const CARD_BY_TYPE = {
 };
 
 export default function StageCard({ item, position }) {
-  const Card = CARD_BY_TYPE[item.type] ?? PlaceholderCard;
+  const Card =
+    getRegisteredStageCard(item.type) ?? CARD_BY_TYPE[item.type] ?? PlaceholderCard;
   return <Card item={item} position={position} />;
 }

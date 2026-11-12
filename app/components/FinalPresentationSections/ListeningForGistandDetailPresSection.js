@@ -9,6 +9,7 @@
 // "Listening for Gist and Detail".
 
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
+import { getRegisteredStagePresSection } from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/stageRegistry";
 //import DecodeUnscramblePresSection from "./DecodeUnscramblePresSection-legacy";
 import GistPresSection from "./GistPresSection";
 import DetailPresSection from "./DetailPresSection";
@@ -40,7 +41,8 @@ const ListeningForGistandDetailPresSection = () => {
   return (
     <SlideThemeProvider>
       {included.map((item) => {
-        const Section = SECTION_BY_TYPE[item.type];
+        const Section =
+          getRegisteredStagePresSection(item.type) ?? SECTION_BY_TYPE[item.type];
         return Section ? <Section key={item.id} item={item} /> : null;
       })}
     </SlideThemeProvider>
