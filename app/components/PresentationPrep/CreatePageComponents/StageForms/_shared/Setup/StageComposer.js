@@ -27,6 +27,20 @@ const CATALOG = [
     requires: [],
   },
   {
+    type: "detailReading",
+    label: "Reading for detail",
+    blurb: "Read slowly for specific information",
+    skills: ["reading"],
+    requires: [],
+  },
+  {
+    type: "partnerDiscussion",
+    label: "Partner discussion",
+    blurb: "Compare answers and ideas with a partner",
+    skills: ["reading", "speaking"],
+    requires: [],
+  },
+  {
     type: "leadIn",
     label: "Lead-in",
     blurb: "Generate interest, set the topic",
