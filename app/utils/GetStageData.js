@@ -27,6 +27,16 @@ export const getCompleteListeningStageDataFromDB = (
     stageID: listeningForGistandDetailStage,
   });
 
+export const getCompleteReadingStageDataFromDB = (
+  currentUserID,
+  currentLessonID,
+) =>
+  fetchStageData("section-data/get-section-data", {
+    userID: currentUserID,
+    lessonID: currentLessonID,
+    stageID: readingForGistandDetailStage,
+  });
+
 export const getReadingTextDataFromDB = (currentUserID, currentLessonID) =>
   fetchStageData("get-textbook-data", {
     userID: currentUserID,

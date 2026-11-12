@@ -18,7 +18,7 @@ import ClassRules from "@app/components/PresentationPrep/CreatePageComponents/St
 import ListeningForGistAndDetail from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ListeningForGistAndDetailForms/ListeningForGistAndDetail";
 import EffortAndAttitudeScore from "@app/components/PresentationPrep/CreatePageComponents/StageForms/EffortAndAttitudeScore";
 import WarmUpSpeaking from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WarmUpSpeaking";
-import ReadingForGistandDetailForm from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForGistandDetailForm";
+import ReadingSection from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForms/ReadingSection";
 import AdvantagesDisadvantages from "@app/components/PresentationPrep/CreatePageComponents/StageForms/AdvantagesDisadvantages";
 import WritingEssay from "@app/components/PresentationPrep/CreatePageComponents/StageForms/WritingEssay";
 import SpeakingDebate from "@app/components/PresentationPrep/CreatePageComponents/StageForms/SpeakingDebate";
@@ -36,7 +36,7 @@ const ComponentMap = {
   "Listening for Gist and Detail": ListeningForGistAndDetail,
   "Effort and Attitude Score": EffortAndAttitudeScore,
   "Warm-Up: Speaking": WarmUpSpeaking,
-  "Reading for Gist and Detail": ReadingForGistandDetailForm,
+  "Reading for Gist and Detail": ReadingSection,
   "Advantages - Disadvantages": AdvantagesDisadvantages,
   "Writing: Essay": WritingEssay,
   "Speaking: Debate": SpeakingDebate,
