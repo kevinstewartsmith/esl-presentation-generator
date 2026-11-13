@@ -34,6 +34,13 @@ const CATALOG = [
     requires: [],
   },
   {
+    type: "vocabHunt",
+    label: "Vocabulary Hunt",
+    blurb: "Pre-teach the hardest words from the text (AI-found)",
+    skills: ["reading"],
+    requires: [],
+  },
+  {
     type: "partnerDiscussion",
     label: "Partner discussion",
     blurb: "Compare answers and ideas with a partner",
@@ -110,8 +117,10 @@ const REDUCED_PRESET = ["gist", "scramble", "detail"];
 // Which stages a brand-new lesson is seeded with, PER SKILL. A skill not listed
 // here starts empty, so the teacher builds the run from the Bag of tricks
 // instead of inheriting listening's gist/decode/detail.
+const READING_PRESET = ["gistReading", "vocabHunt", "detailReading"];
 const PRESET_BY_SKILL = {
   listening: REDUCED_PRESET,
+  reading: READING_PRESET,
 };
 
 let _id = 0;

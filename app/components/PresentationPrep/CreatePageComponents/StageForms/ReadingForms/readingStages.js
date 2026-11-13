@@ -10,9 +10,11 @@ import {
 import GistReadingCard from "./StageCards/GistReadingCard";
 import DetailReadingCard from "./StageCards/DetailReadingCard";
 import PartnerDiscussionCard from "./StageCards/PartnerDiscussionCard";
+import VocabHuntCard from "./StageCards/VocabHuntCard";
 import GistReadingPresSection from "@app/components/FinalPresentationSections/GistReadingPresSection";
 import DetailReadingPresSection from "@app/components/FinalPresentationSections/DetailReadingPresSection";
 import PartnerDiscussionPresSection from "@app/components/FinalPresentationSections/PartnerDiscussionPresSection";
+import VocabHuntPresSection from "@app/components/FinalPresentationSections/VocabHuntPresSection";
 
 registerStageCard("gistReading", GistReadingCard);
 registerStagePresSection("gistReading", GistReadingPresSection);
@@ -20,3 +22,5 @@ registerStageCard("detailReading", DetailReadingCard);
 registerStagePresSection("detailReading", DetailReadingPresSection);
 registerStageCard("partnerDiscussion", PartnerDiscussionCard);
 registerStagePresSection("partnerDiscussion", PartnerDiscussionPresSection);
+registerStageCard("vocabHunt", VocabHuntCard);
+registerStagePresSection("vocabHunt", VocabHuntPresSection);
