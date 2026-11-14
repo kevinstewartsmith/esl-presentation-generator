@@ -41,6 +41,7 @@ const ReadingSection = ({ getSectionsLength, section }) => {
   const setHydratedScrambleConfig = useAudioTextStore(
     (s) => s.setHydratedScrambleConfig,
   );
+  const setHydratedGist = useAudioTextStore((s) => s.setHydratedGist);
 
   // Reading's own source store
   const resetReadingStore = useReadingStore((s) => s.resetReadingStore);
@@ -83,6 +84,7 @@ const ReadingSection = ({ getSectionsLength, section }) => {
       setHydratedStageActivities(data?.stageActivities || {});
       setHydratedDetailConfig(data?.detailConfig || {});
       setHydratedScrambleConfig(data?.scrambleConfig || {});
+      setHydratedGist(data?.gistOptions || [], data?.selectedGist || null);
       // Reading's own source
       setHydratedTextbook(data?.textbook || null);
       setHydratedQuestions(data?.questions || null);
