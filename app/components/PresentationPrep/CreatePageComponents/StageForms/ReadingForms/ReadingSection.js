@@ -15,9 +15,11 @@ import React, { useEffect } from "react";
 import StageComposer from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/StageComposer";
 import ConfigureStageDetails from "@app/components/PresentationPrep/CreatePageComponents/StageForms/_shared/Setup/ConfigureStageDetails";
 import ReadingContent from "@app/components/PresentationPrep/ReadingContent";
+import ReadingReview from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ReadingForms/ReadingReview";
 
 import { readingForGistandDetailStage } from "@app/utils/SectionIDs";
 import { getCompleteReadingStageDataFromDB } from "@app/utils/GetStageData";
+import { buildReadingItemsFromStrings } from "@app/components/FinalPresentationSections/readingDetailModel";
 import { useLessonStore } from "@app/stores/useLessonStore";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useReadingStore } from "@app/stores/useReadingStore";
@@ -48,6 +50,8 @@ const ReadingSection = ({ getSectionsLength, section }) => {
   const setHydratedTextbook = useReadingStore((s) => s.setHydratedTextbook);
   const setHydratedQuestions = useReadingStore((s) => s.setHydratedQuestions);
   const setHydratedAnswers = useReadingStore((s) => s.setHydratedAnswers);
+  const setHydratedReadingItems = useReadingStore((s) => s.setHydratedReadingItems);
+  const setReadingItems = useReadingStore((s) => s.setReadingItems);
   const setHydratedInputTexts = useReadingStore((s) => s.setHydratedInputTexts);
   const setHydratedReadingVocab = useReadingStore(
     (s) => s.setHydratedReadingVocab,
@@ -63,6 +67,7 @@ const ReadingSection = ({ getSectionsLength, section }) => {
 
   const sections = [
     <ReadingContent key="source" stageID={readingForGistandDetailStage} />,
+    <ReadingReview key="review" />,
     <StageComposer key="arrange" />,
     <ConfigureStageDetails key="configure" />,
   ];
@@ -89,6 +94,20 @@ const ReadingSection = ({ getSectionsLength, section }) => {
       setHydratedTextbook(data?.textbook || null);
       setHydratedQuestions(data?.questions || null);
       setHydratedAnswers(data?.answers || null);
+      // Structured per-question items are the source of truth. Load them if
+      // saved; otherwise migrate from the raw Q&A strings once (this build
+      // persists, so next load has structured items). setReadingItems (not the
+      // hydrated setter) so the migration write actually saves.
+      if (Array.isArray(data?.readingItems) && data.readingItems.length) {
+        setHydratedReadingItems(data.readingItems);
+      } else {
+        const built = buildReadingItemsFromStrings({
+          questions: data?.questions || null,
+          answers: data?.answers || null,
+        });
+        if (built.length) setReadingItems(built);
+        else setHydratedReadingItems([]);
+      }
       setHydratedInputTexts(data?.inputTexts || {});
       setHydratedReadingVocab(data?.readingVocab || []);
       setHydratedImagePaths(data?.imagePathsByCategory || {});

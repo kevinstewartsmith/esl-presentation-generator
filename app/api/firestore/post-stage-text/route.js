@@ -4,9 +4,10 @@ import { db } from "@app/utils/firebaseAdmin";
 // Maps a textType to the Firestore field it writes.
 // Adding a new saveable text field = one line here. No switch, no new route.
 const FIELD_MAP = {
-  BookText: "texts",
+  BookText: "textbook",
   QuestionText: "questions",
   AnswerText: "answers",
+  ReadingItems: "readingItems",
   AudioQuestionText: "audioQuestions",
   AudioTranscript: "transcript",
   AudioFileName: "audioFileName",

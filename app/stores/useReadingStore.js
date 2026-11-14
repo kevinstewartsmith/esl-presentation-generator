@@ -9,6 +9,13 @@ const initialReadingState = {
   textbook: null,
   questions: null,
   answers: null,
+  // Structured, per-question comprehension items — the SOURCE OF TRUTH for the
+  // reading detail stage (mirrors listening's comprehensionItems). Each:
+  //   { number, question, answer, passages: [{ text }] }
+  // `questions`/`answers` above remain the raw extraction landing zone; these
+  // items are built from them (migration / "Rebuild from screenshots") and then
+  // edited directly here. `textbook` keeps the WHOLE text, persisted separately.
+  readingItems: [],
   inputTexts: null,
   discussionForms: {},
   readingVocab: [],
@@ -16,6 +23,7 @@ const initialReadingState = {
   imagePathsByCategory: {},
 
   justHydratedTexts: false,
+  justHydratedReadingItems: false,
   justHydratedInputTexts: false,
   justHydratedDiscussions: false,
   justHydratedReadingVocab: false,
@@ -60,6 +68,28 @@ export const useReadingStore = create(
       set({ answers: data ?? null, justHydratedTexts: false }),
     setHydratedAnswers: (data) =>
       set({ answers: data ?? null, justHydratedTexts: true }),
+
+    // readingItems — structured, per-question source of truth
+    setReadingItems: (items) =>
+      set({ readingItems: Array.isArray(items) ? items : [], justHydratedReadingItems: false }),
+    setHydratedReadingItems: (items) =>
+      set({ readingItems: Array.isArray(items) ? items : [], justHydratedReadingItems: true }),
+    // Edit one scalar field (question|answer) of item `index`.
+    updateReadingItem: (index, field, value) =>
+      set((state) => {
+        const next = [...state.readingItems];
+        if (!next[index]) return {};
+        next[index] = { ...next[index], [field]: value };
+        return { readingItems: next, justHydratedReadingItems: false };
+      }),
+    // Replace one item's passages array ([{ text }]).
+    updateReadingItemPassages: (index, passages) =>
+      set((state) => {
+        const next = [...state.readingItems];
+        if (!next[index]) return {};
+        next[index] = { ...next[index], passages: Array.isArray(passages) ? passages : [] };
+        return { readingItems: next, justHydratedReadingItems: false };
+      }),
 
     // inputTexts (dynamic per-key object: title, page, book, exercise, ...)
     updateInputTextForKey: (key, value) =>
@@ -215,6 +245,12 @@ const FIELD_SUBSCRIPTIONS = [
     flag: "justHydratedTexts",
     textType: "AnswerText",
     isEmpty: isEmptyText,
+  },
+  {
+    field: "readingItems",
+    flag: "justHydratedReadingItems",
+    textType: "ReadingItems",
+    isEmpty: isEmptyArray,
   },
   {
     field: "inputTexts",
