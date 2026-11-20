@@ -21,6 +21,7 @@ const IDENTITY = {
   "Advantages - Disadvantages":    { accent: "#a596c9", chipBg: "#efebf6", icon: "#5f5296", ti: "ti-scale" },
   "Think - Pair - Share":          { accent: "#cc9370", chipBg: "#f6ece4", icon: "#8f5a37", ti: "ti-users" },
   "Vocabulary":                    { accent: "#9ca67e", chipBg: "#eef1e6", icon: "#5f6b3d", ti: "ti-vocabulary" },
+  "Grammar: Running Dictation":    { accent: "#c9a66b", chipBg: "#f6efe2", icon: "#8a6a2f", ti: "ti-run" },
 };
 
 export function stageIdentity(name) {

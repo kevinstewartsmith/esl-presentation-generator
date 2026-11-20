@@ -9,11 +9,13 @@ import {
   listeningForGistandDetailStage,
   readingForGistandDetailStage,
   vocabularyStage,
+  grammarRunningDictationStage,
 } from "@app/utils/SectionIDs";
 import { base64ToBlob } from "@app/utils/base64ToBlob";
 import { useAudioTextStore } from "@app/stores/useAudioTextStore";
 import { useReadingStore } from "@app/stores/useReadingStore";
 import { useVocabStore } from "@app/stores/useVocabStore";
+import { useGrammarStore } from "@app/stores/useGrammarStore";
 
 import {
   saveImageToIndexedDB,
@@ -74,6 +76,11 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
   );
   const setVocabQuestions = useVocabStore((s) => s.setVocabQuestions);
   const setVocabAnswers = useVocabStore((s) => s.setVocabAnswers);
+  const grammarImagePaths = useGrammarStore((s) => s.imagePathsByCategory);
+  const grammarUpdateImagePath = useGrammarStore(
+    (s) => s.updateImagePathForCategory,
+  );
+  const updateGrammarContent = useGrammarStore((s) => s.updateGrammarContent);
 
   const IMAGE_STORE_BY_STAGE = {
     [listeningForGistandDetailStage]: {
@@ -87,6 +94,10 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
     [vocabularyStage]: {
       paths: vocabImagePaths,
       update: vocabUpdateImagePath,
+    },
+    [grammarRunningDictationStage]: {
+      paths: grammarImagePaths,
+      update: grammarUpdateImagePath,
     },
   };
   const { paths: imagePathsByCategory, update: updateImagePathForCategory } =
@@ -183,6 +194,9 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
         return null;
       case "vocabAnswers":
         setVocabAnswers(text);
+        return null;
+      case "GrammarExerciseText":
+        updateGrammarContent(text);
         return null;
       default:
         console.log("No category selected");

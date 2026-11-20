@@ -1,3 +1,4 @@
+import { grammarRunningDictationStage } from "@app/utils/SectionIDs";
 import { listeningForGistandDetailStage } from "./SectionIDs";
 import { readingForGistandDetailStage } from "./SectionIDs";
 import { vocabularyStage } from "./SectionIDs";
@@ -52,4 +53,14 @@ export const getCompleteVocabStageDataFromDB = (
     userID: currentUserID,
     lessonID: currentLessonID,
     stageID: vocabularyStage,
+  });
+
+export const getCompleteGrammarStageDataFromDB = (
+  currentUserID,
+  currentLessonID,
+) =>
+  fetchStageData("section-data/get-section-data", {
+    userID: currentUserID,
+    lessonID: currentLessonID,
+    stageID: grammarRunningDictationStage,
   });

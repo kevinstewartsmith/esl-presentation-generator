@@ -31,6 +31,7 @@ import Brainstorming from "@app/components/PresentationPrep/CreatePageComponents
 import ThinkPairShare from "@app/components/PresentationPrep/CreatePageComponents/StageForms/ThinkPairShare";
 import StartPresentation from "@app/components/PresentationPrep/CreatePageComponents/StartPresentation";
 import VocabularySection from "@app/components/PresentationPrep/CreatePageComponents/StageForms/VocabularyForms/VocabularySection";
+import GrammarSection from "@app/components/PresentationPrep/CreatePageComponents/StageForms/GrammarForms/GrammarSection";
 
 const ComponentMap = {
   "Class Rules": ClassRules,
@@ -48,6 +49,7 @@ const ComponentMap = {
   Brainstorming: Brainstorming,
   "Think - Pair - Share": ThinkPairShare,
   Vocabulary: VocabularySection,
+  "Grammar: Running Dictation": GrammarSection,
   "Start Presentation": StartPresentation,
 };
 
