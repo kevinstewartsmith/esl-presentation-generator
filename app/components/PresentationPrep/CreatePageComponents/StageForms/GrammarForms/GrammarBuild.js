@@ -6,7 +6,7 @@
 // 3) Download the cut-strips PDF (shared ContentTools pipeline).
 
 import { useState } from "react";
-import { useGrammarStore } from "@app/stores/useGrammarStore";
+import { useGrammarStore, grammarExercisesToText } from "@app/stores/useGrammarStore";
 import DownloadStripsButton from "@app/components/ContentTools/DownloadStripsButton";
 
 function sanitize(s) {
@@ -14,7 +14,7 @@ function sanitize(s) {
 }
 
 export default function GrammarBuild() {
-  const grammarContent = useGrammarStore((s) => s.grammarContent);
+  const exercises = useGrammarStore((s) => s.grammarExercises) ?? [];
   const inputTexts = useGrammarStore((s) => s.inputTexts) ?? {};
   const aims = useGrammarStore((s) => s.aims) ?? [];
   const setAims = useGrammarStore((s) => s.setAims);
@@ -31,7 +31,8 @@ export default function GrammarBuild() {
   const [err, setErr] = useState("");
 
   const level = inputTexts.level || "B1";
-  const hasContent = !!(grammarContent && String(grammarContent).trim());
+  const content = grammarExercisesToText(exercises);
+  const hasContent = !!content.trim();
   const title = inputTexts.grammarPoint || inputTexts.lessonName || "Running Dictation";
   const fileName = `Running Dictation${inputTexts.lessonName ? " — " + sanitize(inputTexts.lessonName) : ""}.pdf`;
 
@@ -42,7 +43,7 @@ export default function GrammarBuild() {
       const res = await fetch("/api/generate-aims", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: grammarContent, skill: "grammar", level }),
+        body: JSON.stringify({ content, skill: "grammar", level }),
       });
       if (!res.ok) { setErr(`Aims: HTTP ${res.status}`); return; }
       const data = await res.json();
@@ -59,7 +60,7 @@ export default function GrammarBuild() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: grammarContent || "",
+          content,
           skill: "grammar",
           level,
           count: 10,

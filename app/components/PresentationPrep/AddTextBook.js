@@ -33,7 +33,7 @@ import {
   img,
 } from "@app/utils/AddTextBookUtil_CSS";
 
-function AddTextBook({ category, stageID, autoExtract = true }) {
+function AddTextBook({ category, stageID, autoExtract = true, onExtracted, extractCategory, dropLabel }) {
   const textbook = useReadingStore((state) => state.textbook);
   const questions = useReadingStore((state) => state.questions);
   const answers = useReadingStore((state) => state.answers);
@@ -80,7 +80,6 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
   const grammarUpdateImagePath = useGrammarStore(
     (s) => s.updateImagePathForCategory,
   );
-  const updateGrammarContent = useGrammarStore((s) => s.updateGrammarContent);
 
   const IMAGE_STORE_BY_STAGE = {
     [listeningForGistandDetailStage]: {
@@ -155,7 +154,7 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
       const res = await fetch("/api/extract-textbook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64File, category }),
+        body: JSON.stringify({ image: base64File, category: extractCategory || category }),
       });
       if (!res.ok) throw new Error(`Extraction failed (${res.status})`);
       const { data } = await res.json();
@@ -170,6 +169,10 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
   }
 
   function handleTextStateMemory(text) {
+    if (onExtracted) {
+      onExtracted(text);
+      return null;
+    }
     switch (category) {
       case "BookText":
         updateTextbook(text);
@@ -194,9 +197,6 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
         return null;
       case "vocabAnswers":
         setVocabAnswers(text);
-        return null;
-      case "GrammarExerciseText":
-        updateGrammarContent(text);
         return null;
       default:
         console.log("No category selected");
@@ -376,7 +376,7 @@ function AddTextBook({ category, stageID, autoExtract = true }) {
         <div {...getRootProps({ style })}>
           <input {...getInputProps()} />
           <p>
-            Drag <strong>{dragNDropText(category)}</strong>, or click to select
+            Drag <strong>{dropLabel || dragNDropText(category)}</strong>, or click to select
             files
           </p>
         </div>

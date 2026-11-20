@@ -58,8 +58,8 @@ Rules:
 - Write them as present-tense base-verb phrases (e.g. "Form and use the past perfect to describe an action before another past action"). Do NOT start a line with "Students".
 - Base them strictly on the MATERIAL below. If the material mixes several target points, list each.
 
-Return ONLY valid JSON — no markdown, no code fences — an array of strings:
-["aim one", "aim two", ...]
+Return ONLY valid JSON — no markdown, no code fences — an object:
+{"target": "<short label of the target language, e.g. 'Past perfect' or 'Past perfect; reported speech'>", "aims": ["aim one", "aim two", ...]}
 
 MATERIAL:
 ${String(content).slice(0, 7000)}`;
@@ -71,19 +71,22 @@ ${String(content).slice(0, 7000)}`;
     });
     let out = (response.text ?? "").replace(/```json\s*|```/g, "").trim();
 
-    let aims;
+    let parsed;
     try {
-      aims = JSON.parse(out);
+      parsed = JSON.parse(out);
     } catch (e) {
       console.error("generate-aims JSON parse failed. Raw:", out);
       return Response.json({ error: "Model did not return valid JSON" }, { status: 502 });
     }
+    // Accept { target, aims } (preferred) or a bare array (legacy).
+    let aims = Array.isArray(parsed) ? parsed : parsed?.aims;
+    const target = Array.isArray(parsed) ? "" : String(parsed?.target || "").trim();
     if (!Array.isArray(aims)) {
-      return Response.json({ error: "Expected an array" }, { status: 502 });
+      return Response.json({ error: "Expected aims array" }, { status: 502 });
     }
     aims = aims.map((a) => String(a).trim()).filter(Boolean);
 
-    return Response.json({ aims }, { status: 200 });
+    return Response.json({ aims, target }, { status: 200 });
   } catch (error) {
     console.error("generate-aims error:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });

@@ -44,3 +44,6 @@ next-env.d.ts
 
 #service accounts
 /config
+
+# Cowork desktop scratch folder — never commit
+/Claude outputs/

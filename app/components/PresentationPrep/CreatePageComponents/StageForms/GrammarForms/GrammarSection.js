@@ -16,7 +16,7 @@ const GrammarSection = ({ getSectionsLength, section }) => {
   const lessonID = useLessonStore((s) => s.currentLessonID);
 
   const resetGrammarStore = useGrammarStore((s) => s.resetGrammarStore);
-  const setHydratedGrammarContent = useGrammarStore((s) => s.setHydratedGrammarContent);
+  const setHydratedGrammarExercises = useGrammarStore((s) => s.setHydratedGrammarExercises);
   const setHydratedAims = useGrammarStore((s) => s.setHydratedAims);
   const setHydratedDictationSentences = useGrammarStore((s) => s.setHydratedDictationSentences);
   const setHydratedInputTexts = useGrammarStore((s) => s.setHydratedInputTexts);
@@ -37,7 +37,7 @@ const GrammarSection = ({ getSectionsLength, section }) => {
     const fetchGrammarData = async () => {
       resetGrammarStore();
       const data = await getCompleteGrammarStageDataFromDB(userID, lessonID);
-      setHydratedGrammarContent(data?.grammarContent || null);
+      setHydratedGrammarExercises(data?.grammarExercises || []);
       setHydratedAims(data?.aims || []);
       setHydratedDictationSentences(data?.dictationSentences || []);
       setHydratedInputTexts(data?.inputTexts || {});

@@ -9,6 +9,7 @@ const FIELD_MAP = {
   AnswerText: "answers",
   ReadingItems: "readingItems",
   GrammarContent: "grammarContent",
+  GrammarExercises: "grammarExercises",
   GrammarAims: "aims",
   DictationSentences: "dictationSentences",
   AudioQuestionText: "audioQuestions",
